@@ -1,5 +1,7 @@
-# Normalize line endings for source and docs.
-* text=auto
+# Text files are LF in the repository and in every working tree, whatever core.autocrlf says: the
+# style gate checks end_of_line = lf, and a Windows checkout with autocrlf=true (a GitHub runner's
+# default) would otherwise fail it on every file.
+* text=auto eol=lf
 
 # VBA fixture files keep their exact bytes (CLAUDE.md R18). The VBE exports CRLF and
 # round-trip tests compare byte-for-byte, so git must never normalize these.
