@@ -13,6 +13,3 @@ row is [docs/build-log.md](docs/build-log.md)'s, and `vbang --version` reports t
 | 1.2.0 | UserForms |
 | 1.3.0 | 32-bit Excel |
 | 1.4.0 | vba-mp, opt-in per project |
-
-After the 1.0.0-rc1 release, GitHub issues and pull requests take over from this table for planned
-work.

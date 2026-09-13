@@ -154,11 +154,6 @@ Excel-dependent tests sit behind an environment variable, so a normal test run n
 $env:VBANG_E2E = "1"; dotnet test tests/VbaNg.E2E
 ```
 
-One .NET project per component: `VbaNg.Compiler` (lexer, parser, binder, emitter), `VbaNg.Runtime`
-(`Variant`, arrays, strings, the intrinsic library), `VbaNg.Interop` (type libraries, `IDispatch`),
-`VbaNg.Import` (the MS-OVBA reader), `VbaNg.Cli` and `VbaNg.AddIn`. The compiler and the runtime
-never reference Excel or COM, which is what keeps the build and the tests independent of Office.
-
 ## Documentation
 
 | | |

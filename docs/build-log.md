@@ -1,12 +1,14 @@
 # Build log
 
-What changed, why, what was measured, and what was decided or rejected. Newest first. This is
-the only file in the project that is dated or written in the past tense: the design in force is
-[ARCHITECTURE.md](../ARCHITECTURE.md), the plan is [ROADMAP.md](../ROADMAP.md).
+What changed, why, and what was decided or rejected. Newest first. This is the only file in the
+project that is dated or written in the past tense: the design in force is
+[ARCHITECTURE.md](../ARCHITECTURE.md), the plan is [ROADMAP.md](../ROADMAP.md), and the current
+numbers are [measurements.md](measurements.md).
 
-The `R1`/`D20`/`WP4`/`M7` identifiers are discontinued from 1.0.0-alpha1, but some 570 source
-comments still cite them. This file keeps them as anchors: the legend below resolves a work or
-rule label, and Decisions resolves a `D` label.
+The `R1`/`D20`/`WP4`/`M7` identifiers are discontinued from 1.0.0-alpha1, but some 570 citations in
+source comments still use them, most as `ROADMAP.md WP4` or `ARCHITECTURE.md D19`. Those labels
+resolve here, not in the files they name: the legend below for a work or rule label, Decisions for
+a `D` label.
 
 ## Anchors
 
@@ -36,24 +38,24 @@ E2E tests and regeneration · R32 prefer editing existing files · R33 keep CLAU
 doc's scope is its contract · R35 ARCHITECTURE.md is present tense · R36 ROADMAP.md stays a table
 · R37 quirks and diagnostics updated in the same commit as the behavior.
 
-## Open at 1.0.0-alpha1
+## 1.0.0-alpha1 ships when
 
-Recorded once, here, because a plan that fits in no ROADMAP.md row is better dated than lost.
+The five criteria set 2026-09-09, as they stand. Each is shown by a test or a report.
 
-- **Packaging.** The release zip, `vbang install`, and `--out` are not written; a tester builds
-  from source. The ten-minute install the alpha promises is not demonstrated until they are.
-- **Host fidelity.** Ribbon `onAction` and the MSForms multi-parameter order are unverified: both
-  need a hand on the mouse, which no automated probe replaces.
-- **The fifth real workbook is undecided.** Four are driven. Each remaining candidate costs
-  something: VBA-Web's specs reach the network, stdVBA's two drive the VBE and need trust access,
-  `VBA-Web - Example.xlsm` carries duplicate backup modules, and stdVBA's `fullBuild.xlsm` cannot
-  build until `oNext.children.Object` is fixed upstream — invalid VBA that Excel rejects too.
-- **Engineering.** Grow the parse-rate corpus as permissively licensed VBA turns up. Replace the
-  CLI's framework-reference lookup, which reads the CLI process's own trusted platform assemblies,
-  with a reference-assembly pack. `VBA0003` and `VBA0004` have no test that triggers them.
-- **Golden cases wanted.** `Resume Next` after an error in a `For` header or a `Do` condition, a
-  Variant array element passed to a typed `ByRef` parameter, `Erl` with numbered non-executable
-  lines, comparison above U+00FF, `Single` rounding, and the remaining byte functions.
+1. **Compile.** Every corpus library builds against the registered libraries, and stdVBA's `src`
+   builds at least 90% of its files. *Met*: the compile scorecard in measurements.md.
+2. **Run.** VBA-JSON's, VBA-Dictionary's and VBA-UTC's spec suites and VBA-Better-Array's own
+   TestRunner pass under `vbang test` in Excel. *Met 2026-09-12*; re-shown by the final gate with
+   the corpus configured.
+3. **Goldens.** Every miss closed or carried by a decision. *Met*: two named misses, D22.
+4. **Real workbooks.** Five go through `vbang import` and `vbang build` and run in Excel with no
+   source edits, every divergence filed as an issue before the tag. *Four*; the fifth is VBA-Web's
+   spec workbook, which reaches the network and so runs only in the local gate.
+5. **Packaging.** A tester installs from the release zip by following README.md in ten minutes;
+   `vbang init` starts a project, an unhandled error shows on screen, and `vbang report` writes the
+   bug bundle. *Open*: the last three hold, the zip install is neither written nor timed.
+   `vbang install` and `--out` moved to 1.0.0-alpha2, and so did ribbon `onAction` and the MSForms
+   argument order, which docs/vba-quirks.md lists as unverified.
 
 ## 2026-09-12
 

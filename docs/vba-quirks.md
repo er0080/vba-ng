@@ -95,3 +95,7 @@ compiled code does not match Excel, and whether that is deliberate or simply not
 | Host, registered names | The names a project registers with Excel are never unregistered, since Excel-DNA offers no way: they outlive their workbook's close and are registered again after a rebuild. | Not done |
 | Host, UDF threads | `'@ThreadSafe` is not implemented and not reported either, the comment being trivia like any annotation vba-ng does not know, so every UDF runs on Excel's main thread, as VBA's do. | Not done |
 | Host, UDF registration | Every UDF registers as a macro-type function, so any of them may call `Application.Volatile`, `Caller`, and `ThisCell` as any VBA Function may; Excel keeps macro-type functions out of conditional formatting and data validation formulas. | Deliberate, not probed |
+| Compiler, `MidB` statement | `MidB(s, start[, length]) = text` reports VBA0002; the `MidB` function works. | Not done |
+| Host, cross-workbook `Application.Run` | A macro name qualified with another bound project's workbook (`"Other.xlsm!Proc"`) does not resolve; the project's own workbook and a bare name do. | Not done |
+| Host, ribbon `onAction` | Only parameterless public Subs register as commands, so a callback taking `IRibbonControl` is not one; whether Excel reaches it another way is not verified. | Not verified |
+| Host, MSForms events with several arguments | Arguments are taken in the conventional reversed order of a COM event; no MSForms control has been driven to confirm it. | Not verified |
