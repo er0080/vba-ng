@@ -1,0 +1,287 @@
+' Objects: COM objects reached late-bound through IDispatch (ARCHITECTURE.md section 7, D7).
+' The cases use the Scripting runtime (scrrun.dll), which every Windows ships, so the replay
+' needs no Excel: CreateObject, members by name, the default member, value and array
+' marshaling, enumeration, identity, errors, and CallByName.
+
+Public Function CountOf(o As Object) As Long
+    CountOf = o.Count
+End Function
+
+Public Function CountOfVariant(v As Variant) As Long
+    CountOfVariant = v.Count
+End Function
+
+' CreateObject returns an object
+Dim d As Object
+Set d = CreateObject("Scripting.Dictionary")
+? TypeName(d)
+? IsObject(d)
+? VarType(d)
+? d Is Nothing
+
+' Members by name: Add, Count, Item, Exists
+Dim d As Object
+Set d = CreateObject("Scripting.Dictionary")
+d.Add "a", 1
+d.Add "b", 2.5
+? d.Count
+? d.Item("a")
+? d("b")
+? d.Exists("b")
+? d.Exists("z")
+
+' Item assignment through the default member and by name
+Dim d As Object
+Set d = CreateObject("Scripting.Dictionary")
+d("k") = "v"
+? d.Item("k")
+d.Item("k") = 5
+? d("k")
+? TypeName(d("k"))
+
+' Values keep their type through the object
+Dim d As Object
+Set d = CreateObject("Scripting.Dictionary")
+d.Add "i", CInt(3)
+d.Add "l", 300000
+d.Add "s", 1.5!
+d.Add "dbl", 2.5
+d.Add "c", CCur(12.34)
+d.Add "dt", DateSerial(2024, 3, 5) + TimeSerial(6, 7, 8)
+d.Add "b", True
+d.Add "by", CByte(7)
+d.Add "dec", CDec("1.25")
+d.Add "n", Null
+d.Add "e", Empty
+d.Add "str", "text"
+? TypeName(d("i"))
+? TypeName(d("l"))
+? TypeName(d("s"))
+? TypeName(d("dbl"))
+? TypeName(d("c"))
+? TypeName(d("dt"))
+? TypeName(d("b"))
+? TypeName(d("by"))
+? TypeName(d("dec"))
+? TypeName(d("n"))
+? TypeName(d("e"))
+? TypeName(d("str"))
+? d("c")
+? d("dt")
+? d("dec")
+? d("str")
+
+' Arrays through the object keep their bounds and element type
+Dim d As Object
+Dim a(1 To 3) As Long
+Dim v As Variant
+Set d = CreateObject("Scripting.Dictionary")
+a(1) = 10: a(2) = 20: a(3) = 30
+d.Add "arr", a
+v = d("arr")
+? TypeName(v)
+? LBound(v)
+? UBound(v)
+? v(2)
+
+' Keys returns a Variant array and For Each walks the keys
+Dim d As Object
+Dim k As Variant
+Dim s As String
+Set d = CreateObject("Scripting.Dictionary")
+d.Add "x", 1
+d.Add "y", 2
+? TypeName(d.Keys)
+? UBound(d.Keys)
+For Each k In d
+    s = s & k & ";"
+Next k
+? s
+For Each k In d.Keys
+    s = s & k
+Next k
+? s
+
+' Is compares object identity
+Dim d As Object, e As Object, f As Object
+Set d = CreateObject("Scripting.Dictionary")
+Set e = d
+Set f = CreateObject("Scripting.Dictionary")
+? d Is e
+? d Is f
+? d Is Nothing
+Set d = Nothing
+? d Is Nothing
+? TypeName(d)
+
+' With block on an object
+Dim d As Object
+Set d = CreateObject("Scripting.Dictionary")
+With d
+    .Add "p", 1
+    .Add "q", 2
+    ? .Count
+End With
+
+' Objects stored in a Variant
+Dim v As Variant
+Set v = CreateObject("Scripting.Dictionary")
+v.Add "a", 1
+? TypeName(v)
+? v.Count
+? IsObject(v)
+
+' Objects passed to procedures
+Dim d As Object
+Set d = CreateObject("Scripting.Dictionary")
+d.Add 1, 1
+? CountOf(d)
+? CountOfVariant(d)
+
+' Errors: a Nothing reference, an unknown member, a missing argument, a duplicate key
+Dim d As Object
+On Error Resume Next
+d.Add "a", 1
+? Err.Number
+Err.Clear
+Set d = CreateObject("Scripting.Dictionary")
+d.NoSuchMember
+? Err.Number
+? Err.Description
+Err.Clear
+d.Exists
+? Err.Number
+Err.Clear
+d.Add "a", 1
+d.Add "a", 2
+? Err.Number
+? Err.Description
+? Err.Source
+
+' CreateObject with an unknown ProgID
+Dim o As Object
+On Error Resume Next
+Set o = CreateObject("No.Such.Object")
+? Err.Number
+? Err.Description
+
+' CallByName
+Dim d As Object
+Set d = CreateObject("Scripting.Dictionary")
+CallByName d, "Add", 1, "a", 1
+? CallByName(d, "Count", 2)
+CallByName d, "Item", 4, "a", 7
+? CallByName(d, "Item", 2, "a")
+
+' FileSystemObject: nested objects and a text file round trip
+Dim fso As Object, ts As Object, path As String
+Set fso = CreateObject("Scripting.FileSystemObject")
+? TypeName(fso)
+path = fso.BuildPath(fso.GetSpecialFolder(2).Path, fso.GetTempName)
+Set ts = fso.CreateTextFile(path, True)
+? TypeName(ts)
+ts.WriteLine "hello"
+ts.Write "world"
+ts.Close
+? fso.FileExists(path)
+Set ts = fso.OpenTextFile(path, 1)
+? ts.ReadAll
+ts.Close
+? fso.GetFile(path).Size
+fso.DeleteFile path
+? fso.FileExists(path)
+
+' Let-coercion of an object takes its default member: a Folder stands for its Path
+Dim fso As Object, v As Variant, s As String
+Set fso = CreateObject("Scripting.FileSystemObject")
+v = fso.GetSpecialFolder(2)
+? TypeName(v)
+s = fso.GetSpecialFolder(2)
+? Len(s) = Len(fso.GetSpecialFolder(2).Path)
+? Len(fso.GetSpecialFolder(2) & "") > 0
+? fso.GetSpecialFolder(2) = fso.GetSpecialFolder(2).Path
+
+' Let-coercion of an object whose default member needs an argument
+Dim d As Object, v As Variant
+Set d = CreateObject("Scripting.Dictionary")
+d.Add "k", 1
+On Error Resume Next
+v = d
+? Err.Number
+? TypeName(v)
+
+' Let-coercion of a Collection and of Nothing
+Dim c As New Collection, o As Object, v As Variant
+c.Add 1
+On Error Resume Next
+v = c
+? Err.Number
+Err.Clear
+v = o
+? Err.Number
+
+' Named arguments reach a late-bound object by name
+Dim d As Object
+Set d = CreateObject("Scripting.Dictionary")
+d.Add Key:="a", Item:=1
+d.Add Item:=2, Key:="b"
+? d.Count
+? d.Exists(Key:="b")
+? d.Item(Key:="a")
+
+' A positional argument followed by a named one on a late-bound object
+Dim d As Object
+Set d = CreateObject("Scripting.Dictionary")
+d.Add "a", Item:=7
+? d("a")
+
+' A named argument the member does not have
+Dim d As Object
+Set d = CreateObject("Scripting.Dictionary")
+d.Add Key:="a", Value:=1
+
+' TypeOf against a type library's type asks the object for that interface
+Dim f As Object, c As Collection
+Set f = CreateObject("StdFont")
+Set c = New Collection
+? TypeOf f Is StdFont
+? TypeOf f Is IPicture
+? TypeOf c Is StdFont
+Set f = Nothing
+? TypeOf f Is StdFont
+
+' Set through an indexed member and through the default member stores the object
+Dim d As Object, v As Variant
+Set d = CreateObject("Scripting.Dictionary")
+Set d.Item("a") = New Collection
+Set d("b") = New Collection
+? TypeName(d.Item("a")) & " " & TypeName(d("b")) & " " & d.Count
+Set v = d
+Set v("c") = New Collection
+Set v.Item("e") = d
+? TypeName(v("c")) & " " & TypeName(d("e")) & " " & d.Count
+
+' A Let of an object through a late-bound member hands the member the object
+Dim d As Object, c As New Collection, s As Object
+Set d = CreateObject("Scripting.Dictionary")
+d.Add "a", 1
+On Error Resume Next
+d.Key("a") = c
+? Err.Number & " " & d.Exists(c) & " " & d.Count
+Err.Clear
+d.Item("k") = c
+? Err.Number & " " & TypeName(d.Item("k"))
+Err.Clear
+d("m") = c
+? Err.Number & " " & TypeName(d("m"))
+
+' An empty array a COM object returns has bounds 0 To -1
+Dim d As Object, k As Variant, n As Long
+Set d = CreateObject("Scripting.Dictionary")
+? UBound(d.Keys)
+? LBound(d.Items) & " " & UBound(d.Items)
+For Each k In d.Keys
+    n = n + 1
+Next
+? n
+? IsArray(d.Keys)

@@ -1,0 +1,1456 @@
+{
+  "area": "Math",
+  "excel": "16.0.20326",
+  "culture": "en-US",
+  "options": [],
+  "cases": [
+    {
+      "name": "Abs of a negative Integer keeps the type",
+      "source": [
+        "Dim i As Integer",
+        "i = -5",
+        "? Abs(i)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Abs of the Integer minimum overflows",
+      "source": [
+        "Dim i As Integer",
+        "i = -32768",
+        "? Abs(i)"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Abs of the Long minimum overflows",
+      "source": [
+        "Dim l As Long",
+        "l = -2147483648#",
+        "? Abs(l)"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Abs of a Double",
+      "source": [
+        "? Abs(-1.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1.5",
+            "bits": "3FF8000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Abs of a Currency",
+      "source": [
+        "? Abs(CCur(-1.5))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Currency",
+            "value": "1.5",
+            "bits": "0000000000003A98"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Abs of a numeric String",
+      "source": [
+        "? Abs(\"-5\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "5",
+            "bits": "4014000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Abs of Null",
+      "source": [
+        "? Abs(Null)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Abs of Empty",
+      "source": [
+        "Dim v As Variant",
+        "? Abs(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Abs of a Boolean",
+      "source": [
+        "? Abs(True)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Abs of a Decimal",
+      "source": [
+        "? Abs(CDec(\"-1.5\"))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Decimal",
+            "value": "1.5",
+            "bytes": "0E000100000000000F00000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Abs of a Byte",
+      "source": [
+        "? Abs(CByte(5))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Byte",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Abs of a Date",
+      "source": [
+        "? Abs(#1/2/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 00:00:00",
+            "bits": "40E5670000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sgn of a negative",
+      "source": [
+        "? Sgn(-2.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "-1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sgn of zero",
+      "source": [
+        "? Sgn(0)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sgn of a positive Currency",
+      "source": [
+        "? Sgn(CCur(2))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sgn of Null",
+      "source": [
+        "? Sgn(Null)"
+      ],
+      "results": [],
+      "error": {
+        "number": 94,
+        "description": "Invalid use of Null",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Sgn of a numeric String",
+      "source": [
+        "? Sgn(\"-3\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "-1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sgn returns Integer",
+      "source": [
+        "? VarType(Sgn(5))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sgn of Empty",
+      "source": [
+        "Dim v As Variant",
+        "? Sgn(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sqr of four",
+      "source": [
+        "? Sqr(4)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "2",
+            "bits": "4000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sqr of two",
+      "source": [
+        "? Sqr(2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1.4142135623731",
+            "bits": "3FF6A09E667F3BCD"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sqr of a negative",
+      "source": [
+        "? Sqr(-1)"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Sqr of an Integer returns Double",
+      "source": [
+        "Dim i As Integer",
+        "i = 9",
+        "? Sqr(i)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "3",
+            "bits": "4008000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sqr of Null",
+      "source": [
+        "? Sqr(Null)"
+      ],
+      "results": [],
+      "error": {
+        "number": 94,
+        "description": "Invalid use of Null",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Sqr of a numeric String",
+      "source": [
+        "? Sqr(\"16\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "4",
+            "bits": "4010000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sqr of a Currency",
+      "source": [
+        "? Sqr(CCur(2))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1.4142135623731",
+            "bits": "3FF6A09E667F3BCD"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sqr of zero",
+      "source": [
+        "? Sqr(0)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "0",
+            "bits": "0000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sqr of a large value",
+      "source": [
+        "Dim d As Double",
+        "d = 1E+300",
+        "? Sqr(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1E+150",
+            "bits": "5F138D352E5096AF"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Exp of one",
+      "source": [
+        "? Exp(1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "2.71828182845905",
+            "bits": "4005BF0A8B145769"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Exp of zero",
+      "source": [
+        "? Exp(0)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1",
+            "bits": "3FF0000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Exp overflow",
+      "source": [
+        "Dim d As Double",
+        "d = 710",
+        "? Exp(d)"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Exp of a large negative",
+      "source": [
+        "Dim d As Double",
+        "d = -750",
+        "? Exp(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "0",
+            "bits": "0000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Exp of a half",
+      "source": [
+        "? Exp(0.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1.64872127070013",
+            "bits": "3FFA61298E1E069C"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Log of e",
+      "source": [
+        "? Log(Exp(1))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1",
+            "bits": "3FF0000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Log of ten",
+      "source": [
+        "? Log(10)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "2.30258509299405",
+            "bits": "40026BB1BBB55516"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Log of zero",
+      "source": [
+        "? Log(0)"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Log of a negative",
+      "source": [
+        "? Log(-1)"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Log of one",
+      "source": [
+        "? Log(1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "0",
+            "bits": "0000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Log of two",
+      "source": [
+        "? Log(2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": ".693147180559945",
+            "bits": "3FE62E42FEFA39EF"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sin of one",
+      "source": [
+        "? Sin(1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": ".841470984807897",
+            "bits": "3FEAED548F090CEE"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sin of zero",
+      "source": [
+        "? Sin(0)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "0",
+            "bits": "0000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sin of pi",
+      "source": [
+        "? Sin(4 * Atn(1))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1.22464679914735E-16",
+            "bits": "3CA1A62633145C07"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sin of a large angle",
+      "source": [
+        "Dim d As Double",
+        "d = 1E+10",
+        "? Sin(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "-.487506025087511",
+            "bits": "BFDF334C7896A4E3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cos of one",
+      "source": [
+        "? Cos(1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": ".54030230586814",
+            "bits": "3FE14A280FB5068B"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cos of pi",
+      "source": [
+        "? Cos(4 * Atn(1))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "-1",
+            "bits": "BFF0000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tan of one",
+      "source": [
+        "? Tan(1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1.5574077246549",
+            "bits": "3FF8EB245CBEE3A7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tan of half pi",
+      "source": [
+        "? Tan(2 * Atn(1))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1.63312393531954E+16",
+            "bits": "434D02967C31CDB5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Atn of one",
+      "source": [
+        "? Atn(1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": ".785398163397448",
+            "bits": "3FE921FB54442D18"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Atn of a large value",
+      "source": [
+        "Dim d As Double",
+        "d = 1E+300",
+        "? Atn(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1.5707963267949",
+            "bits": "3FF921FB54442D18"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Atn of a negative",
+      "source": [
+        "? Atn(-0.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "-.463647609000806",
+            "bits": "BFDDAC670561BB4F"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Round to an integer",
+      "source": [
+        "? Round(2.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "2",
+            "bits": "4000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Round half to even upward",
+      "source": [
+        "? Round(3.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "4",
+            "bits": "4010000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Round a negative half to even",
+      "source": [
+        "? Round(-2.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "-2",
+            "bits": "C000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Round with digits",
+      "source": [
+        "? Round(2.675, 2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "2.68",
+            "bits": "400570A3D70A3D71"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Round with digits on a binary fraction",
+      "source": [
+        "? Round(1.005, 2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1",
+            "bits": "3FF0000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Round with digits at a half that is exact",
+      "source": [
+        "? Round(0.125, 2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": ".12",
+            "bits": "3FBEB851EB851EB8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Round with digits at 0.375",
+      "source": [
+        "? Round(0.375, 2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": ".38",
+            "bits": "3FD851EB851EB852"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Round of a Double returns Double",
+      "source": [
+        "? VarType(Round(1.5))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Round of an Integer returns Integer",
+      "source": [
+        "Dim i As Integer",
+        "i = 5",
+        "? Round(i)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Round of a Currency returns Currency",
+      "source": [
+        "? Round(CCur(\"1.23456\"), 2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Currency",
+            "value": "1.23",
+            "bits": "000000000000300C"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Round of a Currency at a half",
+      "source": [
+        "? Round(CCur(\"2.5\"))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Currency",
+            "value": "2",
+            "bits": "0000000000004E20"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Round of a Decimal",
+      "source": [
+        "? Round(CDec(\"2.5\"))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Decimal",
+            "value": "2",
+            "bytes": "0E000000000000000200000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Round of a Decimal with digits",
+      "source": [
+        "? Round(CDec(\"2.675\"), 2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Decimal",
+            "value": "2.68",
+            "bytes": "0E000200000000000C01000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Round of a numeric String",
+      "source": [
+        "? Round(\"2.5\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "2",
+            "bits": "4000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Round with negative digits",
+      "source": [
+        "? Round(1234, -2)"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Round of Null",
+      "source": [
+        "? Round(Null)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Round of Empty",
+      "source": [
+        "Dim v As Variant",
+        "? Round(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Round of a Single",
+      "source": [
+        "Dim s As Single",
+        "s = 2.5",
+        "? Round(s)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Single",
+            "value": "2",
+            "bits": "40000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Round of a Single with digits",
+      "source": [
+        "Dim s As Single",
+        "s = 1.25",
+        "? Round(s, 1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Single",
+            "value": "1.2",
+            "bits": "3F99999A"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Round of a Boolean",
+      "source": [
+        "? Round(True)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "-1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Round of a Date",
+      "source": [
+        "? Round(#1/2/2020 6:00:00 PM#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-03 00:00:00",
+            "bits": "40E5672000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Round of a large Double",
+      "source": [
+        "Dim d As Double",
+        "d = 1E+20",
+        "? Round(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1E+20",
+            "bits": "4415AF1D78B58C40"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Round with more digits than the value has",
+      "source": [
+        "? Round(1.5, 5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1.5",
+            "bits": "3FF8000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Round with a Double digits argument",
+      "source": [
+        "? Round(1.25, 1.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1.25",
+            "bits": "3FF4000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Round with too many digits",
+      "source": [
+        "? Round(1.5, 30)"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Rnd with a negative seed restarts the generator",
+      "source": [
+        "? Rnd(-1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Single",
+            "value": ".224007",
+            "bits": "3E656218"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Rnd sequence after a fixed seed",
+      "source": [
+        "Dim r As Single",
+        "r = Rnd(-1)",
+        "? Rnd",
+        "? Rnd",
+        "? Rnd"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Single",
+            "value": "3.584582E-02",
+            "bits": "3D12D310"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Single",
+            "value": "8.635235E-02",
+            "bits": "3DB0D980"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Single",
+            "value": ".1642639",
+            "bits": "3E2834CC"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Rnd of zero repeats the last value",
+      "source": [
+        "Dim r As Single",
+        "r = Rnd(-1)",
+        "r = Rnd",
+        "? Rnd(0)",
+        "? Rnd(0)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Single",
+            "value": "3.584582E-02",
+            "bits": "3D12D310"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Single",
+            "value": "3.584582E-02",
+            "bits": "3D12D310"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Rnd returns Single",
+      "source": [
+        "Dim r As Single",
+        "r = Rnd(-1)",
+        "? VarType(Rnd)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Randomize with a seed after a reset",
+      "source": [
+        "Dim r As Single",
+        "r = Rnd(-1)",
+        "Randomize 1",
+        "? Rnd"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Single",
+            "value": ".3335753",
+            "bits": "3EAACA62"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Randomize with a different seed",
+      "source": [
+        "Dim r As Single",
+        "r = Rnd(-1)",
+        "Randomize 42",
+        "? Rnd"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Single",
+            "value": ".9078093",
+            "bits": "3F686631"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Randomize with a fractional seed",
+      "source": [
+        "Dim r As Single",
+        "r = Rnd(-1)",
+        "Randomize 1.5",
+        "? Rnd"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Single",
+            "value": ".4582091",
+            "bits": "3EEA9A62"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Rnd of a positive argument advances",
+      "source": [
+        "Dim r As Single",
+        "r = Rnd(-1)",
+        "? Rnd(5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Single",
+            "value": "3.584582E-02",
+            "bits": "3D12D310"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Rnd of a negative argument seeds from the number",
+      "source": [
+        "? Rnd(-2)",
+        "? Rnd(-2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Single",
+            "value": ".7133257",
+            "bits": "3F369C83"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Single",
+            "value": ".7133257",
+            "bits": "3F369C83"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Rnd of a negative fraction",
+      "source": [
+        "? Rnd(-0.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Single",
+            "value": ".724007",
+            "bits": "3F395886"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Rnd of a large negative",
+      "source": [
+        "? Rnd(-1000000)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Single",
+            "value": ".8186707",
+            "bits": "3F519468"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Int of Rnd times ten after a seed",
+      "source": [
+        "Dim r As Single",
+        "r = Rnd(-1)",
+        "? Int(Rnd * 10)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Single",
+            "value": "0",
+            "bits": "00000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Rnd with a Null argument",
+      "source": [
+        "? Rnd(Null)"
+      ],
+      "results": [],
+      "error": {
+        "number": 94,
+        "description": "Invalid use of Null",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Rnd with a String argument",
+      "source": [
+        "Dim r As Single",
+        "r = Rnd(-1)",
+        "? Rnd(\"1\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Single",
+            "value": "3.584582E-02",
+            "bits": "3D12D310"
+          }
+        }
+      ]
+    }
+  ]
+}

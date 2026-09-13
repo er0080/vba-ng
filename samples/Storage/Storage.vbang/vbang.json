@@ -1,0 +1,6 @@
+{
+  "name": "Storage",
+  "references": [
+    { "name": "vbang" }
+  ]
+}

@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Description>The vba-ng compiler: VBA front end, lowering, C# emission, and the Roslyn driver.</Description>
+    <!-- CA1720: the binder names VBA's declared types by VBA's own names (Integer, Long, String) by design. -->
+    <NoWarn>$(NoWarn);CA1720</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VbaNg.Runtime\VbaNg.Runtime.csproj" />
+  </ItemGroup>
+
+</Project>

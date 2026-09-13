@@ -1,0 +1,1203 @@
+' Conversion: the Conversion module of the VBA standard library and let-coercion into typed variables (MS-VBAL 5.6.9.3).
+' Out-of-range and non-numeric values go through variables so the VBA compiler cannot fold them.
+
+' CInt rounds half to even
+? CInt(2.5)
+
+' CInt rounds half to even upward
+? CInt(3.5)
+
+' CInt rounds a negative half to even
+? CInt(-2.5)
+
+' CInt of a value just above half
+? CInt(2.5000001)
+
+' CInt overflow
+Dim v As Variant
+v = 32768
+? CInt(v)
+
+' CInt of a value that rounds to the maximum
+Dim v As Variant
+v = 32767.4
+? CInt(v)
+
+' CInt of a value that rounds past the maximum
+Dim v As Variant
+v = 32767.5
+? CInt(v)
+
+' CInt of a numeric String
+? CInt("12")
+
+' CInt of a String with spaces
+? CInt(" 12 ")
+
+' CInt of a String with an exponent
+? CInt("1e3")
+
+' CInt of a hex String
+? CInt("&H10")
+
+' CInt of an octal String
+? CInt("&O10")
+
+' CInt of a String with a thousands separator
+? CInt("1,000")
+
+' CInt of an empty String
+? CInt("")
+
+' CInt of a non-numeric String
+? CInt("abc")
+
+' CInt of a String with a trailing letter
+? CInt("12abc")
+
+' CInt of a decimal String rounds
+? CInt("2.5")
+
+' CInt of a String with a leading plus
+? CInt("+5")
+
+' CInt of a String with a trailing minus
+? CInt("5-")
+
+' CInt of a String with a currency symbol
+? CInt("$5")
+
+' CInt of a String with a percent sign
+? CInt("50%")
+
+' CInt of a String with parentheses
+? CInt("(5)")
+
+' CInt of True
+? CInt(True)
+
+' CInt of Empty
+Dim v As Variant
+? CInt(v)
+
+' CInt of Null
+? CInt(Null)
+
+' CInt of a Date
+? CInt(#1/1/2020#)
+
+' CInt of a Currency
+? CInt(CCur(2.5))
+
+' CInt of a Decimal
+? CInt(CDec(2.5))
+
+' CInt of a Single
+Dim s As Single
+s = 2.5
+? CInt(s)
+
+' CInt of a String that is only a decimal point
+? CInt(".")
+
+' CInt of a String with a trailing tab
+? CInt("7" & vbTab)
+
+' CInt of a String with a leading newline
+? CInt(vbLf & "7")
+
+' CInt of an Error value
+? CInt(CVErr(5))
+
+' CLng rounds half to even
+? CLng(2.5)
+
+' CLng rounds a negative half to even
+? CLng(-3.5)
+
+' CLng overflow
+Dim d As Double
+d = 2147483648#
+? CLng(d)
+
+' CLng of the Long minimum
+Dim d As Double
+d = -2147483648#
+? CLng(d)
+
+' CLng of a hex String with sixteen bits set
+? CLng("&HFFFF")
+
+' CLng of a hex String with a Long suffix
+? CLng("&HFFFF&")
+
+' CLng of a String with an exponent and a decimal
+? CLng("1.5e3")
+
+' CLng of a Boolean
+? CLng(True)
+
+' CLng of a Date at noon
+? CLng(#1/1/2020 12:00:00 PM#)
+
+' CLng of a Date just before noon
+? CLng(#1/1/2020 11:59:59 AM#)
+
+' CLng of a Date at noon on an odd serial
+? CLng(#1/2/2020 12:00:00 PM#)
+
+' CLngLng of a large Double
+Dim d As Double
+d = 1E+15
+? CLngLng(d)
+
+' CLngLng rounds half to even
+? CLngLng(2.5)
+
+' CLngLng overflow
+Dim d As Double
+d = 1E+19
+? CLngLng(d)
+
+' CLngPtr of a value
+? CLngPtr(5)
+
+' CByte of 255
+? CByte(255)
+
+' CByte overflow
+Dim v As Variant
+v = 256
+? CByte(v)
+
+' CByte of a negative
+Dim v As Variant
+v = -1
+? CByte(v)
+
+' CByte of a small negative that rounds to zero
+Dim v As Variant
+v = -0.4
+? CByte(v)
+
+' CByte rounds half to even
+? CByte(2.5)
+
+' CByte of a String
+? CByte("200")
+
+' CByte of True
+? CByte(True)
+
+' CBool of the String True
+? CBool("True")
+
+' CBool of the String false in lower case
+? CBool("false")
+
+' CBool of a numeric String
+? CBool("1")
+
+' CBool of a zero String
+? CBool("0")
+
+' CBool of a non-numeric String
+? CBool("abc")
+
+' CBool of zero
+? CBool(0)
+
+' CBool of a fraction
+? CBool(0.1)
+
+' CBool of Empty
+Dim v As Variant
+? CBool(v)
+
+' CBool of Null
+? CBool(Null)
+
+' CBool of an empty String
+? CBool("")
+
+' CBool of a String with spaces
+? CBool(" True ")
+
+' CBool of a hash-delimited String
+? CBool("#TRUE#")
+
+' CBool of a negative String
+? CBool("-1")
+
+' CBool of a Date
+? CBool(#1/1/2020#)
+
+' CDbl of a String
+? CDbl("1.5")
+
+' CDbl of a String with an exponent
+? CDbl("1.5E+300")
+
+' CDbl of a String with a leading dot
+? CDbl(".5")
+
+' CDbl of a String with a trailing dot
+? CDbl("5.")
+
+' CDbl of a String with thousands separators
+? CDbl("1,234.5")
+
+' CDbl of a String with a misplaced thousands separator
+? CDbl("12,34.5")
+
+' CDbl of a Currency
+? CDbl(CCur(1.5))
+
+' CDbl of a Single keeps the Single value
+Dim s As Single
+s = 0.1
+? CDbl(s)
+
+' CDbl of a Date
+? CDbl(#1/1/2020 6:00:00 AM#)
+
+' CDbl of True
+? CDbl(True)
+
+' CDbl of Empty
+Dim v As Variant
+? CDbl(v)
+
+' CDbl of Null
+? CDbl(Null)
+
+' CDbl of a Decimal
+? CDbl(CDec("0.1"))
+
+' CDbl overflow from a String
+? CDbl("1E400")
+
+' CDbl of a hex String
+? CDbl("&HFF")
+
+' CSng of a Double
+? CSng(0.1)
+
+' CSng of a String
+? CSng("3.14159265358979")
+
+' CSng overflow
+Dim d As Double
+d = 1E+39
+? CSng(d)
+
+' CSng of a Long beyond twenty-four bits
+Dim l As Long
+l = 16777217
+? CSng(l)
+
+' CSng of a tiny Double underflows to zero
+Dim d As Double
+d = 1E-50
+? CSng(d)
+
+' CCur of a Double
+? CCur(1.5)
+
+' CCur rounds to four places
+? CCur(1.00005)
+
+' CCur rounds a fifth-place five
+? CCur(1.00015)
+
+' CCur rounds a fifth-place four down
+? CCur(1.00004)
+
+' CCur of a negative that rounds
+? CCur(-1.00005)
+
+' CCur of a String
+? CCur("1.5")
+
+' CCur of a String with a currency symbol
+? CCur("$1.50")
+
+' CCur overflow
+Dim d As Double
+d = 1E+15
+? CCur(d)
+
+' CCur of True
+? CCur(True)
+
+' CCur of Null
+? CCur(Null)
+
+' CCur of Empty
+Dim v As Variant
+? CCur(v)
+
+' CCur of a Decimal with more than four places
+? CCur(CDec("1.23456"))
+
+' CDec of a String
+? CDec("0.1")
+
+' CDec of a String with many digits
+? CDec("1234567890123456789012345678")
+
+' CDec of a Double
+? CDec(0.1)
+
+' CDec of a String with trailing zeros keeps the scale
+? CDec("1.500")
+
+' CDec of a negative
+? CDec("-1.5")
+
+' CDec of a Currency
+? CDec(CCur(1.5))
+
+' CDec overflow
+? CDec("1E29")
+
+' CDec of True
+? CDec(True)
+
+' CDec of Null
+? CDec(Null)
+
+' CDec of an Integer
+Dim i As Integer
+i = 5
+? CDec(i)
+
+' CDec of a Double with an exponent
+? CDec(1E+20)
+
+' CDec of a String with an exponent
+? CDec("1E-5")
+
+' CDec of zero
+? CDec(0)
+
+' CDec of a negative zero String
+? CDec("-0.0")
+
+' CDec of Strings with trailing zeros and the scale each keeps
+? CDec("1.0")
+? CDec("1.000")
+? CDec("0.00")
+? CDec("10.0")
+? CDec("100")
+? CDec("1.50")
+? CDec("0")
+? CDec("-0")
+? CDec(".0")
+? CDec("0.10")
+? CDec("1E2")
+? CDec("1.5E1")
+? CDec("1.50E1")
+
+' CStr of True
+? CStr(True)
+
+' CStr of False
+? CStr(False)
+
+' CStr of a Double
+? CStr(1.5)
+
+' CStr of a Double with fifteen digits
+Dim d As Double
+d = 1 / 3
+? CStr(d)
+
+' CStr of a Double that needs an exponent
+Dim d As Double
+d = 1E+20
+? CStr(d)
+
+' CStr of a small Double
+Dim d As Double
+d = 0.0001
+? CStr(d)
+
+' CStr of a smaller Double
+Dim d As Double
+d = 0.00001
+? CStr(d)
+
+' CStr of a Double at the exponent threshold
+Dim d As Double
+d = 123456789012345#
+? CStr(d)
+
+' CStr of a Double just past the exponent threshold
+Dim d As Double
+d = 1234567890123456#
+? CStr(d)
+
+' CStr of a Double with sixteen significant digits
+Dim d As Double
+d = 0.1234567890123456
+? CStr(d)
+
+' CStr of a negative fraction
+Dim d As Double
+d = -0.5
+? CStr(d)
+
+' CStr of a positive fraction keeps the leading zero
+Dim d As Double
+d = 0.5
+? CStr(d)
+
+' CStr of negative zero
+Dim d As Double
+d = -1
+d = d * 0
+? CStr(d)
+
+' CStr of a Single
+Dim s As Single
+s = 0.1
+? CStr(s)
+
+' CStr of a Single with seven digits
+Dim s As Single
+s = 1 / 3
+? CStr(s)
+
+' CStr of a large Single
+Dim s As Single
+s = 1E+20
+? CStr(s)
+
+' CStr of a Currency
+? CStr(CCur(1.5))
+
+' CStr of a Currency with four places
+? CStr(CCur("1.2345"))
+
+' CStr of a whole Currency
+? CStr(CCur(2))
+
+' CStr of a Decimal
+? CStr(CDec("1.500"))
+
+' CStr of a Date
+? CStr(#1/2/2020#)
+
+' CStr of a Date with time
+? CStr(#1/2/2020 3:04:05 PM#)
+
+' CStr of a time only
+? CStr(#3:04:05 PM#)
+
+' CStr of a Date whose time lies just below its second
+? CStr(#9/11/2026 2:30:00 PM#)
+
+' CStr of a Date at midnight
+? CStr(#1/2/2020 12:00:00 AM#)
+
+' CStr of Empty
+Dim v As Variant
+? CStr(v)
+
+' CStr of Null
+? CStr(Null)
+
+' CStr of a Byte
+? CStr(CByte(5))
+
+' CStr of a negative Long
+Dim l As Long
+l = -2147483647
+? CStr(l)
+
+' CStr of a LongLong
+Dim l As LongLong
+l = 9223372036854775807^
+? CStr(l)
+
+' CStr of an Error value
+? CStr(CVErr(5))
+
+' CStr of an integral Double
+Dim d As Double
+d = 100
+? CStr(d)
+
+' CStr of a Double with a negative exponent
+Dim d As Double
+d = 1.5E-10
+? CStr(d)
+
+' CVar of an Integer
+? CVar(5)
+
+' CVar of a String
+? CVar("5")
+
+' CVErr of a number
+? CVErr(2007)
+
+' CVErr of an out-of-range number
+Dim v As Variant
+v = 65536
+? CVErr(v)
+
+' CVErr of a negative number
+Dim v As Variant
+v = -1
+? CVErr(v)
+
+' CVErr of a String
+? CVErr("5")
+
+' CDate of a number
+? CDate(43831)
+
+' CDate of zero
+? CDate(0)
+
+' CDate of a negative number with a fraction
+? CDate(-1.5)
+
+' CDate of a fraction
+? CDate(0.5)
+
+' CDate of an ISO String
+? CDate("2020-01-02")
+
+' CDate of a month-day-year String
+? CDate("1/2/2020")
+
+' CDate of a String with a month name
+? CDate("2 Jan 2020")
+
+' CDate of a time String
+? CDate("13:04:05")
+
+' CDate of a twelve-hour time String
+? CDate("1:04:05 PM")
+
+' CDate of a date and time String
+? CDate("2020-01-02 13:04:05")
+
+' CDate of a two-digit year
+? CDate("1/2/20")
+
+' CDate of a two-digit year in the past window
+? CDate("1/2/30")
+
+' CDate of an invalid String
+? CDate("abc")
+
+' CDate of a numeric String
+? CDate("43831")
+
+' CDate of an empty String
+? CDate("")
+
+' CDate of Null
+? CDate(Null)
+
+' CDate of Empty
+Dim v As Variant
+? CDate(v)
+
+' CDate of a day out of range
+? CDate("2/30/2020")
+
+' CDate of a Double out of range
+Dim d As Double
+d = 3000000
+? CDate(d)
+
+' CDate of True
+? CDate(True)
+
+' CDate of a String with a period separator
+? CDate("1.2.2020")
+
+' CDate of a day-month-year String that is not a valid month first
+? CDate("13/2/2020")
+
+' Val of a String with trailing letters
+? Val("12abc")
+
+' Val of a String with embedded spaces
+? Val(" 1 2 3 ")
+
+' Val of a String with a tab and a newline
+? Val("1" & vbTab & "2" & vbCr & "3")
+
+' Val of a hex String
+? Val("&HFF")
+
+' Val of a hex String with a Long suffix
+? Val("&HFFFF&")
+
+' Val of a hex String that reads as a negative Integer
+? Val("&HFFFF")
+
+' Val of an octal String
+? Val("&O17")
+
+' Val of an exponent
+? Val("1e3")
+
+' Val of a decimal
+? Val("1.5")
+
+' Val of a comma
+? Val("1,5")
+
+' Val of an empty String
+? Val("")
+
+' Val of a non-numeric String
+? Val("abc")
+
+' Val of a String with a leading plus
+? Val("+5")
+
+' Val of a String with a leading minus and spaces
+? Val(" - 5")
+
+' Val of a String with two dots
+? Val("1.2.3")
+
+' Val of a String with a type suffix
+? Val("12&")
+
+' Val of a String with an exponent and no digits
+? Val("1e")
+
+' Val of a String with a D exponent
+? Val("1d3")
+
+' Val of a long number
+? Val("123456789012345678901234567890")
+
+' Val of an ampersand alone
+? Val("&")
+
+' Val returns Double even for whole numbers
+? VarType(Val("5"))
+
+' Val of Null
+? Val(Null)
+
+' Val of a number
+? Val(12)
+
+' Str of a positive number has a leading space
+? Str(5)
+
+' Str of a negative number
+? Str(-5)
+
+' Str of a fraction has no leading zero
+? Str(0.5)
+
+' Str of a negative fraction
+? Str(-0.5)
+
+' Str of a large Double
+Dim d As Double
+d = 1E+20
+? Str(d)
+
+' Str of a Boolean
+? Str(True)
+
+' Str of a Date
+? Str(#1/2/2020#)
+
+' Str of a numeric String
+? Str("5")
+
+' Str of a non-numeric String
+? Str("a")
+
+' Str of Null
+? Str(Null)
+
+' Str of Empty
+Dim v As Variant
+? Str(v)
+
+' Str of a Currency
+? Str(CCur("1.2345"))
+
+' Str of a Decimal
+? Str(CDec("1.500"))
+
+' Str of a Single
+Dim s As Single
+s = 0.1
+? Str(s)
+
+' Hex of an Integer
+? Hex(255)
+
+' Hex of a negative Integer is sixteen bits
+Dim i As Integer
+i = -1
+? Hex(i)
+
+' Hex of a negative Long is thirty-two bits
+Dim l As Long
+l = -1
+? Hex(l)
+
+' Hex of a negative Variant Integer
+Dim v As Variant
+v = -1
+? Hex(v)
+
+' Hex of a Double rounds first
+? Hex(255.5)
+
+' Hex of a Double rounds half to even
+? Hex(254.5)
+
+' Hex of a String
+? Hex("255")
+
+' Hex of a hex String
+? Hex("&HFF")
+
+' Hex of a large Double
+Dim d As Double
+d = 4294967295#
+? Hex(d)
+
+' Hex of a Double beyond Long range
+Dim d As Double
+d = 4294967296#
+? Hex(d)
+
+' Hex of a negative Double
+Dim d As Double
+d = -1
+? Hex(d)
+
+' Hex of Null
+? Hex(Null)
+
+' Hex of Empty
+Dim v As Variant
+? Hex(v)
+
+' Hex of a Byte
+? Hex(CByte(15))
+
+' Hex of a LongLong
+Dim l As LongLong
+l = -1
+? Hex(l)
+
+' Hex of a Currency
+? Hex(CCur(255))
+
+' Hex of a Boolean
+? Hex(True)
+
+' Hex of a Decimal
+? Hex(CDec(255))
+
+' Hex returns String
+? VarType(Hex(255))
+
+' Oct of an Integer
+? Oct(8)
+
+' Oct of a negative Integer
+Dim i As Integer
+i = -1
+? Oct(i)
+
+' Oct of a negative Long
+Dim l As Long
+l = -1
+? Oct(l)
+
+' Oct of a Double rounds first
+? Oct(8.5)
+
+' Oct of a String
+? Oct("8")
+
+' Int of a negative fraction
+? Int(-1.5)
+
+' Fix of a negative fraction
+? Fix(-1.5)
+
+' Int of a positive fraction
+? Int(1.5)
+
+' Int of a Double returns Double
+? VarType(Int(1.5))
+
+' Int of an Integer returns Integer
+Dim i As Integer
+i = 5
+? Int(i)
+
+' Int of a Currency returns Currency
+? Int(CCur(1.5))
+
+' Int of a negative Currency
+? Int(CCur(-1.5))
+
+' Int of a Decimal
+? Int(CDec("-1.5"))
+
+' Int of a String
+? Int("-1.5")
+
+' Int of a Single
+Dim s As Single
+s = -1.5
+? Int(s)
+
+' Int of a Date
+? Int(#1/2/2020 6:00:00 PM#)
+
+' Int of Null
+? Int(Null)
+
+' Int of Empty
+Dim v As Variant
+? Int(v)
+
+' Fix of a String
+? Fix("-1.5")
+
+' Fix of a Boolean
+? Fix(True)
+
+' Fix of a Byte
+? Fix(CByte(5))
+
+' Let coercion of a Double into an Integer rounds
+Dim i As Integer
+i = 2.5
+? i
+
+' Let coercion of a Double into an Integer rounds up at odd
+Dim i As Integer
+i = 3.5
+? i
+
+' Let coercion of a Double into a Long
+Dim l As Long
+l = -2.5
+? l
+
+' Let coercion of a numeric String into an Integer
+Dim i As Integer
+i = "3"
+? i
+
+' Let coercion of a String into a Double
+Dim d As Double
+d = "1e3"
+? d
+
+' Let coercion of a non-numeric String into a Long
+Dim l As Long, s As String
+s = "abc"
+l = s
+? l
+
+' Let coercion of a Boolean into an Integer
+Dim i As Integer
+i = True
+? i
+
+' Let coercion of a number into a Boolean
+Dim b As Boolean
+b = 2
+? b
+
+' Let coercion of a String into a Boolean
+Dim b As Boolean
+b = "True"
+? b
+
+' Let coercion of a numeric String into a Boolean
+Dim b As Boolean
+b = "0"
+? b
+
+' Let coercion of a Double into a String
+Dim s As String
+s = 1.5
+? s
+
+' Let coercion of a Boolean into a String
+Dim s As String
+s = True
+? s
+
+' Let coercion of a Date into a String
+Dim s As String
+s = #1/2/2020#
+? s
+
+' Let coercion of a Long into a Byte overflows
+Dim b As Byte, l As Long
+l = 256
+b = l
+? b
+
+' Let coercion of a Long into a Byte within range
+Dim b As Byte, l As Long
+l = 255
+b = l
+? b
+
+' Let coercion of a negative Double into a Byte
+Dim b As Byte, d As Double
+d = -0.4
+b = d
+? b
+
+' Let coercion of a Double into a Currency rounds to four places
+Dim c As Currency
+c = 1.00005
+? c
+
+' Let coercion of a Double into a Single
+Dim s As Single
+s = 0.1
+? s
+
+' Let coercion of a Double into a Date
+Dim d As Date
+d = 43831.5
+? d
+
+' Let coercion of a String into a Date
+Dim d As Date
+d = "2020-01-02"
+? d
+
+' Let coercion of an Integer into a Variant keeps the type
+Dim v As Variant, i As Integer
+i = 5
+v = i
+? v
+
+' Let coercion of Null into a String
+Dim s As String
+s = Null
+? s
+
+' Let coercion of Null into a Long
+Dim l As Long
+l = Null
+? l
+
+' Let coercion of Null into a Boolean
+Dim b As Boolean
+b = Null
+? b
+
+' Let coercion of Empty into a Long
+Dim l As Long, v As Variant
+l = v
+? l
+
+' Let coercion of Empty into a String
+Dim s As String, v As Variant
+s = v
+? s
+
+' Let coercion of Empty into a Boolean
+Dim b As Boolean, v As Variant
+b = v
+? b
+
+' Let coercion of Empty into a Date
+Dim d As Date, v As Variant
+d = v
+? d
+
+' Let coercion of an Error value into a Long
+Dim l As Long
+l = CVErr(5)
+? l
+
+' Let coercion of an Error value into a Variant keeps it
+Dim v As Variant
+v = CVErr(5)
+? v
+
+' Let coercion of a Decimal into a Long
+Dim l As Long
+l = CDec("2.5")
+? l
+
+' Let coercion of a Currency into an Integer rounds
+Dim i As Integer
+i = CCur("2.5")
+? i
+
+' Let coercion of a Single into a Double widens the Single value
+Dim s As Single, d As Double
+s = 0.1
+d = s
+? d
+
+' Let coercion of a Long into a Single loses precision
+Dim l As Long, s As Single
+l = 123456789
+s = l
+? s
+
+' Let coercion of a String with spaces into a Long
+Dim l As Long
+l = " 42 "
+? l
+
+' Let coercion of a hex String into a Long
+Dim l As Long
+l = "&HFF"
+? l
+
+' Let coercion of an exponent String into an Integer
+Dim i As Integer
+i = "1E2"
+? i
+
+' CStr of one E minus fourteen
+Dim d As Double
+d = 1E-14
+? CStr(d)
+
+' CStr of one E minus fifteen
+Dim d As Double
+d = 1E-15
+? CStr(d)
+
+' CStr of one E minus sixteen
+Dim d As Double
+d = 1E-16
+? CStr(d)
+
+' CStr of one E minus twenty
+Dim d As Double
+d = 1E-20
+? CStr(d)
+
+' CStr of one and a half E minus fifteen
+Dim d As Double
+d = 1.5E-15
+? CStr(d)
+
+' CStr of one and a half E minus sixteen
+Dim d As Double
+d = 1.5E-16
+? CStr(d)
+
+' CStr of a fifteen-digit fraction with leading zeros
+Dim d As Double
+d = 0.000123456789012345
+? CStr(d)
+
+' CStr of a sixteen-digit fraction with leading zeros
+Dim d As Double
+d = 0.0001234567890123456
+? CStr(d)
+
+' CStr of one E fifteen
+Dim d As Double
+d = 1E+15
+? CStr(d)
+
+' CStr of one E sixteen
+Dim d As Double
+d = 1E+16
+? CStr(d)
+
+' CStr of a number with fifteen integral digits and a fraction
+Dim d As Double
+d = 123456789012345.6
+? CStr(d)
+
+' CStr of a Single below the fixed range
+Dim s As Single
+s = 0.00001
+? CStr(s)
+
+' CStr of a smaller Single
+Dim s As Single
+s = 0.000001
+? CStr(s)
+
+' CStr of a tiny Single
+Dim s As Single
+s = 1.5E-08
+? CStr(s)
+
+' CStr of a Single with seven integral digits
+Dim s As Single
+s = 1234567.5
+? CStr(s)
+
+' CStr of a Single with eight integral digits
+Dim s As Single
+s = 12345678
+? CStr(s)
+
+' CStr of a Double with a negative exponent and many digits
+Dim d As Double
+d = 1.23456789012345E-10
+? CStr(d)
+
+' CStr of a Double with a negative exponent that needs sixteen digits
+Dim d As Double
+d = 1.2345678901234567E-10
+? CStr(d)
+
+' Str of one E minus sixteen
+Dim d As Double
+d = 1E-16
+? Str(d)
+
+' CStr of the smallest positive Double
+Dim d As Double
+d = 4.94065645841247E-324
+? CStr(d)
+
+' CStr of the largest Double
+Dim d As Double
+d = 1.79769313486231E+308
+? CStr(d)
+
+' CStr of a Currency with a large value
+? CStr(CCur("922337203685477.5807"))
+
+' CStr of a negative Currency
+? CStr(CCur("-0.5"))
+
+' CStr of a Decimal with many digits
+? CStr(CDec("0.1234567890123456789012345678"))
+
+' CStr of a negative Decimal fraction
+? CStr(CDec("-0.5"))
+
+' CStr of a Long
+? CStr(2147483647)
+
+' CStr of a Long minimum
+Dim l As Long
+l = -2147483648#
+? CStr(l)

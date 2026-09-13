@@ -1,0 +1,559 @@
+' DateTime: the DateTime module of the VBA standard library and Date arithmetic. Nothing here reads the clock.
+
+' DateSerial of a plain date
+? DateSerial(2020, 1, 2)
+
+' DateSerial with a month overflow
+? DateSerial(2020, 13, 1)
+
+' DateSerial with a zero month
+? DateSerial(2020, 0, 1)
+
+' DateSerial with a negative month
+? DateSerial(2020, -1, 1)
+
+' DateSerial with a day overflow
+? DateSerial(2020, 2, 30)
+
+' DateSerial with a zero day
+? DateSerial(2020, 3, 0)
+
+' DateSerial with a negative day
+? DateSerial(2020, 3, -1)
+
+' DateSerial with a two-digit year in the future window
+? DateSerial(29, 1, 1)
+
+' DateSerial with a two-digit year in the past window
+? DateSerial(30, 1, 1)
+
+' DateSerial with year zero
+? DateSerial(0, 1, 1)
+
+' DateSerial with year 100
+? DateSerial(100, 1, 1)
+
+' DateSerial before 1900
+? DateSerial(1899, 12, 29)
+
+' DateSerial with year 9999
+? DateSerial(9999, 12, 31)
+
+' DateSerial with year 10000
+? DateSerial(10000, 1, 1)
+
+' DateSerial with a large day count
+? DateSerial(2020, 1, 366)
+
+' DateSerial with Double arguments rounds
+? DateSerial(2020.5, 1.5, 1.5)
+
+' DateSerial with Null
+? DateSerial(Null, 1, 1)
+
+' DateSerial with a String
+? DateSerial("2020", "1", "2")
+
+' DateSerial with year 32767 overflows
+Dim y As Long
+y = 32768
+? DateSerial(y, 1, 1)
+
+' TimeSerial of a time
+? TimeSerial(13, 4, 5)
+
+' TimeSerial with an hour overflow
+? TimeSerial(25, 0, 0)
+
+' TimeSerial with a negative minute
+? TimeSerial(1, -1, 0)
+
+' TimeSerial with a negative hour
+? TimeSerial(-1, 0, 0)
+
+' TimeSerial with a second overflow
+? TimeSerial(0, 0, 3661)
+
+' TimeSerial with all zeros
+? TimeSerial(0, 0, 0)
+
+' TimeSerial with Double arguments
+? TimeSerial(1.5, 0, 0)
+
+' TimeSerial with Null
+? TimeSerial(Null, 0, 0)
+
+' DateAdd months clamps to the month end
+? DateAdd("m", 1, #1/31/2020#)
+
+' DateAdd months into a leap day
+? DateAdd("m", 1, #1/29/2020#)
+
+' DateAdd a year from a leap day
+? DateAdd("yyyy", 1, #2/29/2020#)
+
+' DateAdd a negative year
+? DateAdd("yyyy", -1, #2/29/2020#)
+
+' DateAdd quarters
+? DateAdd("q", 1, #1/31/2020#)
+
+' DateAdd days
+? DateAdd("d", 1, #12/31/2020#)
+
+' DateAdd weekdays adds days
+? DateAdd("w", 1, #1/3/2020#)
+
+' DateAdd weeks
+? DateAdd("ww", 1, #1/3/2020#)
+
+' DateAdd day of year
+? DateAdd("y", 1, #1/3/2020#)
+
+' DateAdd hours
+? DateAdd("h", 25, #1/1/2020#)
+
+' DateAdd minutes
+? DateAdd("n", 90, #1/1/2020#)
+
+' DateAdd seconds
+? DateAdd("s", 3661, #1/1/2020#)
+
+' DateAdd with a fractional number truncates
+? DateAdd("d", 1.9, #1/1/2020#)
+
+' DateAdd with a negative fractional number
+? DateAdd("d", -1.9, #1/1/2020#)
+
+' DateAdd with an invalid interval
+? DateAdd("x", 1, #1/1/2020#)
+
+' DateAdd with an upper-case interval
+? DateAdd("M", 1, #1/31/2020#)
+
+' DateAdd with a String date
+? DateAdd("d", 1, "2020-01-01")
+
+' DateAdd beyond the maximum date
+? DateAdd("yyyy", 1, #12/31/9999#)
+
+' DateAdd with Null
+? DateAdd("d", 1, Null)
+
+' DateAdd with a number date
+? DateAdd("d", 1, 43831)
+
+' DateAdd keeps the time
+? DateAdd("d", 1, #1/1/2020 3:04:05 PM#)
+
+' DateAdd months with a negative date
+? DateAdd("m", 1, #1/31/1899#)
+
+' DateAdd with a Null number
+? DateAdd("d", Null, #1/1/2020#)
+
+' DateAdd with a large number of seconds
+? DateAdd("s", 2147483647, #1/1/2020#)
+
+' DateDiff in years counts boundaries
+? DateDiff("yyyy", #12/31/2019#, #1/1/2020#)
+
+' DateDiff in months counts boundaries
+? DateDiff("m", #1/31/2020#, #2/1/2020#)
+
+' DateDiff in days
+? DateDiff("d", #1/1/2020#, #3/1/2020#)
+
+' DateDiff in days ignores the time
+? DateDiff("d", #1/1/2020 11:00:00 PM#, #1/2/2020 1:00:00 AM#)
+
+' DateDiff is negative when the dates are reversed
+? DateDiff("d", #1/2/2020#, #1/1/2020#)
+
+' DateDiff in weeks with w counts seven-day spans
+? DateDiff("w", #1/1/2020#, #1/7/2020#)
+
+' DateDiff in weeks with w over a full week
+? DateDiff("w", #1/1/2020#, #1/8/2020#)
+
+' DateDiff in calendar weeks with ww
+? DateDiff("ww", #1/4/2020#, #1/5/2020#)
+
+' DateDiff in calendar weeks with a Monday start
+? DateDiff("ww", #1/4/2020#, #1/5/2020#, vbMonday)
+
+' DateDiff in quarters
+? DateDiff("q", #3/31/2020#, #4/1/2020#)
+
+' DateDiff in hours
+? DateDiff("h", #1/1/2020 11:59:59 PM#, #1/2/2020 12:00:00 AM#)
+
+' DateDiff in minutes
+? DateDiff("n", #1/1/2020#, #1/1/2020 1:30:00 AM#)
+
+' DateDiff in seconds
+? DateDiff("s", #1/1/2020#, #1/2/2020#)
+
+' DateDiff in day of year
+? DateDiff("y", #1/1/2020#, #1/2/2020#)
+
+' DateDiff with an invalid interval
+? DateDiff("x", #1/1/2020#, #1/2/2020#)
+
+' DateDiff with String dates
+? DateDiff("d", "2020-01-01", "2020-01-03")
+
+' DateDiff with Null
+? DateDiff("d", Null, #1/2/2020#)
+
+' DateDiff in weeks with the first four days rule
+? DateDiff("ww", #12/29/2019#, #1/1/2020#, vbSunday, vbFirstFourDays)
+
+' DateDiff in years over a large span
+? DateDiff("yyyy", #1/1/1900#, #1/1/2020#)
+
+' DateDiff returns Long
+? VarType(DateDiff("d", #1/1/2020#, #1/2/2020#))
+
+' DateDiff in seconds over a large span
+? DateDiff("s", #1/1/1900#, #1/1/2020#)
+
+' DateDiff in weeks with w and reversed dates
+? DateDiff("w", #1/8/2020#, #1/1/2020#)
+
+' DatePart year
+? DatePart("yyyy", #1/2/2020#)
+
+' DatePart quarter
+? DatePart("q", #5/2/2020#)
+
+' DatePart month
+? DatePart("m", #1/2/2020#)
+
+' DatePart day of year
+? DatePart("y", #2/1/2020#)
+
+' DatePart day
+? DatePart("d", #1/2/2020#)
+
+' DatePart weekday
+? DatePart("w", #1/2/2020#)
+
+' DatePart weekday with a Monday start
+? DatePart("w", #1/2/2020#, vbMonday)
+
+' DatePart week
+? DatePart("ww", #1/2/2020#)
+
+' DatePart week with the first full week rule
+? DatePart("ww", #1/2/2020#, vbSunday, vbFirstFullWeek)
+
+' DatePart week with the first four days rule
+? DatePart("ww", #1/1/2021#, vbSunday, vbFirstFourDays)
+
+' DatePart week at the end of a year with the first four days rule
+? DatePart("ww", #12/31/2020#, vbMonday, vbFirstFourDays)
+
+' DatePart week of the last day of a year with the first full week rule
+? DatePart("ww", #12/31/2020#, vbSunday, vbFirstFullWeek)
+
+' DatePart hour
+? DatePart("h", #1/2/2020 3:04:05 PM#)
+
+' DatePart minute
+? DatePart("n", #1/2/2020 3:04:05 PM#)
+
+' DatePart second
+? DatePart("s", #1/2/2020 3:04:05 PM#)
+
+' DatePart with an invalid interval
+? DatePart("x", #1/2/2020#)
+
+' DatePart with Null
+? DatePart("d", Null)
+
+' DatePart with an invalid first day of week
+? DatePart("w", #1/2/2020#, 8)
+
+' DatePart with an invalid first week of year
+? DatePart("ww", #1/2/2020#, vbSunday, 4)
+
+' Year of a date
+? Year(#1/2/2020#)
+
+' Year returns Integer
+? VarType(Year(#1/2/2020#))
+
+' Year of a String
+? Year("2020-01-02")
+
+' Year of a number
+? Year(43831)
+
+' Year of zero
+? Year(0)
+
+' Year of Null
+? Year(Null)
+
+' Year of Empty
+Dim v As Variant
+? Year(v)
+
+' Year of an invalid String
+? Year("abc")
+
+' Year of a negative serial
+? Year(-100)
+
+' Year of a large serial
+? Year(2958465)
+
+' Year of a serial past the maximum
+Dim d As Double
+d = 2958466
+? Year(d)
+
+' Month of a date
+? Month(#1/2/2020#)
+
+' Day of a date
+? Day(#1/2/2020#)
+
+' Day of a fraction
+? Day(0.5)
+
+' Hour of a time
+? Hour(#3:04:05 PM#)
+
+' Hour of a number
+? Hour(0.75)
+
+' Hour of a negative number
+? Hour(-0.75)
+
+' Minute of a time
+? Minute(#3:04:05 PM#)
+
+' Second of a time
+? Second(#3:04:05 PM#)
+
+' Second of a fractional serial rounds
+? Second(0.9999999)
+
+' Second of a serial just below a whole second
+Dim d As Double
+d = 0.5 - 0.000001
+? Second(d)
+
+' Weekday of a Thursday
+? Weekday(#1/2/2020#)
+
+' Weekday with a Monday start
+? Weekday(#1/2/2020#, vbMonday)
+
+' Weekday with a Thursday start
+? Weekday(#1/2/2020#, vbThursday)
+
+' Weekday with the system start
+? Weekday(#1/2/2020#, vbUseSystemDayOfWeek)
+
+' Weekday with an invalid start
+? Weekday(#1/2/2020#, 8)
+
+' Weekday of Null
+? Weekday(Null)
+
+' Weekday of a negative serial
+? Weekday(-1)
+
+' DateValue of a String
+? DateValue("2020-01-02")
+
+' DateValue drops the time
+? DateValue("2020-01-02 13:04:05")
+
+' DateValue of a month name String
+? DateValue("January 2, 2020")
+
+' DateValue of a String with a two-digit year
+? DateValue("1/2/20")
+
+' DateValue of a String without a year
+? DateValue("January 2")
+
+' DateValue of a number
+? DateValue(43831.5)
+
+' DateValue of an invalid String
+? DateValue("abc")
+
+' DateValue of Null
+? DateValue(Null)
+
+' DateValue of a Date
+? DateValue(#1/2/2020 3:04:05 PM#)
+
+' TimeValue of a String
+? TimeValue("13:04:05")
+
+' TimeValue drops the date
+? TimeValue("2020-01-02 13:04:05")
+
+' TimeValue of a twelve-hour String
+? TimeValue("1:04 PM")
+
+' TimeValue of hours only
+? TimeValue("13")
+
+' TimeValue of an invalid String
+? TimeValue("25:00:00")
+
+' TimeValue of a number
+? TimeValue(43831.75)
+
+' TimeValue of Null
+? TimeValue(Null)
+
+' TimeValue of twenty-four hundred
+? TimeValue("24:00:00")
+
+' IsDate of a Date literal
+? IsDate(#1/2/2020#)
+
+' IsDate of a date String
+? IsDate("2020-01-02")
+
+' IsDate of a time String
+? IsDate("13:04")
+
+' IsDate of a month name String
+? IsDate("Jan 2")
+
+' IsDate of a number
+? IsDate(43831)
+
+' IsDate of a numeric String
+? IsDate("43831")
+
+' IsDate of an invalid date String
+? IsDate("2/30/2020")
+
+' IsDate of an empty String
+? IsDate("")
+
+' IsDate of Null
+? IsDate(Null)
+
+' IsDate of Empty
+Dim v As Variant
+? IsDate(v)
+
+' IsDate of a Boolean
+? IsDate(True)
+
+' IsDate of a String with a period separator
+? IsDate("1.2.2020")
+
+' IsDate of a String with dashes and a two-digit year
+? IsDate("1-2-20")
+
+' IsDate of a large number String
+? IsDate("3000000")
+
+' IsDate of a Date variable
+Dim d As Date
+? IsDate(d)
+
+' IsDate of a Double variable
+Dim d As Double
+? IsDate(d)
+
+' Date arithmetic adds days
+? #1/1/2020# + 1
+
+' Date arithmetic with a fraction
+? #1/1/2020# + 0.5
+
+' Date times a number is Double
+? #1/1/2020# * 2
+
+' Date minus a number is Date
+? #1/1/2020# - 1
+
+' Date plus a Date is Date
+? #1/1/2020# + #1/1/1900#
+
+' Date divided by a number is Double
+? #1/1/2020# / 2
+
+' Date and Integer division
+? #1/1/2020# \ 2
+
+' Date negated
+? -#1/1/2020#
+
+' A negative serial with a time
+Dim d As Date
+d = -1.5
+? d
+
+' A serial just below zero
+Dim d As Date
+d = -0.5
+? d
+
+' A serial with a negative whole part and a fraction
+Dim d As Date
+d = -2.25
+? d
+
+' Minute of a negative serial
+Dim d As Date
+d = -1.75
+? Minute(d)
+
+' Day of a negative serial
+Dim d As Date
+d = -1.75
+? Day(d)
+
+' Adding a day to a negative serial
+Dim d As Date
+d = -1.75
+? d + 1
+
+' A Date one day before the epoch
+Dim d As Date
+d = -1
+? d
+
+' Date comparison
+? #1/2/2020# > #1/1/2020#
+
+' Date and String comparison
+? #1/2/2020# = "1/2/2020"
+
+' Date and ISO String comparison
+? #1/2/2020# = "2020-01-02"
+
+' Date and numeric comparison
+? #1/2/2020# = 43832
+
+' Date and String less-than comparison
+? #1/2/2020# < "2"
+
+' VarType of Now is Date
+? VarType(Now)
+
+' Timer returns Single
+? VarType(Timer)
+
+' Date returns a whole serial
+? Date = Int(Date)
+
+' Time is below one
+? Time < 1
+
+' Now is a Date after 2020
+? Now > #1/1/2020#

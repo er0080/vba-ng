@@ -1,0 +1,2098 @@
+{
+  "area": "Arrays",
+  "excel": "16.0.20326",
+  "culture": "en-US",
+  "options": [],
+  "declarations": [
+    "Private Sub Stretch(s As String)",
+    "    s = s & \"hello\"",
+    "End Sub"
+  ],
+  "cases": [
+    {
+      "name": "Array builds a Variant array from base zero",
+      "source": [
+        "? Array(1, \"a\", True)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Variant()",
+            "bounds": "0 To 2",
+            "items": [
+              {
+                "type": "Integer",
+                "value": "1"
+              },
+              {
+                "type": "String",
+                "value": "a"
+              },
+              {
+                "type": "Boolean",
+                "value": "True"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Array with no elements",
+      "source": [
+        "? Array()"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Variant()",
+            "bounds": "0 To -1",
+            "items": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "Array nested",
+      "source": [
+        "? Array(1, Array(2, 3))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Variant()",
+            "bounds": "0 To 1",
+            "items": [
+              {
+                "type": "Integer",
+                "value": "1"
+              },
+              {
+                "type": "Variant()",
+                "bounds": "0 To 1",
+                "items": [
+                  {
+                    "type": "Integer",
+                    "value": "2"
+                  },
+                  {
+                    "type": "Integer",
+                    "value": "3"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Array of a Long variable keeps the subtype",
+      "source": [
+        "Dim l As Long",
+        "l = 5",
+        "? Array(l)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Variant()",
+            "bounds": "0 To 0",
+            "items": [
+              {
+                "type": "Long",
+                "value": "5"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Array of Null and Empty",
+      "source": [
+        "? Array(Null, Empty)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Variant()",
+            "bounds": "0 To 1",
+            "items": [
+              {
+                "type": "Null"
+              },
+              {
+                "type": "Empty"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Fixed array default elements are zero",
+      "source": [
+        "Dim a(1) As Long",
+        "? a"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long()",
+            "bounds": "0 To 1",
+            "items": [
+              {
+                "type": "Long",
+                "value": "0"
+              },
+              {
+                "type": "Long",
+                "value": "0"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Fixed String array default elements are empty",
+      "source": [
+        "Dim a(1) As String",
+        "? a"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String()",
+            "bounds": "0 To 1",
+            "items": [
+              {
+                "type": "String",
+                "value": ""
+              },
+              {
+                "type": "String",
+                "value": ""
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Fixed Variant array default elements are Empty",
+      "source": [
+        "Dim a(1)",
+        "? a"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Variant()",
+            "bounds": "0 To 1",
+            "items": [
+              {
+                "type": "Empty"
+              },
+              {
+                "type": "Empty"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Fixed Boolean array default elements",
+      "source": [
+        "Dim a(0) As Boolean",
+        "? a"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean()",
+            "bounds": "0 To 0",
+            "items": [
+              {
+                "type": "Boolean",
+                "value": "False"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Fixed Date array default elements",
+      "source": [
+        "Dim a(0) As Date",
+        "? a"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date()",
+            "bounds": "0 To 0",
+            "items": [
+              {
+                "type": "Date",
+                "value": "1899-12-30 00:00:00",
+                "bits": "0000000000000000"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Fixed Object array default elements",
+      "source": [
+        "Dim a(0) As Object",
+        "? a"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Object()",
+            "bounds": "0 To 0",
+            "items": [
+              {
+                "type": "Nothing"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Fixed Currency array default elements",
+      "source": [
+        "Dim a(0) As Currency",
+        "? a"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Currency()",
+            "bounds": "0 To 0",
+            "items": [
+              {
+                "type": "Currency",
+                "value": "0",
+                "bits": "0000000000000000"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Fixed Byte array default elements",
+      "source": [
+        "Dim a(0) As Byte",
+        "? a"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Byte()",
+            "bounds": "0 To 0",
+            "items": [
+              {
+                "type": "Byte",
+                "value": "0"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Two-dimensional array in row-major listing",
+      "source": [
+        "Dim a(1, 2) As Integer",
+        "a(0, 0) = 1: a(0, 1) = 2: a(0, 2) = 3",
+        "a(1, 0) = 4: a(1, 1) = 5: a(1, 2) = 6",
+        "? a"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer()",
+            "bounds": "0 To 1, 0 To 2",
+            "items": [
+              {
+                "type": "Integer",
+                "value": "1"
+              },
+              {
+                "type": "Integer",
+                "value": "2"
+              },
+              {
+                "type": "Integer",
+                "value": "3"
+              },
+              {
+                "type": "Integer",
+                "value": "4"
+              },
+              {
+                "type": "Integer",
+                "value": "5"
+              },
+              {
+                "type": "Integer",
+                "value": "6"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Array with explicit lower bounds",
+      "source": [
+        "Dim a(5 To 6) As Integer",
+        "a(5) = 1: a(6) = 2",
+        "? a"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer()",
+            "bounds": "5 To 6",
+            "items": [
+              {
+                "type": "Integer",
+                "value": "1"
+              },
+              {
+                "type": "Integer",
+                "value": "2"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Index below the lower bound",
+      "source": [
+        "Dim a(1 To 2) As Integer",
+        "? a(0)"
+      ],
+      "results": [],
+      "error": {
+        "number": 9,
+        "description": "Subscript out of range",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Index above the upper bound",
+      "source": [
+        "Dim a(2) As Integer",
+        "? a(3)"
+      ],
+      "results": [],
+      "error": {
+        "number": 9,
+        "description": "Subscript out of range",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Index with a Double rounds",
+      "source": [
+        "Dim a(2) As Integer",
+        "a(2) = 7",
+        "? a(1.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Index with a Double rounds half to even",
+      "source": [
+        "Dim a(2) As Integer",
+        "a(2) = 7",
+        "? a(2.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Index with a String",
+      "source": [
+        "Dim a(2) As Integer",
+        "a(2) = 7",
+        "? a(\"2\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Index with Null",
+      "source": [
+        "Dim a(2) As Integer",
+        "? a(Null)"
+      ],
+      "results": [],
+      "error": {
+        "number": 94,
+        "description": "Invalid use of Null",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Index with Empty",
+      "source": [
+        "Dim a(2) As Integer",
+        "a(0) = 7",
+        "Dim v As Variant",
+        "? a(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Wrong number of dimensions through a Variant, since the VBE rejects it on a declared array",
+      "source": [
+        "Dim a(2) As Integer",
+        "Dim v As Variant",
+        "v = a",
+        "? v(1, 1)"
+      ],
+      "results": [],
+      "error": {
+        "number": 9,
+        "description": "Subscript out of range",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Unallocated array element",
+      "source": [
+        "Dim a() As Integer",
+        "? a(0)"
+      ],
+      "results": [],
+      "error": {
+        "number": 9,
+        "description": "Subscript out of range",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "ReDim allocates",
+      "source": [
+        "Dim a() As Integer",
+        "ReDim a(2)",
+        "? UBound(a)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ReDim without Preserve clears",
+      "source": [
+        "Dim a() As Integer",
+        "ReDim a(2)",
+        "a(1) = 5",
+        "ReDim a(2)",
+        "? a(1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ReDim Preserve keeps elements",
+      "source": [
+        "Dim a() As Integer",
+        "ReDim a(2)",
+        "a(1) = 5",
+        "ReDim Preserve a(4)",
+        "? a"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer()",
+            "bounds": "0 To 4",
+            "items": [
+              {
+                "type": "Integer",
+                "value": "0"
+              },
+              {
+                "type": "Integer",
+                "value": "5"
+              },
+              {
+                "type": "Integer",
+                "value": "0"
+              },
+              {
+                "type": "Integer",
+                "value": "0"
+              },
+              {
+                "type": "Integer",
+                "value": "0"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "ReDim Preserve shrinks",
+      "source": [
+        "Dim a() As Integer",
+        "ReDim a(4)",
+        "a(1) = 5: a(4) = 9",
+        "ReDim Preserve a(1)",
+        "? a"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer()",
+            "bounds": "0 To 1",
+            "items": [
+              {
+                "type": "Integer",
+                "value": "0"
+              },
+              {
+                "type": "Integer",
+                "value": "5"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "ReDim Preserve changes the lower bound",
+      "source": [
+        "Dim a() As Integer",
+        "ReDim a(2)",
+        "a(1) = 5",
+        "ReDim Preserve a(1 To 3)",
+        "? a"
+      ],
+      "results": [],
+      "error": {
+        "number": 9,
+        "description": "Subscript out of range",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "ReDim Preserve on the last dimension",
+      "source": [
+        "Dim a() As Integer",
+        "ReDim a(1, 1)",
+        "a(1, 1) = 5",
+        "ReDim Preserve a(1, 2)",
+        "? a"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer()",
+            "bounds": "0 To 1, 0 To 2",
+            "items": [
+              {
+                "type": "Integer",
+                "value": "0"
+              },
+              {
+                "type": "Integer",
+                "value": "0"
+              },
+              {
+                "type": "Integer",
+                "value": "0"
+              },
+              {
+                "type": "Integer",
+                "value": "0"
+              },
+              {
+                "type": "Integer",
+                "value": "5"
+              },
+              {
+                "type": "Integer",
+                "value": "0"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "ReDim Preserve on a leading dimension",
+      "source": [
+        "Dim a() As Integer",
+        "ReDim a(1, 1)",
+        "ReDim Preserve a(2, 1)",
+        "? a"
+      ],
+      "results": [],
+      "error": {
+        "number": 9,
+        "description": "Subscript out of range",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "ReDim Preserve changing the number of dimensions",
+      "source": [
+        "Dim a() As Integer",
+        "ReDim a(1)",
+        "ReDim Preserve a(1, 1)",
+        "? a"
+      ],
+      "results": [],
+      "error": {
+        "number": 9,
+        "description": "Subscript out of range",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "ReDim Preserve of an unallocated array",
+      "source": [
+        "Dim a() As Integer",
+        "ReDim Preserve a(2)",
+        "? a"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer()",
+            "bounds": "0 To 2",
+            "items": [
+              {
+                "type": "Integer",
+                "value": "0"
+              },
+              {
+                "type": "Integer",
+                "value": "0"
+              },
+              {
+                "type": "Integer",
+                "value": "0"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "ReDim with a negative upper bound",
+      "source": [
+        "Dim a() As Integer",
+        "Dim n As Long",
+        "n = -1",
+        "ReDim a(n)",
+        "? UBound(a)"
+      ],
+      "results": [],
+      "error": {
+        "number": 9,
+        "description": "Subscript out of range",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "ReDim with a lower bound above the upper bound",
+      "source": [
+        "Dim a() As Integer",
+        "Dim n As Long",
+        "n = 5",
+        "ReDim a(n To 2)",
+        "? UBound(a)"
+      ],
+      "results": [],
+      "error": {
+        "number": 9,
+        "description": "Subscript out of range",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "ReDim a Variant makes it an array",
+      "source": [
+        "Dim v As Variant",
+        "ReDim v(2)",
+        "? v"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Variant()",
+            "bounds": "0 To 2",
+            "items": [
+              {
+                "type": "Empty"
+              },
+              {
+                "type": "Empty"
+              },
+              {
+                "type": "Empty"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "ReDim a Variant with a type",
+      "source": [
+        "Dim v As Variant",
+        "ReDim v(1) As String",
+        "? v"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String()",
+            "bounds": "0 To 1",
+            "items": [
+              {
+                "type": "String",
+                "value": ""
+              },
+              {
+                "type": "String",
+                "value": ""
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "ReDim with a Double bound rounds",
+      "source": [
+        "Dim a() As Integer",
+        "ReDim a(2.5)",
+        "? UBound(a)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ReDim with a String bound",
+      "source": [
+        "Dim a() As Integer",
+        "ReDim a(\"2\")",
+        "? UBound(a)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erase of a dynamic array deallocates",
+      "source": [
+        "Dim a() As Integer",
+        "ReDim a(2)",
+        "Erase a",
+        "? a"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer()",
+            "bounds": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erase of a fixed array resets the elements",
+      "source": [
+        "Dim a(1) As Integer",
+        "a(0) = 5",
+        "Erase a",
+        "? a"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer()",
+            "bounds": "0 To 1",
+            "items": [
+              {
+                "type": "Integer",
+                "value": "0"
+              },
+              {
+                "type": "Integer",
+                "value": "0"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erase of a fixed String array",
+      "source": [
+        "Dim a(1) As String",
+        "a(0) = \"x\"",
+        "Erase a",
+        "? a"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String()",
+            "bounds": "0 To 1",
+            "items": [
+              {
+                "type": "String",
+                "value": ""
+              },
+              {
+                "type": "String",
+                "value": ""
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erase of a Variant array",
+      "source": [
+        "Dim v As Variant",
+        "v = Array(1, 2)",
+        "Erase v",
+        "? v"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Variant()",
+            "bounds": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erase of a fixed Object array",
+      "source": [
+        "Dim a(0) As Object",
+        "Set a(0) = New Collection",
+        "Erase a",
+        "? a"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Object()",
+            "bounds": "0 To 0",
+            "items": [
+              {
+                "type": "Nothing"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Assigning an array copies it",
+      "source": [
+        "Dim a(1) As Integer, b() As Integer",
+        "a(0) = 1",
+        "b = a",
+        "b(0) = 9",
+        "? a(0)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Assigning an array to a Variant copies it",
+      "source": [
+        "Dim a(1) As Integer, v As Variant",
+        "a(0) = 1",
+        "v = a",
+        "v(0) = 9",
+        "? a(0)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Assigning a Variant array to a typed array",
+      "source": [
+        "Dim v As Variant, b() As Integer",
+        "v = Array(1, 2)",
+        "b = v",
+        "? b"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Assigning a Variant holding a String array to a String array",
+      "source": [
+        "Dim v As Variant, b() As String",
+        "v = Split(\"a b\")",
+        "b = v",
+        "? b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String()",
+            "bounds": "0 To 1",
+            "items": [
+              {
+                "type": "String",
+                "value": "a"
+              },
+              {
+                "type": "String",
+                "value": "b"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "An element of a Variant array keeps its own type",
+      "source": [
+        "Dim v As Variant",
+        "v = Array(CByte(1), CCur(2))",
+        "? v(1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Currency",
+            "value": "2",
+            "bits": "0000000000004E20"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Assigning to an element of a Variant array",
+      "source": [
+        "Dim v As Variant",
+        "v = Array(1, 2)",
+        "v(0) = \"x\"",
+        "? v"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Variant()",
+            "bounds": "0 To 1",
+            "items": [
+              {
+                "type": "String",
+                "value": "x"
+              },
+              {
+                "type": "Integer",
+                "value": "2"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Assigning to an element of a typed array coerces",
+      "source": [
+        "Dim a(0) As Integer",
+        "a(0) = \"12\"",
+        "? a"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer()",
+            "bounds": "0 To 0",
+            "items": [
+              {
+                "type": "Integer",
+                "value": "12"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Assigning beyond the element type range",
+      "source": [
+        "Dim a(0) As Byte",
+        "Dim n As Long",
+        "n = 300",
+        "a(0) = n",
+        "? a"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Nested array element access",
+      "source": [
+        "Dim v As Variant",
+        "v = Array(Array(1, 2), Array(3))",
+        "? v(0)(1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Split result assigned to a String array",
+      "source": [
+        "Dim s() As String",
+        "s = Split(\"a b\")",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String()",
+            "bounds": "0 To 1",
+            "items": [
+              {
+                "type": "String",
+                "value": "a"
+              },
+              {
+                "type": "String",
+                "value": "b"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Array size with Dim of zero",
+      "source": [
+        "Dim a(0) As Long",
+        "? UBound(a)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Three-dimensional array bounds",
+      "source": [
+        "Dim a(1, 2, 3) As Long",
+        "? UBound(a, 3)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Three-dimensional array items are not listed",
+      "source": [
+        "Dim a(1, 1, 1) As Long",
+        "? a"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long()",
+            "bounds": "0 To 1, 0 To 1, 0 To 1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A Variant holding a two-dimensional array",
+      "source": [
+        "Dim v As Variant",
+        "Dim a(1, 1) As String",
+        "a(0, 0) = \"a\": a(0, 1) = \"b\": a(1, 0) = \"c\": a(1, 1) = \"d\"",
+        "v = a",
+        "? v"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String()",
+            "bounds": "0 To 1, 0 To 1",
+            "items": [
+              {
+                "type": "String",
+                "value": "a"
+              },
+              {
+                "type": "String",
+                "value": "b"
+              },
+              {
+                "type": "String",
+                "value": "c"
+              },
+              {
+                "type": "String",
+                "value": "d"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "For Each over an array visits elements in memory order",
+      "source": [
+        "Dim a(1, 1) As Integer",
+        "a(0, 0) = 1: a(0, 1) = 2: a(1, 0) = 3: a(1, 1) = 4",
+        "Dim e As Variant",
+        "For Each e In a",
+        "? e",
+        "Next"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "3"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "2"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "For Each over an empty array",
+      "source": [
+        "Dim e As Variant",
+        "For Each e In Array()",
+        "? e",
+        "Next",
+        "? \"done\""
+      ],
+      "results": [
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "done"
+          }
+        }
+      ]
+    },
+    {
+      "name": "For Each over an unallocated array",
+      "source": [
+        "Dim a() As Long",
+        "Dim e As Variant",
+        "For Each e In a",
+        "? e",
+        "Next",
+        "? \"done\""
+      ],
+      "results": [],
+      "error": {
+        "number": 92,
+        "description": "For loop not initialized",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "For Each over a String array",
+      "source": [
+        "Dim s() As String",
+        "s = Split(\"x y\")",
+        "Dim e As Variant",
+        "For Each e In s",
+        "? e",
+        "Next"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "x"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "y"
+          }
+        }
+      ]
+    },
+    {
+      "name": "For Each variable after the loop",
+      "source": [
+        "Dim e As Variant",
+        "For Each e In Array(1, 2)",
+        "Next",
+        "? e"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Empty"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeName after ReDim in a Variant with a type",
+      "source": [
+        "Dim v As Variant",
+        "ReDim v(1) As String",
+        "? TypeName(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "String()"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType after ReDim in a Variant with a type",
+      "source": [
+        "Dim v As Variant",
+        "ReDim v(1) As Long",
+        "? VarType(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "8195"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A dynamic array of Variants with ReDim As",
+      "source": [
+        "Dim v() As Variant",
+        "ReDim v(1)",
+        "? v"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Variant()",
+            "bounds": "0 To 1",
+            "items": [
+              {
+                "type": "Empty"
+              },
+              {
+                "type": "Empty"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Array element assignment with a Set",
+      "source": [
+        "Dim a(0) As Object",
+        "Set a(0) = New Collection",
+        "? a"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Object()",
+            "bounds": "0 To 0",
+            "items": [
+              {
+                "type": "Object",
+                "class": "Collection"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Byte array from a String",
+      "source": [
+        "Dim b() As Byte",
+        "b = \"hi\"",
+        "? b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Byte()",
+            "bounds": "0 To 3",
+            "items": [
+              {
+                "type": "Byte",
+                "value": "104"
+              },
+              {
+                "type": "Byte",
+                "value": "0"
+              },
+              {
+                "type": "Byte",
+                "value": "105"
+              },
+              {
+                "type": "Byte",
+                "value": "0"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Byte array from an empty String",
+      "source": [
+        "Dim b() As Byte",
+        "b = \"\"",
+        "? b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Byte()",
+            "bounds": "0 To -1",
+            "items": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "Array with the same element assigned twice",
+      "source": [
+        "Dim a(1) As Long",
+        "a(0) = 1",
+        "a(0) = 2",
+        "? a"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long()",
+            "bounds": "0 To 1",
+            "items": [
+              {
+                "type": "Long",
+                "value": "2"
+              },
+              {
+                "type": "Long",
+                "value": "0"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "A Long array element incremented",
+      "source": [
+        "Dim a(0) As Long",
+        "a(0) = a(0) + 1",
+        "? a(0)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "An Integer array element overflowed",
+      "source": [
+        "Dim a(0) As Integer",
+        "a(0) = 32767",
+        "a(0) = a(0) + 1",
+        "? a(0)"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Array of ten thousand Longs bounds",
+      "source": [
+        "Dim a(9999) As Long",
+        "? UBound(a)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "9999"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Assigning arrays of different element types",
+      "source": [
+        "Dim v As Variant, b() As Long",
+        "v = Array(\"1\", \"2\")",
+        "b = v",
+        "? b"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "For Each over a Split result lives for the loop",
+      "source": [
+        "Dim e As Variant, r As String",
+        "For Each e In Split(\"p q r\")",
+        "    r = r & e & \"|\"",
+        "Next",
+        "? r"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "p|q|r|"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Exit For out of a For Each over a Split result",
+      "source": [
+        "Dim e As Variant, r As String",
+        "For Each e In Split(\"p q r\")",
+        "    r = r & e",
+        "    If e = \"q\" Then Exit For",
+        "Next",
+        "? r"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "pq"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ReDim inside a For Each over the array raises 10 and leaves it as it was",
+      "source": [
+        "Dim a() As Long, e As Variant",
+        "ReDim a(2): a(0) = 1: a(1) = 2: a(2) = 3",
+        "On Error Resume Next",
+        "For Each e In a",
+        "ReDim a(5)",
+        "? Err.Number",
+        "Exit For",
+        "Next",
+        "On Error GoTo 0",
+        "? UBound(a)",
+        "? a(1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ReDim Preserve inside a For Each over the array raises 10",
+      "source": [
+        "Dim a() As Long, e As Variant",
+        "ReDim a(2): a(0) = 1: a(1) = 2: a(2) = 3",
+        "On Error Resume Next",
+        "For Each e In a",
+        "ReDim Preserve a(5)",
+        "? Err.Number",
+        "Exit For",
+        "Next",
+        "On Error GoTo 0",
+        "? UBound(a)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erase inside a For Each over the array raises 10",
+      "source": [
+        "Dim a() As Long, e As Variant",
+        "ReDim a(2): a(0) = 1: a(1) = 2: a(2) = 3",
+        "On Error Resume Next",
+        "For Each e In a",
+        "Erase a",
+        "? Err.Number",
+        "Exit For",
+        "Next",
+        "On Error GoTo 0",
+        "? UBound(a)",
+        "? a(2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Assigning to an array inside a For Each over it raises 10",
+      "source": [
+        "Dim a() As Long, b() As Long, e As Variant",
+        "ReDim a(2): a(0) = 1: a(1) = 2: a(2) = 3",
+        "ReDim b(0): b(0) = 9",
+        "On Error Resume Next",
+        "For Each e In a",
+        "a = b",
+        "? Err.Number",
+        "Exit For",
+        "Next",
+        "On Error GoTo 0",
+        "? UBound(a)",
+        "? a(0)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Assigning to a Variant holding the array inside a For Each over it raises 10",
+      "source": [
+        "Dim v As Variant, e As Variant",
+        "v = Array(1, 2, 3)",
+        "On Error Resume Next",
+        "For Each e In v",
+        "v = 5",
+        "? Err.Number",
+        "Exit For",
+        "Next",
+        "On Error GoTo 0",
+        "? IsArray(v)",
+        "? UBound(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "For Each reads the array's elements as they are when it reaches them",
+      "source": [
+        "Dim a() As Long, e As Variant",
+        "ReDim a(2): a(0) = 1: a(1) = 2: a(2) = 3",
+        "For Each e In a",
+        "If e = 1 Then a(2) = 99",
+        "? e",
+        "Next"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "99"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A fixed-length String array's elements start as nulls",
+      "source": [
+        "Dim a(1) As String * 3",
+        "? Len(a(0))",
+        "? AscW(a(0))",
+        "? LenB(a(1))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Integer",
+            "value": "6"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A fixed-length String array element pads and truncates",
+      "source": [
+        "Dim a(1) As String * 3",
+        "a(0) = \"ab\"",
+        "a(1) = \"abcdef\"",
+        "? \"[\" & a(0) & \"]\"",
+        "? a(1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "[ab ]"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "abc"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erase on a fixed-length String array resets its elements",
+      "source": [
+        "Dim a(1) As String * 3",
+        "a(0) = \"abc\"",
+        "Erase a",
+        "? Len(a(0))",
+        "? AscW(a(0))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A dynamic fixed-length String array through ReDim, ReDim Preserve, and Erase",
+      "source": [
+        "Dim d() As String * 3, n As Long",
+        "ReDim d(1)",
+        "? Len(d(0)) & \" \" & AscW(d(1))",
+        "d(0) = \"xy\"",
+        "ReDim Preserve d(2)",
+        "? \"[\" & d(0) & \"]\"",
+        "? Len(d(2)) & \" \" & AscW(d(2))",
+        "Erase d",
+        "On Error Resume Next",
+        "n = UBound(d)",
+        "? Err.Number",
+        "On Error GoTo 0"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "3 0"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "[xy ]"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "3 0"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Long",
+            "value": "9"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A fixed-length String array element passed ByRef takes the change cut to its length",
+      "source": [
+        "Dim a(1) As String * 3",
+        "a(0) = \"ab\"",
+        "Stretch a(0)",
+        "? \"[\" & a(0) & \"]\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "[ab ]"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Elements of typed integer arrays compare as integers, alone and inside a Boolean operator",
+      "source": [
+        "Dim b() As Long",
+        "ReDim b(0 To 1)",
+        "b(0) = 2",
+        "b(1) = 5",
+        "Dim c As Long",
+        "c = 3",
+        "? c >= b(0) And c <= b(1)",
+        "Dim m(0 To 1) As Integer",
+        "Dim n(0 To 1) As Long",
+        "m(0) = 1",
+        "n(0) = 4",
+        "? m(0) < n(0)",
+        "? n(0) = 4",
+        "? n(1) > m(0)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+# Cases whose Double or Single results may miss VBA's by one ulp, and by nothing else, as "Area: case name", one per
+# line (VBA keeps a Double expression's intermediates in the x87 extended format, the compiler
+# computes in Double). The replay asserts that each listed case misses by one ulp at most, and that none of them
+# matches exactly any more.
+Financial: FV of the previous period times the rate, second period
+Financial: FV of the previous period times the rate, period three hundred
+Operators: A Double expression keeps its intermediate results in extended precision

@@ -1,0 +1,200 @@
+{
+  "area": "DateLiterals",
+  "excel": "16.0.20326",
+  "culture": "en-US",
+  "options": [],
+  "cases": [
+    {
+      "name": "Date literal with month day year",
+      "source": [
+        "? #1/2/2020#"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 00:00:00",
+            "bits": "40E5670000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date literal with time",
+      "source": [
+        "? #1/2/2020 3:04:05 PM#"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 15:04:05",
+            "bits": "40E56714173AC902"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date literal with a twenty-four hour time",
+      "source": [
+        "? #1/2/2020 15:04:05#"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 15:04:05",
+            "bits": "40E56714173AC902"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date literal with time only",
+      "source": [
+        "? #3:04:05 PM#"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "1899-12-30 15:04:05",
+            "bits": "3FE4173AC901E574"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date literal with a two-digit year",
+      "source": [
+        "? #1/2/20#"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 00:00:00",
+            "bits": "40E5670000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date literal with a two-digit year in the past window",
+      "source": [
+        "? #1/2/30#"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2030-01-02 00:00:00",
+            "bits": "40E72FA000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date literal with a month name",
+      "source": [
+        "? #Jan 2 2020#"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 00:00:00",
+            "bits": "40E5670000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date literal with hours and minutes only",
+      "source": [
+        "? #15:04#"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "1899-12-30 15:04:00",
+            "bits": "3FE416C16C16C16C"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date literal in ISO order",
+      "source": [
+        "? #2020-01-02#"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 00:00:00",
+            "bits": "40E5670000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date literal with dashes",
+      "source": [
+        "? #1-2-2020#"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 00:00:00",
+            "bits": "40E5670000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date literal with midnight",
+      "source": [
+        "? #1/2/2020 12:00:00 AM#"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 00:00:00",
+            "bits": "40E5670000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date literal with noon",
+      "source": [
+        "? #1/2/2020 12:00:00 PM#"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 12:00:00",
+            "bits": "40E5671000000000"
+          }
+        }
+      ]
+    }
+  ]
+}

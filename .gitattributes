@@ -1,0 +1,18 @@
+# Normalize line endings for source and docs.
+* text=auto
+
+# VBA fixture files keep their exact bytes (CLAUDE.md R18). The VBE exports CRLF and
+# round-trip tests compare byte-for-byte, so git must never normalize these.
+*.bas -text
+*.cls -text
+*.frm -text
+*.frx binary
+
+# Binary artifacts.
+*.xlsx binary
+*.xlsm binary
+*.xlam binary
+*.xll binary
+*.dll binary
+*.pdb binary
+*.png binary

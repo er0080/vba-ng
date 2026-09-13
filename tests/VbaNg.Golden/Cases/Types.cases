@@ -1,0 +1,418 @@
+' Types: what assigning a user-defined type copies (fixed and dynamic arrays, nested types,
+' strings, Variants, and object references), nested With, Erase on arrays of types and on
+' array members, assignment of arrays of types, LSet between types and on strings, Len and
+' LenB of types, and fixed-length string members (MS-VBAL 5.2.3.3, 5.4.3.6, 5.4.3.7).
+
+Public Type TInner
+    A As Long
+    B As Long
+End Type
+
+Public Type TOuter
+    Name As String
+    Inner As TInner
+    Fixed(1 To 3) As Long
+    Dynamic() As Long
+    Inners(1 To 2) As TInner
+    V As Variant
+    Obj As Collection
+End Type
+
+Public Type TPair
+    X As Long
+    Y As Long
+End Type
+
+Public Type TTriple
+    P As Long
+    Q As Long
+    R As Long
+End Type
+
+Public Type TMixed
+    B As Byte
+    I As Integer
+    L As Long
+    D As Double
+    C As Currency
+    S As String
+    F As String * 4
+End Type
+
+Public Type TBytes
+    Data(1 To 8) As Byte
+End Type
+
+Public Type TText
+    Text As String * 8
+End Type
+
+Public Type TWide
+    Text As String * 4
+    Tail As Long
+End Type
+
+Public Type TCodes
+    B As Byte
+    S(0 To 1) As String * 3
+    Z As Byte
+End Type
+
+Private gOuter As TOuter
+
+Private Function MakeInner(ByVal a As Long, ByVal b As Long) As TInner
+    MakeInner.A = a
+    MakeInner.B = b
+End Function
+
+Private Function MakeNamed(ByVal text As String) As TOuter
+    MakeNamed.Name = text
+End Function
+
+Private Sub RenameThroughWith()
+    With gOuter
+        .Name = .Name & "!"
+    End With
+End Sub
+
+Private Sub Shift(ByRef p As TPair)
+    p.X = p.X + 100
+End Sub
+
+Private Sub Shift2(ByRef i As TInner)
+    i.A = i.A + 100
+End Sub
+
+' Assigning a type copies its fixed array
+Dim t1 As TOuter, t2 As TOuter
+t1.Fixed(1) = 5
+t2 = t1
+t2.Fixed(1) = 99
+? t1.Fixed(1)
+? t2.Fixed(1)
+
+' Assigning a type copies its dynamic array
+Dim t1 As TOuter, t2 As TOuter
+ReDim t1.Dynamic(1 To 2)
+t1.Dynamic(1) = 5
+t2 = t1
+t2.Dynamic(1) = 6
+? t1.Dynamic(1)
+? UBound(t2.Dynamic)
+
+' Assigning a type with an unallocated dynamic array
+Dim t1 As TOuter, t2 As TOuter, n As Long
+t2 = t1
+On Error Resume Next
+n = UBound(t2.Dynamic)
+? Err.Number
+
+' Assigning a type copies the nested type and the array of types
+Dim t1 As TOuter, t2 As TOuter
+t1.Inner.A = 1
+t1.Inners(2).B = 2
+t2 = t1
+t2.Inner.A = 10
+t2.Inners(2).B = 20
+? t1.Inner.A
+? t1.Inners(2).B
+
+' Assigning a type copies its String
+Dim t1 As TOuter, t2 As TOuter
+t1.Name = "one"
+t2 = t1
+t2.Name = "two"
+? t1.Name
+
+' Assigning a type copies a Variant array member
+Dim t1 As TOuter, t2 As TOuter
+t1.V = Array(1, 2)
+t2 = t1
+t2.V(0) = 9
+? t1.V(0)
+
+' Assigning a type shares an object member
+Dim t1 As TOuter, t2 As TOuter
+Set t1.Obj = New Collection
+t2 = t1
+t2.Obj.Add 1
+? t1.Obj.Count
+? t1.Obj Is t2.Obj
+
+' A type from a function
+Dim t As TInner
+t = MakeInner(3, 4)
+? t.A + t.B
+
+' A function result used as a whole value only
+Dim t As TInner, u As TInner
+t = MakeInner(1, 2)
+u = t
+u.A = 5
+? t.A
+
+' Nested With
+Dim t As TOuter
+With t
+    .Name = "x"
+    With .Inner
+        .A = 1
+        .B = 2
+    End With
+    .Fixed(2) = 7
+    With .Inners(2)
+        .A = 3
+    End With
+End With
+? t.Name & t.Inner.A & t.Inner.B & t.Fixed(2) & t.Inners(2).A
+
+' With on an element of an array of types
+Dim a(1 To 2) As TInner
+With a(2)
+    .A = 5
+    .B = .A * 2
+End With
+? a(2).B
+
+' With over a nested member reached twice
+Dim t As TOuter
+With t.Inner
+    .A = 1
+End With
+With t
+    .Inner.B = .Inner.A + 1
+End With
+? t.Inner.B
+
+' Erase on a fixed array of types resets the elements
+Dim a(1 To 2) As TOuter
+a(1).Name = "x"
+a(1).Inner.A = 4
+a(2).Fixed(3) = 9
+Erase a
+? a(1).Name = ""
+? a(1).Inner.A
+? a(2).Fixed(3)
+
+' Erase on a type's fixed array member
+Dim t As TOuter
+t.Fixed(1) = 1: t.Fixed(2) = 2
+Erase t.Fixed
+? t.Fixed(1) + t.Fixed(2)
+
+' Erase on a type's dynamic array member deallocates it
+Dim t As TOuter, n As Long
+ReDim t.Dynamic(1 To 3)
+Erase t.Dynamic
+On Error Resume Next
+n = UBound(t.Dynamic)
+? Err.Number
+
+' Erase on a dynamic array of types deallocates it
+Dim a() As TInner, n As Long
+ReDim a(1 To 2)
+a(1).A = 1
+Erase a
+On Error Resume Next
+n = UBound(a)
+? Err.Number
+
+' ReDim Preserve on a type's dynamic array member
+Dim t As TOuter
+ReDim t.Dynamic(1 To 2)
+t.Dynamic(2) = 5
+ReDim Preserve t.Dynamic(1 To 4)
+? t.Dynamic(2)
+? UBound(t.Dynamic)
+
+' Assigning a fixed array of types to a dynamic array copies it
+Dim a(1 To 2) As TInner, b() As TInner
+a(1).A = 1
+b = a
+b(1).A = 2
+? a(1).A
+? b(1).A
+? LBound(b)
+
+' Assigning a dynamic array of types copies it
+Dim a() As TInner, b() As TInner
+ReDim a(0 To 1)
+a(1).B = 7
+b = a
+a(1).B = 8
+? b(1).B
+
+' An element of an array of types passed ByRef
+Dim a(1 To 2) As TPair
+a(2).X = 1
+Shift a(2)
+? a(2).X
+
+' A type member passed ByRef
+Dim t As TOuter
+t.Inner.A = 1
+Shift2 t.Inner
+? t.Inner.A
+
+' LSet from a smaller type into a larger one
+Dim p As TPair, t As TTriple
+p.X = 1: p.Y = 2
+t.R = 7
+LSet t = p
+? t.P
+? t.Q
+? t.R
+
+' LSet from a larger type into a smaller one
+Dim p As TPair, t As TTriple
+t.P = 10: t.Q = 20: t.R = 30
+LSet p = t
+? p.X
+? p.Y
+
+' LSet of bytes into a fixed-length string member
+Dim b As TBytes, t As TText, i As Long
+For i = 1 To 8
+    b.Data(i) = 64 + i
+Next
+LSet t = b
+? Len(t.Text)
+? AscW(t.Text)
+? AscW(Mid$(t.Text, 2, 1))
+
+' LSet of a fixed-length string member into bytes
+Dim b As TBytes, t As TText
+t.Text = "ABCDEFGH"
+LSet b = t
+? b.Data(1)
+? b.Data(2)
+? b.Data(3)
+
+' LSet of a String member past a Long
+Dim w As TWide, t As TText
+t.Text = "ABCDEFGH"
+LSet w = t
+? w.Text
+? w.Tail
+
+' LSet on a fixed-length string pads and truncates
+Dim s As String * 6
+LSet s = "ab"
+? s
+LSet s = "abcdefgh"
+? s
+
+' RSet on a fixed-length string
+Dim s As String * 6
+RSet s = "ab"
+? s
+RSet s = "abcdefgh"
+? s
+
+' LSet on a variable-length string keeps its length
+Dim s As String
+s = "hello"
+LSet s = "hi"
+? s
+? Len(s)
+
+' RSet on a variable-length string keeps its length
+Dim s As String
+s = "hello"
+RSet s = "hi"
+? s
+
+' LSet on an empty string stays empty
+Dim s As String
+LSet s = "abc"
+? Len(s)
+
+' Len and LenB of a mixed type with an empty String member
+Dim m As TMixed
+? Len(m)
+? LenB(m)
+
+' Len and LenB of a mixed type with a String member set
+Dim m As TMixed
+m.S = "hello"
+? Len(m)
+? LenB(m)
+
+' Len and LenB of a type with only Longs
+Dim t As TTriple
+? Len(t)
+? LenB(t)
+
+' Len and LenB of a type with a fixed-length string
+Dim t As TText
+? Len(t)
+? LenB(t)
+
+' A fixed-length string member truncates and pads
+Dim m As TMixed
+m.F = "abcdefgh"
+? m.F
+m.F = "a"
+? m.F
+? Len(m.F)
+
+' A fixed-length string member starts as nulls
+Dim m As TMixed
+? Len(m.F)
+? AscW(m.F)
+? m.F = String$(4, 0)
+
+' Comparing a fixed-length string member with a padded value
+Dim m As TMixed
+m.F = "ab"
+? m.F = "ab  "
+? m.F = "ab"
+? RTrim$(m.F) = "ab"
+
+' The default values of a type
+Dim m As TMixed
+? m.B
+? m.I
+? m.L
+? m.D
+? m.C
+? m.S = ""
+
+' A type variable reassigned from itself
+Dim t As TOuter
+t.Name = "self"
+t.Fixed(1) = 3
+t = t
+? t.Name
+? t.Fixed(1)
+
+' Swapping two types through a third
+Dim a As TPair, b As TPair, c As TPair
+a.X = 1: b.X = 2
+c = a: a = b: b = c
+? a.X
+? b.X
+
+' With over a module-level type in another procedure leaves its strings alone
+gOuter.Name = "kept"
+RenameThroughWith
+? gOuter.Name
+? Len(gOuter.Name)
+
+' A function returning a type with a String member
+Dim t As TOuter
+t = MakeNamed("n")
+? t.Name
+? MakeNamed("m").Name
+
+' With over a function result copies it for the block
+With MakeNamed("w")
+    ? .Name & "!"
+End With
+
+' Len and LenB of a type with a fixed-length string array
+Dim t As TCodes
+? Len(t)
+? LenB(t)
+t.S(1) = "xyz"
+? Len(t)

@@ -1,0 +1,2766 @@
+{
+  "area": "FileSystem",
+  "excel": "16.0.20326",
+  "culture": "en-US",
+  "options": [],
+  "declarations": [
+    "Public Type TRecord",
+    "    Id As Long",
+    "    Label As String * 5",
+    "    Amount As Currency",
+    "End Type",
+    "",
+    "Public Type TCoded",
+    "    Id As Long",
+    "    Codes(1 To 2) As String * 3",
+    "End Type",
+    "",
+    "Public Function TempDir() As String",
+    "    TempDir = Environ(\"TEMP\") & \"\\vbang-golden\"",
+    "    If Dir(TempDir, vbDirectory) = \"\" Then MkDir TempDir",
+    "End Function",
+    "",
+    "Public Function TempPath(name As String) As String",
+    "    TempPath = TempDir() & \"\\\" & name",
+    "End Function",
+    "",
+    "Public Sub Zap(path As String)",
+    "    On Error Resume Next",
+    "    Kill path",
+    "    Err.Clear",
+    "End Sub",
+    "",
+    "Public Function CountLines(path As String) As Long",
+    "    Dim f As Integer, s As String",
+    "    f = FreeFile",
+    "    Open path For Input As #f",
+    "    Do Until EOF(f)",
+    "        Line Input #f, s",
+    "        CountLines = CountLines + 1",
+    "    Loop",
+    "    Close #f",
+    "End Function"
+  ],
+  "cases": [
+    {
+      "name": "CurDir and ChDir",
+      "source": [
+        "Dim old As String",
+        "old = CurDir",
+        "? Len(old) > 3",
+        "? Left(CurDir(\"C\"), 2)",
+        "ChDir TempDir",
+        "? CurDir = TempDir",
+        "ChDir old",
+        "? CurDir = old"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "C:"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ChDir to a missing folder",
+      "source": [
+        "ChDir TempPath(\"no-such-folder\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 76,
+        "description": "Path not found",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "ChDrive to the current drive",
+      "source": [
+        "ChDrive Left(CurDir, 1)",
+        "? Left(CurDir, 2) = Left(TempDir, 2)",
+        "ChDrive \"\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "MkDir, Dir with vbDirectory, GetAttr, RmDir",
+      "source": [
+        "Dim d As String",
+        "d = TempPath(\"sub\")",
+        "On Error Resume Next",
+        "RmDir d",
+        "On Error GoTo 0",
+        "MkDir d",
+        "? Dir(d, vbDirectory)",
+        "? (GetAttr(d) And vbDirectory) = vbDirectory",
+        "RmDir d",
+        "? Dir(d, vbDirectory)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "sub"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "MkDir of an existing folder",
+      "source": [
+        "MkDir TempDir"
+      ],
+      "results": [],
+      "error": {
+        "number": 75,
+        "description": "Path/File access error",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "RmDir of a missing folder",
+      "source": [
+        "RmDir TempPath(\"no-such-folder\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 76,
+        "description": "Path not found",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Kill of a missing file",
+      "source": [
+        "Kill TempPath(\"no-such-file.txt\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 53,
+        "description": "File not found",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "FreeFile ranges and the next free number",
+      "source": [
+        "Reset",
+        "Dim f As Integer",
+        "? FreeFile",
+        "? FreeFile(0)",
+        "? FreeFile(1)",
+        "Open TempPath(\"free.txt\") For Output As #1",
+        "? FreeFile",
+        "Close #1",
+        "? FreeFile",
+        "Zap TempPath(\"free.txt\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Integer",
+            "value": "256"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Integer",
+            "value": "2"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "FreeFile with a bad range",
+      "source": [
+        "? FreeFile(2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "256"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Print # writes lines the way Debug.Print shows them",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String, s As String",
+        "p = TempPath(\"lines.txt\")",
+        "Zap p",
+        "f = FreeFile",
+        "Open p For Output As #f",
+        "Print #f, \"hello\"; 1; True; 2.5",
+        "Print #f, \"a\", \"b\"",
+        "Print #f,",
+        "Print #f, \"x\";",
+        "Close #f",
+        "? FileLen(p)",
+        "Open p For Input As #f",
+        "Line Input #f, s",
+        "? s",
+        "Line Input #f, s",
+        "? s",
+        "Line Input #f, s",
+        "? s",
+        "? EOF(f)",
+        "Line Input #f, s",
+        "? s",
+        "? EOF(f)",
+        "? Loc(f)",
+        "? Seek(f)",
+        "Close #f",
+        "Zap p"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "39"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "hello 1 True 2.5 "
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "a             b"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "String",
+            "value": ""
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "String",
+            "value": "x"
+          }
+        },
+        {
+          "index": 6,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 7,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 8,
+          "value": {
+            "type": "Long",
+            "value": "40"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Write # quotes strings and marks the other types",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String, s As String",
+        "p = TempPath(\"write.txt\")",
+        "Zap p",
+        "f = FreeFile",
+        "Open p For Output As #f",
+        "Write #f, \"text\", 12, -3.5, True, False, Null, Empty, CDate(\"2024-03-05 06:07:08\"), CCur(12.5), 1E+21, \"quo\"\"te\"",
+        "Write #f,",
+        "Write #f, 1; 2",
+        "Write #f, \"end\";",
+        "Close #f",
+        "? FileLen(p)",
+        "Open p For Input As #f",
+        "Line Input #f, s",
+        "? s",
+        "Line Input #f, s",
+        "? s",
+        "Line Input #f, s",
+        "? s",
+        "Line Input #f, s",
+        "? s",
+        "? EOF(f)",
+        "Close #f",
+        "Zap p"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "95"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "\"text\",12,-3.5,#TRUE#,#FALSE#,#NULL#,,#2024-03-05 06:07:08#,12.5,1E+21,\"quo\"\"te\""
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": ""
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "String",
+            "value": "1,2"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "String",
+            "value": "\"end\","
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Write # of dates and errors",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String, s As String",
+        "p = TempPath(\"write2.txt\")",
+        "Zap p",
+        "f = FreeFile",
+        "Open p For Output As #f",
+        "Write #f, DateSerial(2024, 3, 5), TimeSerial(6, 7, 8), CVErr(2042), CInt(7), CByte(8), 0.1",
+        "Close #f",
+        "Open p For Input As #f",
+        "Line Input #f, s",
+        "? s",
+        "Close #f",
+        "Zap p"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "#2024-03-05#,#1899-12-30 06:07:08#,#ERROR 2042#,7,8,.1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Input # reads what Write # wrote into typed variables",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String",
+        "Dim s As String, n As Long, d As Double, b As Boolean, v As Variant, dt As Date, c As Currency",
+        "p = TempPath(\"input.txt\")",
+        "Zap p",
+        "f = FreeFile",
+        "Open p For Output As #f",
+        "Write #f, \"text\", 12, -3.5, True, Null, DateSerial(2024, 3, 5) + TimeSerial(6, 7, 8), CCur(12.5), Empty",
+        "Print #f, \"bare words, second\"; 7",
+        "Close #f",
+        "Open p For Input As #f",
+        "Input #f, s, n, d, b, v, dt, c",
+        "? s",
+        "? n",
+        "? d",
+        "? b",
+        "? IsNull(v)",
+        "? dt",
+        "? c",
+        "Input #f, v",
+        "? TypeName(v)",
+        "Input #f, s, v",
+        "? s",
+        "? TypeName(v)",
+        "? v",
+        "Input #f, n",
+        "? n",
+        "? EOF(f)",
+        "Close #f",
+        "Zap p"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "text"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "12"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Double",
+            "value": "-3.5",
+            "bits": "C00C000000000000"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "Date",
+            "value": "2024-03-05 06:07:08",
+            "bits": "40E625882894AB6D"
+          }
+        },
+        {
+          "index": 6,
+          "value": {
+            "type": "Currency",
+            "value": "12.5",
+            "bits": "000000000001E848"
+          }
+        },
+        {
+          "index": 7,
+          "value": {
+            "type": "String",
+            "value": "Empty"
+          }
+        },
+        {
+          "index": 8,
+          "value": {
+            "type": "String",
+            "value": "bare words"
+          }
+        },
+        {
+          "index": 9,
+          "value": {
+            "type": "String",
+            "value": "String"
+          }
+        },
+        {
+          "index": 10,
+          "value": {
+            "type": "String",
+            "value": "second 7"
+          }
+        }
+      ],
+      "error": {
+        "number": 62,
+        "description": "Input past end of file",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Input # converts text to the variable's type",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String, n As Long, d As Double, v As Variant, b As Boolean",
+        "p = TempPath(\"input2.txt\")",
+        "Zap p",
+        "f = FreeFile",
+        "Open p For Output As #f",
+        "Print #f, \"abc,12.5,#TRUE#,1e3\"",
+        "Close #f",
+        "Open p For Input As #f",
+        "Input #f, n, v, b, d",
+        "? n",
+        "? TypeName(v)",
+        "? v",
+        "? b",
+        "? d",
+        "Close #f",
+        "Zap p"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "Currency"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Currency",
+            "value": "12.5",
+            "bits": "000000000001E848"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Double",
+            "value": "1000",
+            "bits": "408F400000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Input # past the end of the file",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String, s As String",
+        "p = TempPath(\"past.txt\")",
+        "Zap p",
+        "f = FreeFile",
+        "Open p For Output As #f",
+        "Write #f, \"only\"",
+        "Close #f",
+        "Open p For Input As #f",
+        "Input #f, s",
+        "? s",
+        "Input #f, s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "only"
+          }
+        }
+      ],
+      "error": {
+        "number": 62,
+        "description": "Input past end of file",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Line Input past the end of the file",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String, s As String",
+        "p = TempPath(\"past2.txt\")",
+        "Zap p",
+        "f = FreeFile",
+        "Open p For Output As #f",
+        "Print #f, \"only\"",
+        "Close #f",
+        "Open p For Input As #f",
+        "Line Input #f, s",
+        "? EOF(f)",
+        "Line Input #f, s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ],
+      "error": {
+        "number": 62,
+        "description": "Input past end of file",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Append adds to the end",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String",
+        "p = TempPath(\"append.txt\")",
+        "Zap p",
+        "f = FreeFile",
+        "Open p For Output As #f",
+        "Print #f, \"one\"",
+        "Close #f",
+        "Open p For Append As #f",
+        "Print #f, \"two\"",
+        "Close #f",
+        "? CountLines(p)",
+        "? FileLen(p)",
+        "Zap p"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Input() reads a number of characters",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String",
+        "p = TempPath(\"chars.txt\")",
+        "Zap p",
+        "f = FreeFile",
+        "Open p For Output As #f",
+        "Print #f, \"abcdef\"",
+        "Close #f",
+        "Open p For Input As #f",
+        "? Input(3, f)",
+        "? Input(2, #f)",
+        "? Loc(f)",
+        "? Seek(f)",
+        "? EOF(f)",
+        "? Input(3, f)",
+        "? EOF(f)",
+        "Close #f",
+        "Zap p"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "abc"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "de"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Long",
+            "value": "6"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "String",
+            "value": "f\r\n"
+          }
+        },
+        {
+          "index": 6,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "InputB() reads a number of bytes as a byte string",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String, b As String",
+        "p = TempPath(\"bytes.bin\")",
+        "Zap p",
+        "f = FreeFile",
+        "Open p For Output As #f",
+        "Print #f, \"abcdef\";",
+        "Close #f",
+        "Open p For Binary As #f",
+        "b = InputB(3, f)",
+        "? LenB(b)",
+        "? AscB(b) & \",\" & AscB(MidB(b, 2, 1)) & \",\" & AscB(MidB(b, 3, 1))",
+        "? Loc(f)",
+        "b = InputB(2, #f)",
+        "? LenB(b) & \":\" & AscB(b)",
+        "Close #f",
+        "Zap p"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "97,98,99"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "String",
+            "value": "2:100"
+          }
+        }
+      ]
+    },
+    {
+      "name": "InputB() past the end of the file",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String, b As String",
+        "p = TempPath(\"short.bin\")",
+        "Zap p",
+        "f = FreeFile",
+        "Open p For Output As #f",
+        "Print #f, \"ab\";",
+        "Close #f",
+        "Open p For Binary As #f",
+        "b = InputB(5, f)",
+        "? LenB(b)",
+        "? AscB(b) & \",\" & AscB(MidB(b, 2, 1)) & \",\" & AscB(MidB(b, 3, 1))",
+        "? Loc(f)",
+        "? EOF(f)",
+        "Close #f",
+        "Zap p"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "97,98,0"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "InputB() in Input mode past the end of the file",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String, b As String",
+        "p = TempPath(\"short.txt\")",
+        "Zap p",
+        "f = FreeFile",
+        "Open p For Output As #f",
+        "Print #f, \"ab\";",
+        "Close #f",
+        "Open p For Input As #f",
+        "b = InputB(2, f)",
+        "? LenB(b)",
+        "b = InputB(1, f)",
+        "Close #f",
+        "Zap p"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ],
+      "error": {
+        "number": 62,
+        "description": "Input past end of file",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Input() past the end of the file",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String",
+        "p = TempPath(\"chars2.txt\")",
+        "Zap p",
+        "f = FreeFile",
+        "Open p For Output As #f",
+        "Print #f, \"ab\"",
+        "Close #f",
+        "Open p For Input As #f",
+        "? Input(9, f)"
+      ],
+      "results": [],
+      "error": {
+        "number": 62,
+        "description": "Input past end of file",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Open For Input on a missing file",
+      "source": [
+        "Reset",
+        "Dim f As Integer",
+        "f = FreeFile",
+        "Open TempPath(\"no-such-file.txt\") For Input As #f"
+      ],
+      "results": [],
+      "error": {
+        "number": 53,
+        "description": "File not found",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Open with a bad file name",
+      "source": [
+        "Reset",
+        "Dim f As Integer",
+        "f = FreeFile",
+        "Open TempPath(\"bad<>name.txt\") For Output As #f"
+      ],
+      "results": [],
+      "error": {
+        "number": 52,
+        "description": "Bad file name or number",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Open with a file number already in use",
+      "source": [
+        "Reset",
+        "Dim p As String",
+        "p = TempPath(\"twice.txt\")",
+        "Open p For Output As #1",
+        "Open TempPath(\"twice2.txt\") For Output As #1"
+      ],
+      "results": [],
+      "error": {
+        "number": 55,
+        "description": "File already open",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Open with file number zero",
+      "source": [
+        "Reset",
+        "Open TempPath(\"zero.txt\") For Output As #0"
+      ],
+      "results": [],
+      "error": {
+        "number": 52,
+        "description": "Bad file name or number",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Print # to a file that is not open",
+      "source": [
+        "Reset",
+        "Print #7, \"x\""
+      ],
+      "results": [],
+      "error": {
+        "number": 52,
+        "description": "Bad file name or number",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Print # to a file opened for Input",
+      "source": [
+        "Reset",
+        "Dim p As String",
+        "p = TempPath(\"mode.txt\")",
+        "Zap p",
+        "Open p For Output As #1",
+        "Print #1, \"x\"",
+        "Close #1",
+        "Open p For Input As #1",
+        "Print #1, \"y\""
+      ],
+      "results": [],
+      "error": {
+        "number": 54,
+        "description": "Bad file mode",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Input # from a file opened for Output",
+      "source": [
+        "Reset",
+        "Dim s As String",
+        "Open TempPath(\"mode2.txt\") For Output As #1",
+        "Input #1, s"
+      ],
+      "results": [],
+      "error": {
+        "number": 54,
+        "description": "Bad file mode",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Get from a sequential file",
+      "source": [
+        "Reset",
+        "Dim n As Long",
+        "Open TempPath(\"mode3.txt\") For Output As #1",
+        "Get #1, , n"
+      ],
+      "results": [],
+      "error": {
+        "number": 54,
+        "description": "Bad file mode",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Binary Put and Get of scalars, with LOF, Loc, and Seek",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String",
+        "Dim i As Integer, l As Long, d As Double, s As String, b As Byte, cur As Currency, bo As Boolean",
+        "p = TempPath(\"bin.dat\")",
+        "Zap p",
+        "f = FreeFile",
+        "Open p For Binary As #f",
+        "Put #f, , CInt(7)",
+        "Put #f, , 123456789",
+        "Put #f, , 2.5",
+        "Put #f, , \"abc\"",
+        "Put #f, , CByte(255)",
+        "Put #f, , CCur(1.25)",
+        "Put #f, , True",
+        "? LOF(f)",
+        "? Loc(f)",
+        "? Seek(f)",
+        "Seek #f, 1",
+        "Get #f, , i",
+        "Get #f, , l",
+        "Get #f, , d",
+        "s = \"   \"",
+        "Get #f, , s",
+        "Get #f, , b",
+        "Get #f, , cur",
+        "Get #f, , bo",
+        "? i",
+        "? l",
+        "? d",
+        "? s",
+        "? b",
+        "? cur",
+        "? bo",
+        "? Loc(f)",
+        "? Seek(f)",
+        "? EOF(f)",
+        "Get #f, 3, l",
+        "? l",
+        "? Seek(f)",
+        "Close #f",
+        "? FileLen(p)",
+        "Zap p"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "28"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "28"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "29"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Integer",
+            "value": "7"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Long",
+            "value": "123456789"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "Double",
+            "value": "2.5",
+            "bits": "4004000000000000"
+          }
+        },
+        {
+          "index": 6,
+          "value": {
+            "type": "String",
+            "value": "abc"
+          }
+        },
+        {
+          "index": 7,
+          "value": {
+            "type": "Byte",
+            "value": "255"
+          }
+        },
+        {
+          "index": 8,
+          "value": {
+            "type": "Currency",
+            "value": "1.25",
+            "bits": "00000000000030D4"
+          }
+        },
+        {
+          "index": 9,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 10,
+          "value": {
+            "type": "Long",
+            "value": "28"
+          }
+        },
+        {
+          "index": 11,
+          "value": {
+            "type": "Long",
+            "value": "29"
+          }
+        },
+        {
+          "index": 12,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        },
+        {
+          "index": 13,
+          "value": {
+            "type": "Long",
+            "value": "123456789"
+          }
+        },
+        {
+          "index": 14,
+          "value": {
+            "type": "Long",
+            "value": "7"
+          }
+        },
+        {
+          "index": 15,
+          "value": {
+            "type": "Long",
+            "value": "28"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Binary Put and Get of a record, an array, and Variants",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String, r As TRecord, r2 As TRecord, a(1 To 3) As Long, a2(1 To 3) As Long, v As Variant, v2 As Variant",
+        "p = TempPath(\"bin2.dat\")",
+        "Zap p",
+        "f = FreeFile",
+        "Open p For Binary As #f",
+        "r.Id = 42",
+        "r.Label = \"ab\"",
+        "r.Amount = 9.5",
+        "Put #f, , r",
+        "a(1) = 10",
+        "a(2) = 20",
+        "a(3) = 30",
+        "Put #f, , a",
+        "v = 3.75",
+        "Put #f, , v",
+        "v = \"hey\"",
+        "Put #f, , v",
+        "? LOF(f)",
+        "Seek #f, 1",
+        "Get #f, , r2",
+        "Get #f, , a2",
+        "Get #f, , v2",
+        "? r2.Id",
+        "? r2.Label",
+        "? Len(r2.Label)",
+        "? r2.Amount",
+        "? a2(1) + a2(2) + a2(3)",
+        "? TypeName(v2)",
+        "? v2",
+        "Get #f, , v2",
+        "? TypeName(v2)",
+        "? v2",
+        "? Seek(f)",
+        "Close #f",
+        "Zap p"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "46"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "42"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "ab   "
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Currency",
+            "value": "9.5",
+            "bits": "0000000000017318"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "Long",
+            "value": "60"
+          }
+        },
+        {
+          "index": 6,
+          "value": {
+            "type": "String",
+            "value": "Double"
+          }
+        },
+        {
+          "index": 7,
+          "value": {
+            "type": "Double",
+            "value": "3.75",
+            "bits": "400E000000000000"
+          }
+        },
+        {
+          "index": 8,
+          "value": {
+            "type": "String",
+            "value": "String"
+          }
+        },
+        {
+          "index": 9,
+          "value": {
+            "type": "String",
+            "value": "hey"
+          }
+        },
+        {
+          "index": 10,
+          "value": {
+            "type": "Long",
+            "value": "47"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Binary Get past the end",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String, l As Long, l2 As Long",
+        "p = TempPath(\"bin3.dat\")",
+        "Zap p",
+        "f = FreeFile",
+        "Open p For Binary As #f",
+        "Put #f, , CLng(5)",
+        "? EOF(f)",
+        "Seek #f, 1",
+        "Get #f, , l",
+        "? l",
+        "? EOF(f)",
+        "Get #f, , l2",
+        "? l2",
+        "? EOF(f)",
+        "Close #f",
+        "Zap p"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Binary Access Read on a missing file creates it",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String",
+        "p = TempPath(\"no-such-file.dat\")",
+        "Zap p",
+        "f = FreeFile",
+        "Open p For Binary Access Read As #f",
+        "? LOF(f)",
+        "Close #f",
+        "? FileLen(p)",
+        "Zap p"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Binary mode creates a missing file",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String",
+        "p = TempPath(\"created.dat\")",
+        "Zap p",
+        "f = FreeFile",
+        "Open p For Binary As #f",
+        "? LOF(f)",
+        "Close #f",
+        "? FileLen(p)",
+        "Zap p"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Random Put and Get of records with Len",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String, r As TRecord, r2 As TRecord",
+        "p = TempPath(\"rand.dat\")",
+        "Zap p",
+        "f = FreeFile",
+        "? Len(r)",
+        "Open p For Random As #f Len = Len(r)",
+        "r.Id = 1",
+        "r.Label = \"one\"",
+        "r.Amount = 1.5",
+        "Put #f, 1, r",
+        "r.Id = 2",
+        "r.Label = \"two\"",
+        "r.Amount = 2.5",
+        "Put #f, 2, r",
+        "r.Id = 3",
+        "r.Label = \"three\"",
+        "r.Amount = 3.5",
+        "Put #f, 3, r",
+        "? LOF(f)",
+        "? Loc(f)",
+        "? Seek(f)",
+        "Get #f, 2, r2",
+        "? r2.Id",
+        "? r2.Label",
+        "? r2.Amount",
+        "? Loc(f)",
+        "? Seek(f)",
+        "Get #f, , r2",
+        "? r2.Id",
+        "? EOF(f)",
+        "Get #f, 5, r2",
+        "? r2.Id",
+        "? EOF(f)",
+        "Close #f",
+        "? FileLen(p)",
+        "Zap p"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "17"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "51"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "String",
+            "value": "two  "
+          }
+        },
+        {
+          "index": 6,
+          "value": {
+            "type": "Currency",
+            "value": "2.5",
+            "bits": "00000000000061A8"
+          }
+        },
+        {
+          "index": 7,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        },
+        {
+          "index": 8,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        },
+        {
+          "index": 9,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        },
+        {
+          "index": 10,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        },
+        {
+          "index": 11,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        },
+        {
+          "index": 12,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 13,
+          "value": {
+            "type": "Long",
+            "value": "51"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Random mode with the default record length",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String, l As Long, s As String",
+        "p = TempPath(\"rand2.dat\")",
+        "Zap p",
+        "f = FreeFile",
+        "Open p For Random As #f",
+        "Put #f, 2, CLng(9)",
+        "? LOF(f)",
+        "Put #f, , \"abc\"",
+        "? LOF(f)",
+        "? Seek(f)",
+        "Get #f, 3, s",
+        "? s",
+        "? Len(s)",
+        "Close #f",
+        "Zap p"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "132"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "261"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "String",
+            "value": "abc"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Random Put longer than the record length",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String, r As TRecord",
+        "p = TempPath(\"rand3.dat\")",
+        "Zap p",
+        "f = FreeFile",
+        "Open p For Random As #f Len = 4",
+        "Put #f, 1, r"
+      ],
+      "results": [],
+      "error": {
+        "number": 59,
+        "description": "Bad record length",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Seek to zero",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String",
+        "p = TempPath(\"seek0.dat\")",
+        "Zap p",
+        "f = FreeFile",
+        "Open p For Binary As #f",
+        "Seek #f, 0"
+      ],
+      "results": [],
+      "error": {
+        "number": 63,
+        "description": "Bad record number",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Seek beyond the end of a Binary file, then Loc and EOF",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String, l As Long",
+        "p = TempPath(\"seek.dat\")",
+        "Zap p",
+        "f = FreeFile",
+        "Open p For Binary As #f",
+        "Put #f, , CLng(1)",
+        "Seek #f, 10",
+        "? Seek(f)",
+        "? Loc(f)",
+        "? EOF(f)",
+        "Put #f, , CLng(2)",
+        "? LOF(f)",
+        "Close #f",
+        "Zap p"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "9"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Long",
+            "value": "13"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Lock and Unlock a file",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String",
+        "p = TempPath(\"lock.dat\")",
+        "Zap p",
+        "f = FreeFile",
+        "Open p For Binary As #f",
+        "Put #f, , CLng(1)",
+        "Lock #f",
+        "Unlock #f",
+        "Lock #f, 1",
+        "Unlock #f, 1",
+        "Lock #f, 1 To 2",
+        "Unlock #f, 1 To 2",
+        "? LOF(f)",
+        "Close #f",
+        "Zap p"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Width wraps Print # lines",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String, s As String",
+        "p = TempPath(\"width.txt\")",
+        "Zap p",
+        "f = FreeFile",
+        "Open p For Output As #f",
+        "Width #f, 5",
+        "Print #f, \"abcdefgh\"",
+        "Print #f, \"ij\"; \"kl\"; \"mn\"",
+        "Close #f",
+        "? FileLen(p)",
+        "? CountLines(p)",
+        "Open p For Input As #f",
+        "Line Input #f, s",
+        "? s",
+        "Line Input #f, s",
+        "? s",
+        "Close #f",
+        "Zap p"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "20"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "abcdefgh"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "String",
+            "value": "ijkl"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Close without arguments and Reset close every file",
+      "source": [
+        "Reset",
+        "Open TempPath(\"all1.txt\") For Output As #1",
+        "Open TempPath(\"all2.txt\") For Output As #2",
+        "? FreeFile",
+        "Close",
+        "? FreeFile",
+        "Open TempPath(\"all1.txt\") For Output As #1",
+        "Reset",
+        "? FreeFile",
+        "Zap TempPath(\"all1.txt\")",
+        "Zap TempPath(\"all2.txt\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "3"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Close of a file that is not open",
+      "source": [
+        "Reset",
+        "Close #9",
+        "? FreeFile"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "FileLen, FileCopy, FileDateTime, GetAttr, SetAttr, Name",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String, q As String, r As String",
+        "p = TempPath(\"orig.txt\")",
+        "q = TempPath(\"copy.txt\")",
+        "r = TempPath(\"renamed.txt\")",
+        "Zap p",
+        "Zap q",
+        "Zap r",
+        "f = FreeFile",
+        "Open p For Output As #f",
+        "Print #f, \"12345\"",
+        "Close #f",
+        "? FileLen(p)",
+        "FileCopy p, q",
+        "? FileLen(q)",
+        "? TypeName(FileDateTime(q))",
+        "? Abs(FileDateTime(q) - Now) < 1",
+        "? GetAttr(q) And vbReadOnly",
+        "SetAttr q, vbReadOnly",
+        "? GetAttr(q) And vbReadOnly",
+        "SetAttr q, vbNormal",
+        "? GetAttr(q) And vbReadOnly",
+        "Name q As r",
+        "? Dir(q)",
+        "? Dir(r)",
+        "Kill r",
+        "Kill p",
+        "? Dir(p)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "7"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "7"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "Date"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 6,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        },
+        {
+          "index": 7,
+          "value": {
+            "type": "String",
+            "value": ""
+          }
+        },
+        {
+          "index": 8,
+          "value": {
+            "type": "String",
+            "value": "renamed.txt"
+          }
+        },
+        {
+          "index": 9,
+          "value": {
+            "type": "String",
+            "value": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "FileLen of a missing file",
+      "source": [
+        "? FileLen(TempPath(\"no-such-file.txt\"))"
+      ],
+      "results": [],
+      "error": {
+        "number": 53,
+        "description": "File not found",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "FileCopy from a missing file",
+      "source": [
+        "FileCopy TempPath(\"no-such-file.txt\"), TempPath(\"copy2.txt\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 53,
+        "description": "File not found",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Name onto an existing file",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String, q As String",
+        "p = TempPath(\"n1.txt\")",
+        "q = TempPath(\"n2.txt\")",
+        "f = FreeFile",
+        "Open p For Output As #f",
+        "Close #f",
+        "Open q For Output As #f",
+        "Close #f",
+        "Name p As q"
+      ],
+      "results": [],
+      "error": {
+        "number": 58,
+        "description": "File already exists",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "GetAttr of a missing file",
+      "source": [
+        "? GetAttr(TempPath(\"no-such-file.txt\"))"
+      ],
+      "results": [],
+      "error": {
+        "number": 53,
+        "description": "File not found",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Dir walks a wildcard pattern",
+      "source": [
+        "Reset",
+        "Dim d As String, f As Integer, n As Long, names As String",
+        "d = TempPath(\"dir\")",
+        "If Dir(d, vbDirectory) = \"\" Then MkDir d",
+        "Zap d & \"\\a1.txt\"",
+        "Zap d & \"\\a2.txt\"",
+        "Zap d & \"\\b.txt\"",
+        "f = FreeFile",
+        "Open d & \"\\a1.txt\" For Output As #f",
+        "Close #f",
+        "Open d & \"\\a2.txt\" For Output As #f",
+        "Close #f",
+        "Open d & \"\\b.txt\" For Output As #f",
+        "Close #f",
+        "? Dir(d & \"\\a*.txt\")",
+        "? Dir",
+        "? Dir",
+        "names = Dir(d & \"\\*.txt\")",
+        "Do While names <> \"\"",
+        "    n = n + 1",
+        "    names = Dir",
+        "Loop",
+        "? n",
+        "? Dir(d & \"\\nomatch*\")",
+        "? Dir(d & \"\\\")",
+        "? Dir(d)",
+        "Kill d & \"\\*.txt\"",
+        "? Dir(d & \"\\*.txt\")",
+        "RmDir d"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "a1.txt"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "a2.txt"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": ""
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "String",
+            "value": ""
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "String",
+            "value": "a1.txt"
+          }
+        },
+        {
+          "index": 6,
+          "value": {
+            "type": "String",
+            "value": ""
+          }
+        },
+        {
+          "index": 7,
+          "value": {
+            "type": "String",
+            "value": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dir without a pattern after the walk ended",
+      "source": [
+        "? Dir(TempPath(\"none-*.zzz\"))",
+        "? Dir"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": ""
+          }
+        }
+      ],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Dir with vbDirectory lists folders and files",
+      "source": [
+        "Reset",
+        "Dim d As String, f As Integer, entry As String, folders As Long, files As Long",
+        "d = TempPath(\"dir2\")",
+        "If Dir(d, vbDirectory) = \"\" Then MkDir d",
+        "If Dir(d & \"\\inner\", vbDirectory) = \"\" Then MkDir d & \"\\inner\"",
+        "f = FreeFile",
+        "Open d & \"\\file.txt\" For Output As #f",
+        "Close #f",
+        "entry = Dir(d & \"\\*\", vbDirectory)",
+        "Do While entry <> \"\"",
+        "    If entry <> \".\" And entry <> \"..\" Then",
+        "        If (GetAttr(d & \"\\\" & entry) And vbDirectory) = vbDirectory Then folders = folders + 1 Else files = files + 1",
+        "    End If",
+        "    entry = Dir",
+        "Loop",
+        "? folders",
+        "? files",
+        "Kill d & \"\\file.txt\"",
+        "RmDir d & \"\\inner\"",
+        "RmDir d"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Settings in the registry",
+      "source": [
+        "SaveSetting \"VbaNgGolden\", \"Section\", \"Key\", \"value\"",
+        "? GetSetting(\"VbaNgGolden\", \"Section\", \"Key\")",
+        "? GetSetting(\"VbaNgGolden\", \"Section\", \"Missing\")",
+        "? GetSetting(\"VbaNgGolden\", \"Section\", \"Missing\", \"dflt\")",
+        "SaveSetting \"VbaNgGolden\", \"Section\", \"Other\", \"2\"",
+        "? UBound(GetAllSettings(\"VbaNgGolden\", \"Section\"), 1)",
+        "? UBound(GetAllSettings(\"VbaNgGolden\", \"Section\"), 2)",
+        "DeleteSetting \"VbaNgGolden\", \"Section\", \"Other\"",
+        "? UBound(GetAllSettings(\"VbaNgGolden\", \"Section\"), 1)",
+        "DeleteSetting \"VbaNgGolden\"",
+        "? GetSetting(\"VbaNgGolden\", \"Section\", \"Key\")",
+        "? IsEmpty(GetAllSettings(\"VbaNgGolden\", \"Section\"))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "value"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": ""
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "dflt"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        },
+        {
+          "index": 6,
+          "value": {
+            "type": "String",
+            "value": ""
+          }
+        },
+        {
+          "index": 7,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Len of a record",
+      "source": [
+        "Dim r As TRecord",
+        "? Len(r)",
+        "? LenB(r)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "17"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "24"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Input # into a Variant types an integer, a large integer, an exponent form, and a negative",
+      "source": [
+        "Reset",
+        "Dim p As String, f As Integer, a As Variant, b As Variant, c As Variant, d As Variant",
+        "p = TempPath(\"variants.txt\")",
+        "f = FreeFile",
+        "Open p For Output As #f",
+        "Write #f, 12, 100000, 1.5E+20, -7",
+        "Close #f",
+        "Open p For Input As #f",
+        "Input #f, a, b, c, d",
+        "Close #f",
+        "? TypeName(a)",
+        "? TypeName(b)",
+        "? TypeName(c)",
+        "? TypeName(d)",
+        "? c"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Integer"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "Long"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "Double"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "String",
+            "value": "Integer"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Double",
+            "value": "1.5E+20",
+            "bits": "442043561A882930"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Input # into a Variant reads the Write # forms of Boolean, Null, Date, and Empty",
+      "source": [
+        "Reset",
+        "Dim p As String, f As Integer, a As Variant, b As Variant, c As Variant, d As Variant",
+        "p = TempPath(\"variants2.txt\")",
+        "f = FreeFile",
+        "Open p For Output As #f",
+        "Write #f, True, Null, #1/2/2020 3:04:05 PM#, Empty",
+        "Close #f",
+        "Open p For Input As #f",
+        "Input #f, a, b, c, d",
+        "Close #f",
+        "? TypeName(a)",
+        "? TypeName(b)",
+        "? TypeName(c)",
+        "? c",
+        "? TypeName(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Boolean"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "Null"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "Date"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 15:04:05",
+            "bits": "40E56714173AC902"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "String",
+            "value": "Empty"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dir with vbDirectory lists the dot entries first",
+      "source": [
+        "Reset",
+        "Dim d As String, f As Integer, first As String, second As String",
+        "d = TempPath(\"dir3\")",
+        "If Dir(d, vbDirectory) = \"\" Then MkDir d",
+        "If Dir(d & \"\\aaa\", vbDirectory) = \"\" Then MkDir d & \"\\aaa\"",
+        "f = FreeFile",
+        "Open d & \"\\000.txt\" For Output As #f",
+        "Close #f",
+        "first = Dir(d & \"\\*\", vbDirectory)",
+        "second = Dir()",
+        "? first",
+        "? second"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "."
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": ".."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dir lists a hidden file only with vbHidden",
+      "source": [
+        "Reset",
+        "Dim d As String, f As Integer, plain As String, hidden As String",
+        "d = TempPath(\"dir4\")",
+        "If Dir(d, vbDirectory) = \"\" Then MkDir d",
+        "f = FreeFile",
+        "Open d & \"\\h.txt\" For Output As #f",
+        "Close #f",
+        "SetAttr d & \"\\h.txt\", vbHidden",
+        "plain = Dir(d & \"\\h.txt\")",
+        "hidden = Dir(d & \"\\h.txt\", vbHidden)",
+        "SetAttr d & \"\\h.txt\", vbNormal",
+        "? plain",
+        "? hidden"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": ""
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "h.txt"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dir lists a system file only with vbSystem",
+      "source": [
+        "Reset",
+        "Dim d As String, f As Integer, plain As String, system As String",
+        "d = TempPath(\"dir5\")",
+        "If Dir(d, vbDirectory) = \"\" Then MkDir d",
+        "f = FreeFile",
+        "Open d & \"\\s.txt\" For Output As #f",
+        "Close #f",
+        "SetAttr d & \"\\s.txt\", vbSystem",
+        "plain = Dir(d & \"\\s.txt\")",
+        "system = Dir(d & \"\\s.txt\", vbSystem)",
+        "SetAttr d & \"\\s.txt\", vbNormal",
+        "? plain",
+        "? system"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": ""
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "s.txt"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Loc on a sequential file counts 128-byte blocks",
+      "source": [
+        "Reset",
+        "Dim p As String, f As Integer, s As String, i As Long",
+        "p = TempPath(\"loc.txt\")",
+        "f = FreeFile",
+        "Open p For Output As #f",
+        "For i = 1 To 30",
+        "    Print #f, String$(18, \"x\")",
+        "Next",
+        "Close #f",
+        "Open p For Input As #f",
+        "? Loc(f)",
+        "Line Input #f, s",
+        "? Loc(f)",
+        "For i = 1 To 6",
+        "    Line Input #f, s",
+        "Next",
+        "? Loc(f)",
+        "? Seek(f)",
+        "Close #f"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Long",
+            "value": "141"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Binary Put of a dynamic array writes a descriptor that Get reads back",
+      "source": [
+        "Reset",
+        "Dim p As String, f As Integer, a() As Long, b() As Long, c(1 To 3) As Long",
+        "p = TempPath(\"dynamic.bin\")",
+        "Zap p",
+        "ReDim a(2 To 4)",
+        "a(2) = 10: a(3) = 20: a(4) = 30",
+        "f = FreeFile",
+        "Open p For Binary As #f",
+        "Put #f, , a",
+        "? LOF(f)",
+        "Get #f, 1, b",
+        "? LBound(b)",
+        "? UBound(b)",
+        "? b(3)",
+        "Get #f, 1, c",
+        "? c(1)",
+        "? c(2)",
+        "Close #f"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "12"
+          }
+        }
+      ],
+      "error": {
+        "number": 9,
+        "description": "Subscript out of range",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Binary Put of a fixed array writes the elements only",
+      "source": [
+        "Reset",
+        "Dim p As String, f As Integer, a(1 To 3) As Long, b() As Long",
+        "p = TempPath(\"fixed.bin\")",
+        "Zap p",
+        "a(1) = 1: a(2) = 2: a(3) = 3",
+        "f = FreeFile",
+        "Open p For Binary As #f",
+        "Put #f, , a",
+        "? LOF(f)",
+        "Close #f"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "12"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Binary Put and Get of a record with a fixed-length string array",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String, r As TCoded, r2 As TCoded",
+        "p = TempPath(\"codes.dat\")",
+        "Zap p",
+        "f = FreeFile",
+        "Open p For Binary As #f",
+        "r.Id = 7",
+        "r.Codes(1) = \"ab\"",
+        "r.Codes(2) = \"wxyz\"",
+        "Put #f, , r",
+        "? LOF(f)",
+        "Seek #f, 1",
+        "Get #f, , r2",
+        "? r2.Id",
+        "? \"[\" & r2.Codes(1) & \"]\"",
+        "? r2.Codes(2)",
+        "Close #f",
+        "Zap p",
+        "? Len(r)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "7"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "[ab ]"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "String",
+            "value": "wxy"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Integer",
+            "value": "10"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Binary Put and Get of a fixed-length String array",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String, a(1) As String * 3, a2(1) As String * 3",
+        "p = TempPath(\"fixed.dat\")",
+        "Zap p",
+        "f = FreeFile",
+        "Open p For Binary As #f",
+        "a(0) = \"ab\"",
+        "a(1) = \"xyz\"",
+        "Put #f, , a",
+        "? LOF(f)",
+        "Seek #f, 1",
+        "Get #f, , a2",
+        "? \"[\" & a2(0) & \"]\" & a2(1)",
+        "Close #f",
+        "Zap p"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "6"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "[ab ]xyz"
+          }
+        }
+      ]
+    }
+  ]
+}

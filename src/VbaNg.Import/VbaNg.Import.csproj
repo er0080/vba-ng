@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Description>Reads the VBA project embedded in a workbook (MS-OVBA) without Excel, and writes it as vba-ng source files.</Description>
+  </PropertyGroup>
+
+</Project>

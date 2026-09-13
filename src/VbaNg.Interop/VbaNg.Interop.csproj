@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Description>COM interop for compiled vba-ng projects: IDispatch invoke, VARIANT and SAFEARRAY marshaling, enumeration, and object creation (ARCHITECTURE.md section 7, D7).</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VbaNg.Runtime\VbaNg.Runtime.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="VbaNg.Interop.Tests" />
+  </ItemGroup>
+
+</Project>

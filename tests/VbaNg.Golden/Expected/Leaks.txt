@@ -1,0 +1,10 @@
+# Cases that leave BSTRs or arrays allocated after they end, as "Area: case name", one per
+# line. The replay asserts that every other case leaves the live-allocation count where it found it,
+# and that every case listed here still does not. Two kinds belong here: a case that fills
+# module-level storage the area declares (the first to assign it; the storage lives until the
+# project resets, as in VBA), and a case that leaks on purpose (VBA leaks it too).
+Classes: New runs Class_Initialize and Set Nothing runs Class_Terminate
+Classes: Objects that reference each other never terminate
+Memory: An object reached through its pointer without AddRef, and when it dies
+Scope: A public variable of another module, qualified and bare
+Types: With over a module-level type in another procedure leaves its strings alone

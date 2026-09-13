@@ -1,0 +1,2253 @@
+{
+  "area": "Procedures",
+  "excel": "16.0.20326",
+  "culture": "en-US",
+  "options": [],
+  "declarations": [
+    "Public Type TPoint",
+    "    X As Long",
+    "    Y As Long",
+    "End Type",
+    "",
+    "Public Type TShape",
+    "    Name As String",
+    "    Origin As TPoint",
+    "    Points(1 To 3) As TPoint",
+    "    Tags() As String",
+    "End Type",
+    "",
+    "Public Enum Color",
+    "    Red",
+    "    Green = 5",
+    "    Blue",
+    "    Purple = -1",
+    "End Enum",
+    "",
+    "Public Enum ECompass",
+    "    North = 1",
+    "    East = 2",
+    "End Enum",
+    "",
+    "Public Enum EDial",
+    "    North = 10",
+    "    East = 20",
+    "End Enum",
+    "",
+    "Public Type TRange",
+    "    Items(Green To Blue) As Long",
+    "End Type",
+    "",
+    "Public Const KLongLong = VbVarType.vbLongLong",
+    "",
+    "Private prop As Long",
+    "",
+    "Public Function ShiftAndSum(p As TPoint) As Long",
+    "    p.X = p.X + 1",
+    "    ShiftAndSum = p.X + p.Y",
+    "End Function",
+    "",
+    "Public Function MakeNumbers() As Long()",
+    "    Dim n(1 To 2) As Long",
+    "    n(1) = 3: n(2) = 4",
+    "    MakeNumbers = n",
+    "End Function",
+    "",
+    "Public Function SumNumbers(n() As Long) As Long",
+    "    SumNumbers = n(1) + n(2)",
+    "End Function",
+    "",
+    "Public Function MakeNames() As String()",
+    "    Dim n(1 To 2) As String",
+    "    n(1) = \"ab\": n(2) = \"cd\"",
+    "    MakeNames = n",
+    "End Function",
+    "",
+    "Public Function Twice(ByVal n As Long) As Long",
+    "    Twice = n * 2",
+    "End Function",
+    "",
+    "Public Sub Bump(ByRef n As Long)",
+    "    n = n + 1",
+    "End Sub",
+    "",
+    "Public Sub BumpVariant(ByRef v As Variant)",
+    "    v = v + 1",
+    "End Sub",
+    "",
+    "Public Sub SetText(ByRef s As String)",
+    "    s = \"set\"",
+    "End Sub",
+    "",
+    "Public Function DefaultNothing(Optional ByVal v As Variant = Nothing) As String",
+    "    DefaultNothing = TypeName(v) & \" \" & IsMissing(v) & \" \" & IsObject(v)",
+    "End Function",
+    "",
+    "Public Function Stepped(n As Long) As Long",
+    "    n = n + 1",
+    "    Stepped = n",
+    "End Function",
+    "",
+    "Public Function Exclaimed(s As String) As String",
+    "    s = s & \"!\"",
+    "    Exclaimed = s",
+    "End Function",
+    "",
+    "Public Function Bumped(v As Variant) As Long",
+    "    v = v + 10",
+    "    Bumped = v * 2",
+    "End Function",
+    "",
+    "Public Function Halved(v As Variant) As Variant()",
+    "    Dim r() As Variant",
+    "    ReDim r(0 To 0)",
+    "    r(0) = UBound(v)",
+    "    Halved = r",
+    "End Function",
+    "",
+    "Public Function TwiceOver(ParamArray items() As Variant) As String",
+    "    Dim item As Variant",
+    "    For Each item In items",
+    "        TwiceOver = TwiceOver & item",
+    "    Next",
+    "    For Each item In items",
+    "        TwiceOver = TwiceOver & item",
+    "    Next",
+    "End Function",
+    "",
+    "Public Function Widths(ParamArray items() As Variant) As String",
+    "    Dim item As Variant",
+    "    For Each item In items",
+    "        Widths = Widths & UBound(item)",
+    "    Next",
+    "    For Each item In items",
+    "        Widths = Widths & UBound(item)",
+    "    Next",
+    "End Function",
+    "",
+    "Public Function Describe(Optional ByVal label As String = \"none\", Optional ByVal count As Long = 3) As String",
+    "    Describe = label & \":\" & count",
+    "End Function",
+    "",
+    "Public Function MissingCount(Optional ByVal a As Variant, Optional ByVal b As Variant) As Long",
+    "    MissingCount = 0",
+    "    If IsMissing(a) Then MissingCount = MissingCount + 1",
+    "    If IsMissing(b) Then MissingCount = MissingCount + 1",
+    "End Function",
+    "",
+    "Public Function Total(ParamArray items() As Variant) As Long",
+    "    Dim i As Long",
+    "    Total = 0",
+    "    For i = LBound(items) To UBound(items)",
+    "        Total = Total + items(i)",
+    "    Next i",
+    "End Function",
+    "",
+    "Public Function ParamBounds(ParamArray items() As Variant) As String",
+    "    ParamBounds = LBound(items) & \",\" & UBound(items)",
+    "End Function",
+    "",
+    "Public Function ParamArrayTypeName(ParamArray items() As Variant) As String",
+    "    ParamArrayTypeName = TypeName(items)",
+    "End Function",
+    "",
+    "Public Function Counter() As Long",
+    "    Static calls As Long",
+    "    calls = calls + 1",
+    "    Counter = calls",
+    "End Function",
+    "",
+    "Public Static Function StaticProc() As Long",
+    "    Dim n As Long",
+    "    n = n + 10",
+    "    StaticProc = n",
+    "End Function",
+    "",
+    "Public Function Factorial(ByVal n As Long) As Long",
+    "    If n <= 1 Then",
+    "        Factorial = 1",
+    "    Else",
+    "        Factorial = n * Factorial(n - 1)",
+    "    End If",
+    "End Function",
+    "",
+    "Public Function EarlyExit() As String",
+    "    EarlyExit = \"first\"",
+    "    Exit Function",
+    "    EarlyExit = \"second\"",
+    "End Function",
+    "",
+    "Public Function MovePoint(ByRef p As TPoint) As Long",
+    "    p.X = p.X + 100",
+    "    MovePoint = p.X",
+    "End Function",
+    "",
+    "Public Function PointSum(p As TPoint) As Long",
+    "    PointSum = p.X + p.Y",
+    "End Function",
+    "",
+    "Public Function MakePoint(ByVal x As Long, ByVal y As Long) As TPoint",
+    "    MakePoint.X = x",
+    "    MakePoint.Y = y",
+    "End Function",
+    "",
+    "Public Function ColorName(ByVal c As Color) As String",
+    "    Select Case c",
+    "        Case Red: ColorName = \"red\"",
+    "        Case Green: ColorName = \"green\"",
+    "        Case Blue: ColorName = \"blue\"",
+    "        Case Else: ColorName = \"other\"",
+    "    End Select",
+    "End Function",
+    "",
+    "Public Function Divide(ByVal a As Double, ByVal b As Double) As Double",
+    "    Divide = a / b",
+    "End Function",
+    "",
+    "Public Function ResumeNextDivide(ByVal a As Double, ByVal b As Double) As Double",
+    "    On Error Resume Next",
+    "    ResumeNextDivide = a / b",
+    "End Function",
+    "",
+    "Public Function ErlInside() As Long",
+    "10  Dim z As Long",
+    "20  On Error Resume Next",
+    "30  z = 1 / z",
+    "40  ErlInside = Erl",
+    "End Function",
+    "",
+    "Public Function RaiseCustom() As Long",
+    "    Err.Raise 1001, \"Helper\", \"custom failure\"",
+    "End Function",
+    "",
+    "Public Property Get Value() As Long",
+    "    Value = prop",
+    "End Property",
+    "",
+    "Public Property Let Value(ByVal v As Long)",
+    "    prop = v * 10",
+    "End Property",
+    "",
+    "Public Property Get Stored() As Long",
+    "    Stored = prop",
+    "End Property",
+    "",
+    "Public Property Let Stored(v As Long)",
+    "    prop = v",
+    "    v = -1",
+    "End Property",
+    "",
+    "Public Property Get Item(ByVal i As Long) As String",
+    "    Item = \"item\" & i",
+    "End Property",
+    "",
+    "Public Function ArrayLength(a() As Long) As Long",
+    "    ArrayLength = UBound(a) - LBound(a) + 1",
+    "End Function",
+    "",
+    "Public Sub Grow(a() As Long)",
+    "    ReDim Preserve a(LBound(a) To UBound(a) + 1)",
+    "    a(UBound(a)) = 99",
+    "End Sub",
+    "",
+    "Public Function MakeArray() As Long()",
+    "    Dim r(1 To 2) As Long",
+    "    r(1) = 7: r(2) = 8",
+    "    MakeArray = r",
+    "End Function",
+    "",
+    "Public Function FirstDefault(Optional ByVal n As Long = 5) As Long",
+    "    FirstDefault = n",
+    "End Function",
+    "",
+    "Public Function SubCalls() As Long",
+    "    SubCalls = 0",
+    "    GoSubTest SubCalls",
+    "End Function",
+    "",
+    "Public Sub GoSubTest(ByRef n As Long)",
+    "    GoSub Add",
+    "    GoSub Add",
+    "    Exit Sub",
+    "Add:",
+    "    n = n + 1",
+    "    Return",
+    "End Sub",
+    "",
+    "Public Function OnGoToPick(ByVal i As Long) As String",
+    "    On i GoTo One, Two",
+    "    OnGoToPick = \"fell\"",
+    "    Exit Function",
+    "One:",
+    "    OnGoToPick = \"one\"",
+    "    Exit Function",
+    "Two:",
+    "    OnGoToPick = \"two\"",
+    "End Function",
+    "",
+    "Public Sub BumpFirst(ByRef v As Variant)",
+    "    v(1) = v(1) + 1",
+    "End Sub",
+    "",
+    "Public Sub GrowIt(ByRef v As Variant)",
+    "    ReDim v(1 To 5)",
+    "    v(5) = 99",
+    "End Sub"
+  ],
+  "cases": [
+    {
+      "name": "ByVal function result",
+      "source": [
+        "? Twice(21)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "42"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ByRef changes the caller's variable",
+      "source": [
+        "Dim n As Long",
+        "n = 1",
+        "Bump n",
+        "? n"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ByRef with Call and parentheses",
+      "source": [
+        "Dim n As Long",
+        "n = 1",
+        "Call Bump(n)",
+        "? n"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Parentheses pass ByVal",
+      "source": [
+        "Dim n As Long",
+        "n = 1",
+        "Bump (n)",
+        "? n"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A call statement written with parentheses and no Call passes ByVal",
+      "source": [
+        "Dim n As Long",
+        "n = 1",
+        "Bump(n)",
+        "? n"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Passing a literal to a ByRef parameter",
+      "source": [
+        "Bump 5",
+        "? 1"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A Function called as a statement",
+      "source": [
+        "Twice 3",
+        "? 2"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ByRef typed variable to a Variant parameter is copied back",
+      "source": [
+        "Dim n As Long",
+        "n = 1",
+        "BumpVariant n",
+        "? n"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ByRef array element",
+      "source": [
+        "Dim a(1 To 2) As Long",
+        "a(2) = 5",
+        "Bump a(2)",
+        "? a(2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "6"
+          }
+        }
+      ]
+    },
+    {
+      "name": "An element of the array a Variant holds reaches a ByRef parameter as storage; an item of a Collection is a call's result, which takes no change back",
+      "source": [
+        "Dim v As Variant",
+        "v = Array(1, 2)",
+        "BumpVariant v(1)",
+        "? v(1)",
+        "Dim c As Variant",
+        "Set c = New Collection",
+        "c.Add 5",
+        "BumpVariant c(1)",
+        "? c(1)",
+        "Dim o As Object",
+        "Set o = New Collection",
+        "o.Add 7",
+        "BumpVariant o(1)",
+        "? o(1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "3"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "5"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Integer",
+            "value": "7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ByRef record field",
+      "source": [
+        "Dim p As TPoint",
+        "p.X = 3",
+        "Bump p.X",
+        "? p.X"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Optional defaults",
+      "source": [
+        "? Describe()",
+        "? Describe(\"a\")",
+        "? Describe(, 7)",
+        "? Describe(count:=9, label:=\"b\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "none:3"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "a:3"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "none:7"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "String",
+            "value": "b:9"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsMissing counts omitted Variants",
+      "source": [
+        "? MissingCount()",
+        "? MissingCount(1)",
+        "? MissingCount(, 2)",
+        "? MissingCount(1, 2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ParamArray sums",
+      "source": [
+        "? Total()",
+        "? Total(1)",
+        "? Total(1, 2, 3)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "6"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ParamArray bounds",
+      "source": [
+        "? ParamBounds()",
+        "? ParamBounds(1, 2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "0,-1"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "0,1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ParamArray type",
+      "source": [
+        "? ParamArrayTypeName(1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Variant()"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Static local persists",
+      "source": [
+        "? Counter()",
+        "? Counter()",
+        "? Counter()"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Static procedure keeps every local",
+      "source": [
+        "? StaticProc()",
+        "? StaticProc()"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "20"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Recursion",
+      "source": [
+        "? Factorial(5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "120"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Exit Function keeps the value assigned so far",
+      "source": [
+        "? EarlyExit()"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "first"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Record ByRef is modified in place",
+      "source": [
+        "Dim p As TPoint",
+        "p.X = 1",
+        "? MovePoint(p)",
+        "? p.X"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "101"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "101"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Record assignment copies",
+      "source": [
+        "Dim a As TPoint, b As TPoint",
+        "a.X = 1",
+        "b = a",
+        "b.X = 2",
+        "? a.X",
+        "? b.X"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Record returned from a function",
+      "source": [
+        "Dim p As TPoint",
+        "p = MakePoint(4, 5)",
+        "? p.X + p.Y",
+        "? PointSum(p)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "9"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "9"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Nested record and array members",
+      "source": [
+        "Dim s As TShape",
+        "s.Origin.X = 1",
+        "s.Points(2).Y = 20",
+        "s.Name = \"sq\"",
+        "? s.Origin.X + s.Points(2).Y",
+        "? s.Name",
+        "? LBound(s.Points)",
+        "? UBound(s.Points)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "21"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "sq"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Nested record copy is deep",
+      "source": [
+        "Dim a As TShape, b As TShape",
+        "a.Points(1).X = 7",
+        "b = a",
+        "b.Points(1).X = 8",
+        "? a.Points(1).X"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dynamic array member of a record",
+      "source": [
+        "Dim s As TShape",
+        "ReDim s.Tags(0 To 1)",
+        "s.Tags(1) = \"t\"",
+        "? UBound(s.Tags)",
+        "? s.Tags(1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "t"
+          }
+        }
+      ]
+    },
+    {
+      "name": "With block on a record",
+      "source": [
+        "Dim p As TPoint",
+        "With p",
+        "    .X = 2",
+        "    .Y = .X * 3",
+        "End With",
+        "? p.Y"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "6"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Record array",
+      "source": [
+        "Dim pts(1 To 2) As TPoint",
+        "pts(2).X = 9",
+        "? pts(2).X",
+        "? pts(1).X"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "9"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Enum values",
+      "source": [
+        "? Red",
+        "? Green",
+        "? Blue",
+        "? Purple"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "6"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Long",
+            "value": "-1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Enum qualified",
+      "source": [
+        "? Color.Green"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Enum variable is a Long",
+      "source": [
+        "Dim c As Color",
+        "c = Blue",
+        "? TypeName(c)",
+        "? c"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Long"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "6"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Enum in Select Case",
+      "source": [
+        "? ColorName(Green)",
+        "? ColorName(Blue)",
+        "? ColorName(7)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "green"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "blue"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "other"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error in a callee reaches the caller's handler",
+      "source": [
+        "Dim r As Double",
+        "On Error Resume Next",
+        "r = Divide(1, 0)",
+        "? Err.Number",
+        "? Err.Source",
+        "? r"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "11"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "VBAProject"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Double",
+            "value": "0",
+            "bits": "0000000000000000"
+          }
+        }
+      ],
+      "error": {
+        "number": 11,
+        "description": "Division by zero",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Resume Next inside the callee hides the error from the caller",
+      "source": [
+        "Dim r As Double",
+        "r = ResumeNextDivide(1, 0)",
+        "? Err.Number",
+        "? r"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "11"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Double",
+            "value": "inf",
+            "bits": "7FF0000000000000"
+          }
+        }
+      ],
+      "error": {
+        "number": 11,
+        "description": "Division by zero",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Erl inside a called procedure",
+      "source": [
+        "? ErlInside()"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "30"
+          }
+        }
+      ],
+      "error": {
+        "number": 11,
+        "description": "Division by zero",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Err.Raise in a callee carries its source",
+      "source": [
+        "On Error Resume Next",
+        "RaiseCustom",
+        "? Err.Number",
+        "? Err.Source",
+        "? Err.Description"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1001"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "Helper"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "custom failure"
+          }
+        }
+      ],
+      "error": {
+        "number": 1001,
+        "description": "custom failure",
+        "source": "Helper"
+      }
+    },
+    {
+      "name": "Property Let and Get in a standard module",
+      "source": [
+        "Value = 4",
+        "? Value"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "40"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A Property Let whose value parameter is ByRef takes the assigned value as a temporary",
+      "source": [
+        "Dim n As Long",
+        "n = 8",
+        "Stored = n",
+        "? Stored",
+        "? n",
+        "Stored = 9",
+        "? Stored"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "8"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "8"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "9"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Property Get with an argument",
+      "source": [
+        "? Item(3)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "item3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Array parameter",
+      "source": [
+        "Dim a(1 To 4) As Long",
+        "? ArrayLength(a)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Array parameter ReDim Preserve is visible to the caller",
+      "source": [
+        "Dim a() As Long",
+        "ReDim a(0 To 1)",
+        "Grow a",
+        "? UBound(a)",
+        "? a(2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "99"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Function returning an array",
+      "source": [
+        "Dim r() As Long",
+        "r = MakeArray()",
+        "? r(1) + r(2)",
+        "? LBound(r)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "15"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Function returning an array used directly",
+      "source": [
+        "? UBound(MakeArray())"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Optional default of a typed parameter",
+      "source": [
+        "? FirstDefault()",
+        "? FirstDefault(6)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "6"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GoSub and Return",
+      "source": [
+        "? SubCalls()"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "On GoTo",
+      "source": [
+        "? OnGoToPick(1)",
+        "? OnGoToPick(2)",
+        "? OnGoToPick(0)",
+        "? OnGoToPick(3)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "one"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "two"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "fell"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "String",
+            "value": "fell"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Typed arithmetic intermediate keeps its type",
+      "source": [
+        "Dim a As Integer",
+        "a = 20000",
+        "? (a + 10000) + 10000"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Integer plus Integer overflows before widening",
+      "source": [
+        "Dim a As Integer",
+        "a = 30000",
+        "? a + a"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Exit For inside a nested Do",
+      "source": [
+        "Dim i As Long, n As Long",
+        "For i = 1 To 5",
+        "    Do",
+        "        n = n + 1",
+        "        If i = 2 Then Exit For",
+        "    Loop While False",
+        "Next i",
+        "? i",
+        "? n"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Exit Do inside a nested For",
+      "source": [
+        "Dim i As Long, n As Long",
+        "Do",
+        "    For i = 1 To 3",
+        "        n = n + 1",
+        "        If i = 2 Then Exit Do",
+        "    Next i",
+        "Loop",
+        "? i",
+        "? n"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "For with a Variant counter",
+      "source": [
+        "Dim v As Variant, n As Long",
+        "For v = 1 To 3",
+        "    n = n + v",
+        "Next v",
+        "? n",
+        "? TypeName(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "6"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "Integer"
+          }
+        }
+      ]
+    },
+    {
+      "name": "For with a negative step",
+      "source": [
+        "Dim i As Long, n As Long",
+        "For i = 5 To 1 Step -2",
+        "    n = n * 10 + i",
+        "Next i",
+        "? n",
+        "? i"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "531"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "-1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "For with Step zero and Exit For",
+      "source": [
+        "Dim i As Long, n As Long",
+        "For i = 1 To 3 Step 0",
+        "    n = n + 1",
+        "    If n = 4 Then Exit For",
+        "Next i",
+        "? n"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "For limit is evaluated once",
+      "source": [
+        "Dim i As Long, lim As Long, n As Long",
+        "lim = 3",
+        "For i = 1 To lim",
+        "    lim = 10",
+        "    n = n + 1",
+        "Next i",
+        "? n"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Next with two variables",
+      "source": [
+        "Dim i As Long, j As Long, n As Long",
+        "For i = 1 To 2",
+        "    For j = 1 To 3",
+        "        n = n + 1",
+        "Next j, i",
+        "? n"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "6"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Do Until at the bottom runs once",
+      "source": [
+        "Dim n As Long",
+        "Do",
+        "    n = n + 1",
+        "Loop Until True",
+        "? n"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "While Wend",
+      "source": [
+        "Dim n As Long",
+        "While n < 3",
+        "    n = n + 1",
+        "Wend",
+        "? n"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Resume Next after an error in an If condition",
+      "source": [
+        "Dim z As Long, r As String",
+        "On Error Resume Next",
+        "If 1 / z > 0 Then",
+        "    r = \"then\"",
+        "Else",
+        "    r = \"else\"",
+        "End If",
+        "? r",
+        "? Err.Number"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "then"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "11"
+          }
+        }
+      ],
+      "error": {
+        "number": 11,
+        "description": "Division by zero",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Resume Next after an error in a Select Case expression",
+      "source": [
+        "Dim z As Long, r As String",
+        "On Error Resume Next",
+        "Select Case 1 / z",
+        "    Case 0: r = \"zero\"",
+        "    Case Else: r = \"other\"",
+        "End Select",
+        "? r"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": ""
+          }
+        }
+      ],
+      "error": {
+        "number": 11,
+        "description": "Division by zero",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Resume retries the statement",
+      "source": [
+        "Dim tries As Long, z As Long, r As Double",
+        "On Error GoTo Handler",
+        "r = 1 / z",
+        "? tries",
+        "? r",
+        "Exit Sub",
+        "Handler:",
+        "tries = tries + 1",
+        "z = 4",
+        "Resume"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Double",
+            "value": ".25",
+            "bits": "3FD0000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Resume label",
+      "source": [
+        "Dim r As String",
+        "On Error GoTo Handler",
+        "Err.Raise 5",
+        "r = \"skipped\"",
+        "Done:",
+        "? r",
+        "Exit Sub",
+        "Handler:",
+        "r = \"handled\"",
+        "Resume Done"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "handled"
+          }
+        }
+      ]
+    },
+    {
+      "name": "On Error GoTo -1 lets a handler catch a second error",
+      "source": [
+        "Dim r As String",
+        "On Error GoTo Handler",
+        "Err.Raise 5",
+        "Exit Sub",
+        "Handler:",
+        "r = r & Err.Number",
+        "On Error GoTo -1",
+        "On Error GoTo Second",
+        "Err.Raise 6",
+        "Exit Sub",
+        "Second:",
+        "r = r & \",\" & Err.Number",
+        "? r"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "5,6"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error inside a handler is fatal",
+      "source": [
+        "Dim r As String",
+        "On Error GoTo Handler",
+        "Err.Raise 5",
+        "Exit Sub",
+        "Handler:",
+        "r = \"in handler\"",
+        "Err.Raise 7"
+      ],
+      "results": [],
+      "error": {
+        "number": 7,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Const inside a procedure",
+      "source": [
+        "Const K As Long = 40",
+        "? K + 2"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "42"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Select Case with Is and ranges",
+      "source": [
+        "Dim r As String, n As Long",
+        "For n = 1 To 4",
+        "    Select Case n",
+        "        Case Is < 2: r = r & \"a\"",
+        "        Case 2 To 3: r = r & \"b\"",
+        "        Case Else: r = r & \"c\"",
+        "    End Select",
+        "Next n",
+        "? r"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "abbc"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Collection members through a Variant",
+      "source": [
+        "Dim c As Variant",
+        "Set c = New Collection",
+        "c.Add \"x\", \"k\"",
+        "? c.Count",
+        "? c(\"k\")",
+        "? c.Item(1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "x"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "x"
+          }
+        }
+      ]
+    },
+    {
+      "name": "An object declared As New is created on use and after Set Nothing",
+      "source": [
+        "Dim c As New Collection",
+        "c.Add 1",
+        "? c.Count",
+        "Set c = Nothing",
+        "c.Add 2",
+        "? c.Count"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "An array reaches a ByRef Variant parameter as itself",
+      "source": [
+        "Dim fixed(1 To 3) As Long",
+        "fixed(1) = 7",
+        "BumpFirst fixed",
+        "? fixed(1)",
+        "? UBound(fixed)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "8"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A ByRef Variant parameter can ReDim the caller's array",
+      "source": [
+        "Dim grown() As Long",
+        "ReDim grown(1 To 2)",
+        "GrowIt grown",
+        "? UBound(grown)",
+        "? grown(5)",
+        "? TypeName(grown)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "99"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "Long()"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A constant from the VBA library's enum, qualified by the enum",
+      "source": [
+        "? KLongLong"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "20"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Enum members as the bounds of an array in a user-defined type",
+      "source": [
+        "Dim r As TRange",
+        "? LBound(r.Items)",
+        "? UBound(r.Items)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "6"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Two enums of one module may share a member name; qualified uses are unambiguous",
+      "source": [
+        "? ECompass.North + EDial.East",
+        "? EDial.North"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "21"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A function result passed to a ByRef record parameter goes through a temporary",
+      "source": [
+        "? ShiftAndSum(MakePoint(1, 2))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A function result passed to a ByRef array parameter goes through a temporary",
+      "source": [
+        "? SumNumbers(MakeNumbers())"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A function returning a String array",
+      "source": [
+        "Dim s() As String",
+        "s = MakeNames()",
+        "? s(1) & s(2)",
+        "? Join(MakeNames(), \"-\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "abcd"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "ab-cd"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A function result String array assigned to a Variant",
+      "source": [
+        "Dim v As Variant",
+        "v = MakeNames()",
+        "? v(2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "cd"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A condition whose call needs a temporary for a ByRef argument, in If, ElseIf, and Select Case",
+      "source": [
+        "Dim r As String",
+        "If Stepped(1) = 5 Then",
+        "    r = \"a\"",
+        "ElseIf Exclaimed(\"hi\") = \"hi!\" Then",
+        "    r = \"b\"",
+        "Else",
+        "    r = \"c\"",
+        "End If",
+        "? r",
+        "If Exclaimed(\"x\") = \"y\" Then",
+        "    r = \"d\"",
+        "ElseIf Stepped(4) = 5 Then",
+        "    r = \"e\"",
+        "End If",
+        "? r",
+        "Select Case True",
+        "Case Stepped(1) = 9: r = \"x\"",
+        "Case Exclaimed(\"a\") = \"a!\": r = \"y\"",
+        "End Select",
+        "? r"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "b"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "e"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "y"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Nothing as the default of an Optional Variant parameter",
+      "source": [
+        "? DefaultNothing()",
+        "? DefaultNothing(1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Nothing False True"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "Integer False False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A ByRef argument goes back when its call returns, before the statement stores the result: n = Bumped(n)",
+      "source": [
+        "Dim n As Long",
+        "n = 1",
+        "n = Bumped(n)",
+        "? n"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "22"
+          }
+        }
+      ]
+    },
+    {
+      "name": "An array passed to a ByRef Variant goes back before the call's result is stored: a = Halved(a)",
+      "source": [
+        "Dim a() As Variant",
+        "ReDim a(0 To 2)",
+        "a = Halved(a)",
+        "? UBound(a)",
+        "? a(0)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A ParamArray walked twice with For Each gives its elements both times",
+      "source": [
+        "? TwiceOver(1, \"a\", 2)",
+        "? Widths(Array(1, 2), Array(3))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1a21a2"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "1010"
+          }
+        }
+      ]
+    }
+  ]
+}

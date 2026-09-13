@@ -1,0 +1,3955 @@
+{
+  "area": "Operators",
+  "excel": "16.0.20326",
+  "culture": "en-US",
+  "options": [],
+  "cases": [
+    {
+      "name": "Integer plus Integer stays Integer",
+      "source": [
+        "Dim a As Integer, b As Integer",
+        "a = 1: b = 2",
+        "? a + b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Integer overflow with typed operands",
+      "source": [
+        "Dim a As Integer, b As Integer",
+        "a = 32767: b = 1",
+        "? a + b"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Integer overflow with Variant operands",
+      "source": [
+        "Dim a As Variant, b As Variant",
+        "a = 32767: b = 1",
+        "? a + b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "32768"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Integer overflow with one Variant operand",
+      "source": [
+        "Dim a As Integer, b As Variant",
+        "a = 32767: b = 1",
+        "? a + b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "32768"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Integer plus a literal",
+      "source": [
+        "Dim a As Integer",
+        "a = 32767",
+        "? a + 1"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Byte plus Byte promotes to Integer",
+      "source": [
+        "Dim a As Byte, b As Byte",
+        "a = 200: b = 100",
+        "? a + b"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Byte overflow when the sum is assigned back",
+      "source": [
+        "Dim a As Byte, b As Byte",
+        "a = 200: b = 100",
+        "a = a + b",
+        "? a"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Long overflow",
+      "source": [
+        "Dim a As Long, b As Long",
+        "a = 2147483647: b = 1",
+        "? a + b"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Long overflow with Variant operands",
+      "source": [
+        "Dim a As Variant, b As Variant",
+        "a = 2147483647: b = 1",
+        "? a + b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "2147483648",
+            "bits": "41E0000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "LongLong plus LongLong",
+      "source": [
+        "Dim a As LongLong, b As LongLong",
+        "a = 2147483647: b = 1",
+        "? a + b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "2147483648"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Long plus Integer",
+      "source": [
+        "Dim a As Long, b As Integer",
+        "a = 1: b = 2",
+        "? a + b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Integer plus Single",
+      "source": [
+        "Dim a As Integer, b As Single",
+        "a = 1: b = 0.5",
+        "? a + b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Single",
+            "value": "1.5",
+            "bits": "3FC00000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Long plus Single",
+      "source": [
+        "Dim a As Long, b As Single",
+        "a = 1: b = 0.5",
+        "? a + b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1.5",
+            "bits": "3FF8000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Single plus Double",
+      "source": [
+        "Dim a As Single, b As Double",
+        "a = 0.1: b = 0.2",
+        "? a + b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": ".300000001490116",
+            "bits": "3FD3333334CCCCCD"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Single plus Single beyond the Single range",
+      "source": [
+        "Dim a As Single, b As Single",
+        "a = 3E+38: b = 3E+38",
+        "? a + b"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Double plus Double beyond the Double range",
+      "source": [
+        "Dim a As Double, b As Double",
+        "a = 1E+308: b = 1E+308",
+        "? a + b"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Currency plus Integer",
+      "source": [
+        "Dim a As Currency, b As Integer",
+        "a = 1.5: b = 1",
+        "? a + b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Currency",
+            "value": "2.5",
+            "bits": "00000000000061A8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Currency plus Double",
+      "source": [
+        "Dim a As Currency, b As Double",
+        "a = 1.5: b = 0.25",
+        "? a + b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Currency",
+            "value": "1.75",
+            "bits": "000000000000445C"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Currency plus Single",
+      "source": [
+        "Dim a As Currency, b As Single",
+        "a = 1.5: b = 0.25",
+        "? a + b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Currency",
+            "value": "1.75",
+            "bits": "000000000000445C"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Currency overflow",
+      "source": [
+        "Dim a As Currency, b As Currency",
+        "a = 900000000000000: b = 900000000000000",
+        "? a + b"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Date plus a number",
+      "source": [
+        "Dim d As Date",
+        "d = #1/1/2020#",
+        "? d + 1"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 00:00:00",
+            "bits": "40E5670000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date plus a Date",
+      "source": [
+        "Dim d As Date, e As Date",
+        "d = #1/1/2020#: e = #1/2/2020#",
+        "? d + e"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2140-01-04 00:00:00",
+            "bits": "40F566F000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date minus a Date",
+      "source": [
+        "Dim d As Date, e As Date",
+        "d = #1/1/2020#: e = #1/2/2020#",
+        "? e - d"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1",
+            "bits": "3FF0000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Boolean plus Boolean",
+      "source": [
+        "Dim a As Boolean, b As Boolean",
+        "a = True: b = True",
+        "? a + b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "-2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Boolean plus Integer",
+      "source": [
+        "Dim a As Boolean, b As Integer",
+        "a = True: b = 1",
+        "? a + b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Empty plus Integer",
+      "source": [
+        "Dim v As Variant",
+        "? v + 1"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Empty plus Empty",
+      "source": [
+        "Dim v As Variant, w As Variant",
+        "? v + w"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Empty plus String",
+      "source": [
+        "Dim v As Variant",
+        "? v + \"a\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "a"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Null plus Integer",
+      "source": [
+        "? Null + 1"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Null plus String",
+      "source": [
+        "? Null + \"a\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "String plus String concatenates",
+      "source": [
+        "Dim s As String, t As String",
+        "s = \"1\": t = \"2\"",
+        "? s + t"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "12"
+          }
+        }
+      ]
+    },
+    {
+      "name": "String plus a number adds",
+      "source": [
+        "Dim s As String",
+        "s = \"1\"",
+        "? s + 1"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "2",
+            "bits": "4000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Non-numeric String plus a number",
+      "source": [
+        "Dim s As String",
+        "s = \"a\"",
+        "? s + 1"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Variant String plus Variant number",
+      "source": [
+        "Dim v As Variant, w As Variant",
+        "v = \"1\": w = 2",
+        "? v + w"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "3",
+            "bits": "4008000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Variant String plus Variant String",
+      "source": [
+        "Dim v As Variant, w As Variant",
+        "v = \"1\": w = \"2\"",
+        "? v + w"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "12"
+          }
+        }
+      ]
+    },
+    {
+      "name": "String plus Empty",
+      "source": [
+        "Dim s As String, v As Variant",
+        "s = \"1\"",
+        "? s + v"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date plus a numeric String",
+      "source": [
+        "Dim d As Date, s As String",
+        "d = #1/1/2020#: s = \"1\"",
+        "? d + s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 00:00:00",
+            "bits": "40E5670000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Decimal plus Integer",
+      "source": [
+        "? CDec(1.5) + 1"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Decimal",
+            "value": "2.5",
+            "bytes": "0E000100000000001900000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Decimal overflow",
+      "source": [
+        "Dim a As Variant, b As Variant",
+        "a = CDec(\"79228162514264337593543950335\"): b = CDec(1)",
+        "? a + b"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Integer minus Integer overflow",
+      "source": [
+        "Dim a As Integer, b As Integer",
+        "a = -32768: b = 1",
+        "? a - b"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Unary minus on the Integer minimum",
+      "source": [
+        "Dim a As Integer",
+        "a = -32768",
+        "? -a"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Unary minus on the Integer minimum in a Variant",
+      "source": [
+        "Dim a As Variant",
+        "a = CInt(-32768)",
+        "? -a"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "32768"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Unary minus on the Long minimum",
+      "source": [
+        "Dim a As Long",
+        "a = -2147483648#",
+        "? -a"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Unary minus on Empty",
+      "source": [
+        "Dim v As Variant",
+        "? -v"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Unary minus on Null",
+      "source": [
+        "? -Null"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Unary minus on a numeric String",
+      "source": [
+        "Dim s As String",
+        "s = \"5\"",
+        "? -s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "-5",
+            "bits": "C014000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Unary minus on a Boolean",
+      "source": [
+        "Dim b As Boolean",
+        "b = True",
+        "? -b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Unary minus on a Byte",
+      "source": [
+        "Dim b As Byte",
+        "b = 5",
+        "? -b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "-5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Unary minus on a Currency",
+      "source": [
+        "Dim c As Currency",
+        "c = 1.5",
+        "? -c"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Currency",
+            "value": "-1.5",
+            "bits": "FFFFFFFFFFFFC568"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Integer times Integer overflow",
+      "source": [
+        "Dim a As Integer, b As Integer",
+        "a = 200: b = 200",
+        "? a * b"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Integer times Integer overflow with Variants",
+      "source": [
+        "Dim a As Variant, b As Variant",
+        "a = 200: b = 200",
+        "? a * b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "40000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Long times Long overflow",
+      "source": [
+        "Dim a As Long, b As Long",
+        "a = 100000: b = 100000",
+        "? a * b"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Long times Long overflow with Variants",
+      "source": [
+        "Dim a As Variant, b As Variant",
+        "a = 100000: b = 100000",
+        "? a * b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "10000000000",
+            "bits": "4202A05F20000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Currency times Currency",
+      "source": [
+        "Dim a As Currency, b As Currency",
+        "a = 1.5: b = 2.5",
+        "? a * b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Currency",
+            "value": "3.75",
+            "bits": "000000000000927C"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Currency times Currency rounds to four places",
+      "source": [
+        "Dim a As Currency, b As Currency",
+        "a = 0.0001: b = 0.5",
+        "? a * b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Currency",
+            "value": "0",
+            "bits": "0000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Currency times Currency overflow",
+      "source": [
+        "Dim a As Currency, b As Currency",
+        "a = 900000000000000: b = 1000",
+        "? a * b"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Byte times Byte",
+      "source": [
+        "Dim a As Byte, b As Byte",
+        "a = 16: b = 16",
+        "? a * b"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Boolean times Boolean",
+      "source": [
+        "Dim a As Boolean, b As Boolean",
+        "a = True: b = True",
+        "? a * b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Integer divided by Integer is Double",
+      "source": [
+        "Dim a As Integer, b As Integer",
+        "a = 1: b = 3",
+        "? a / b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": ".333333333333333",
+            "bits": "3FD5555555555555"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Exact Integer division is still Double",
+      "source": [
+        "Dim a As Integer, b As Integer",
+        "a = 4: b = 2",
+        "? a / b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "2",
+            "bits": "4000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Single divided by Single",
+      "source": [
+        "Dim a As Single, b As Single",
+        "a = 1: b = 3",
+        "? a / b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Single",
+            "value": ".3333333",
+            "bits": "3EAAAAAB"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Single divided by Integer",
+      "source": [
+        "Dim a As Single, b As Integer",
+        "a = 1: b = 3",
+        "? a / b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Single",
+            "value": ".3333333",
+            "bits": "3EAAAAAB"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Currency divided by Currency",
+      "source": [
+        "Dim a As Currency, b As Currency",
+        "a = 1: b = 3",
+        "? a / b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": ".333333333333333",
+            "bits": "3FD5555555555555"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Currency divided by Integer",
+      "source": [
+        "Dim a As Currency, b As Integer",
+        "a = 1: b = 3",
+        "? a / b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": ".333333333333333",
+            "bits": "3FD5555555555555"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Decimal divided by Integer",
+      "source": [
+        "? CDec(1) / 3"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Decimal",
+            "value": ".3333333333333333333333333333",
+            "bytes": "0E001C00CA44C50A55555505CB00B714"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Division by zero with Integers",
+      "source": [
+        "Dim a As Integer, b As Integer",
+        "a = 1: b = 0",
+        "? a / b"
+      ],
+      "results": [],
+      "error": {
+        "number": 11,
+        "description": "Division by zero",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Division by zero with Doubles",
+      "source": [
+        "Dim a As Double, b As Double",
+        "a = 1: b = 0",
+        "? a / b"
+      ],
+      "results": [],
+      "error": {
+        "number": 11,
+        "description": "Division by zero",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Zero divided by zero",
+      "source": [
+        "Dim a As Double, b As Double",
+        "? a / b"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Division by Empty",
+      "source": [
+        "Dim v As Variant",
+        "? 1 / v"
+      ],
+      "results": [],
+      "error": {
+        "number": 11,
+        "description": "Division by zero",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Division by Null",
+      "source": [
+        "? 1 / Null"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Empty divided by Empty",
+      "source": [
+        "Dim v As Variant, w As Variant",
+        "? v / w"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Boolean divided by Boolean",
+      "source": [
+        "Dim a As Boolean, b As Boolean",
+        "a = True: b = True",
+        "? a / b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1",
+            "bits": "3FF0000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Byte divided by Byte",
+      "source": [
+        "Dim a As Byte, b As Byte",
+        "a = 1: b = 2",
+        "? a / b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": ".5",
+            "bits": "3FE0000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Integer division of Integers",
+      "source": [
+        "Dim a As Integer, b As Integer",
+        "a = 7: b = 2",
+        "? a \\ b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Integer division truncates a negative quotient toward zero",
+      "source": [
+        "Dim a As Integer, b As Integer",
+        "a = -7: b = 2",
+        "? a \\ b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "-3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Integer division rounds Double operands first",
+      "source": [
+        "Dim a As Double, b As Double",
+        "a = 7.5: b = 2",
+        "? a \\ b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Integer division rounds half to even before dividing",
+      "source": [
+        "Dim a As Double, b As Double",
+        "a = 6.5: b = 2",
+        "? a \\ b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Integer division of Doubles returns Long",
+      "source": [
+        "Dim a As Double, b As Double",
+        "a = 100000: b = 3",
+        "? a \\ b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "33333"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Integer division of a Double beyond Long overflows",
+      "source": [
+        "Dim a As Double, b As Double",
+        "a = 1E+10: b = 3",
+        "? a \\ b"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Integer division of LongLongs",
+      "source": [
+        "Dim a As LongLong, b As LongLong",
+        "a = 10000000000^: b = 3",
+        "? a \\ b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "3333333333"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Integer division by zero",
+      "source": [
+        "Dim a As Long, b As Long",
+        "a = 1: b = 0",
+        "? a \\ b"
+      ],
+      "results": [],
+      "error": {
+        "number": 11,
+        "description": "Division by zero",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Integer division with Currency operands",
+      "source": [
+        "Dim a As Currency, b As Currency",
+        "a = 7.5: b = 2",
+        "? a \\ b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Integer division with Byte operands",
+      "source": [
+        "Dim a As Byte, b As Byte",
+        "a = 7: b = 2",
+        "? a \\ b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Byte",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Integer division with Boolean operands",
+      "source": [
+        "Dim a As Boolean, b As Boolean",
+        "a = True: b = True",
+        "? a \\ b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Integer division with Empty",
+      "source": [
+        "Dim v As Variant",
+        "? v \\ 2"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Integer division with Null",
+      "source": [
+        "? Null \\ 2"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Integer division of numeric Strings",
+      "source": [
+        "Dim s As String, t As String",
+        "s = \"7\": t = \"2\"",
+        "? s \\ t"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mod keeps the sign of the dividend",
+      "source": [
+        "Dim a As Integer, b As Integer",
+        "a = -7: b = 2",
+        "? a Mod b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "-1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mod with a negative divisor",
+      "source": [
+        "Dim a As Integer, b As Integer",
+        "a = 7: b = -2",
+        "? a Mod b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mod rounds Double operands first",
+      "source": [
+        "Dim a As Double, b As Double",
+        "a = 7.5: b = 2",
+        "? a Mod b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mod of Doubles returns Long",
+      "source": [
+        "Dim a As Double, b As Double",
+        "a = 100000: b = 7",
+        "? a Mod b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mod by zero",
+      "source": [
+        "Dim a As Long, b As Long",
+        "a = 1: b = 0",
+        "? a Mod b"
+      ],
+      "results": [],
+      "error": {
+        "number": 11,
+        "description": "Division by zero",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Mod with Byte operands",
+      "source": [
+        "Dim a As Byte, b As Byte",
+        "a = 7: b = 3",
+        "? a Mod b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Byte",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mod with Currency operands",
+      "source": [
+        "Dim a As Currency, b As Currency",
+        "a = 7.5: b = 2",
+        "? a Mod b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mod with Null",
+      "source": [
+        "? 7 Mod Null"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mod with Empty",
+      "source": [
+        "Dim v As Variant",
+        "? 7 Mod v"
+      ],
+      "results": [],
+      "error": {
+        "number": 11,
+        "description": "Division by zero",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Mod of a Double beyond Long overflows",
+      "source": [
+        "Dim a As Double, b As Double",
+        "a = 1E+10: b = 3",
+        "? a Mod b"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Exponent returns Double",
+      "source": [
+        "Dim a As Integer, b As Integer",
+        "a = 2: b = 3",
+        "? a ^ b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "8",
+            "bits": "4020000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Exponent is left associative",
+      "source": [
+        "Dim a As Integer, b As Integer, c As Integer",
+        "a = 2: b = 3: c = 2",
+        "? a ^ b ^ c"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "64",
+            "bits": "4050000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Unary minus binds looser than exponent",
+      "source": [
+        "Dim a As Integer",
+        "a = 2",
+        "? -a ^ 2"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "-4",
+            "bits": "C010000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Negative base with a fractional exponent",
+      "source": [
+        "Dim a As Double, b As Double",
+        "a = -8: b = 1 / 3",
+        "? a ^ b"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Negative base with an integral exponent",
+      "source": [
+        "Dim a As Double, b As Double",
+        "a = -2: b = 3",
+        "? a ^ b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "-8",
+            "bits": "C020000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Zero to the zero",
+      "source": [
+        "Dim a As Double, b As Double",
+        "? a ^ b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1",
+            "bits": "3FF0000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Zero to a negative power",
+      "source": [
+        "Dim a As Double, b As Double",
+        "a = 0: b = -1",
+        "? a ^ b"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Exponent overflow",
+      "source": [
+        "Dim a As Double, b As Double",
+        "a = 10: b = 400",
+        "? a ^ b"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Exponent with Currency operands",
+      "source": [
+        "Dim a As Currency, b As Currency",
+        "a = 2: b = 3",
+        "? a ^ b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "8",
+            "bits": "4020000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Exponent with Null",
+      "source": [
+        "? 2 ^ Null"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Exponent with Empty",
+      "source": [
+        "Dim v As Variant",
+        "? 2 ^ v"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1",
+            "bits": "3FF0000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Exponent with an Empty base",
+      "source": [
+        "Dim v As Variant",
+        "? v ^ 2"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "0",
+            "bits": "0000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Exponent with numeric Strings",
+      "source": [
+        "Dim s As String, t As String",
+        "s = \"2\": t = \"3\"",
+        "? s ^ t"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "8",
+            "bits": "4020000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Concatenating numbers",
+      "source": [
+        "Dim a As Integer, b As Double",
+        "a = 1: b = 2.5",
+        "? a & b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "12.5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Concatenating Booleans",
+      "source": [
+        "Dim b As Boolean",
+        "b = True",
+        "? b & False"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "TrueFalse"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Concatenating Null and a String",
+      "source": [
+        "? Null & \"a\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "a"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Concatenating Null and Null",
+      "source": [
+        "? Null & Null"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Concatenating Empty and a String",
+      "source": [
+        "Dim v As Variant",
+        "? v & \"a\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "a"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Concatenating two Empties gives a String",
+      "source": [
+        "Dim v As Variant, w As Variant",
+        "? v & w"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "Concatenating a Date",
+      "source": [
+        "Dim d As Date",
+        "d = #1/2/2020 3:04:05 PM#",
+        "? d & \"\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1/2/2020 3:04:05 PM"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Concatenating a negative number",
+      "source": [
+        "Dim a As Long",
+        "a = -5",
+        "? a & \"\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "-5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Concatenating a Double with many digits",
+      "source": [
+        "Dim d As Double",
+        "d = 1 / 3",
+        "? d & \"\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "0.333333333333333"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Concatenating a Currency",
+      "source": [
+        "Dim c As Currency",
+        "c = 1.5",
+        "? c & \"\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1.5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Concatenating a Single",
+      "source": [
+        "Dim s As Single",
+        "s = 0.1",
+        "? s & \"\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "0.1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Concatenating a Decimal",
+      "source": [
+        "? CDec(\"1.10\") & \"\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1.1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Concatenating an Error value",
+      "source": [
+        "? CVErr(5) & \"\""
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Concatenating a Byte",
+      "source": [
+        "? CByte(7) & \"\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Concatenating a large Double uses an exponent",
+      "source": [
+        "Dim d As Double",
+        "d = 1E+20",
+        "? d & \"\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1E+20"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Numeric comparison of Integers",
+      "source": [
+        "Dim a As Integer, b As Integer",
+        "a = 1: b = 2",
+        "? a < b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Comparison returns Boolean",
+      "source": [
+        "Dim a As Integer, b As Integer",
+        "a = 1: b = 2",
+        "? a = b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Strings compare by character code under Option Compare Binary",
+      "source": [
+        "Dim s As String, t As String",
+        "s = \"a\": t = \"B\"",
+        "? s < t"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "String comparison is not numeric",
+      "source": [
+        "Dim s As String, t As String",
+        "s = \"10\": t = \"9\"",
+        "? s < t"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A number compared with a numeric String",
+      "source": [
+        "Dim s As String",
+        "s = \"9\"",
+        "? 10 < s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A number compared with a non-numeric String",
+      "source": [
+        "Dim s As String",
+        "s = \"a\"",
+        "? 10 < s"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "A Variant number compared with a Variant String",
+      "source": [
+        "Dim v As Variant, w As Variant",
+        "v = 10: w = \"9\"",
+        "? v < w"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A Variant number compared with a Variant numeric String",
+      "source": [
+        "Dim v As Variant, w As Variant",
+        "v = 10: w = \"10\"",
+        "? v = w"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A typed number compared with a Variant String",
+      "source": [
+        "Dim l As Long, w As Variant",
+        "l = 10: w = \"9\"",
+        "? l < w"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Empty equals zero",
+      "source": [
+        "Dim v As Variant",
+        "? v = 0"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Empty equals the empty String",
+      "source": [
+        "Dim v As Variant",
+        "? v = \"\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Empty compared with a non-empty String",
+      "source": [
+        "Dim v As Variant",
+        "? v < \"a\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Null equals Null is Null",
+      "source": [
+        "? Null = Null"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Null compared with a number",
+      "source": [
+        "? 1 = Null"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Null in a less-than comparison",
+      "source": [
+        "? Null < 1"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Boolean compared with minus one",
+      "source": [
+        "Dim b As Boolean",
+        "b = True",
+        "? b = -1"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Boolean compared with one",
+      "source": [
+        "Dim b As Boolean",
+        "b = True",
+        "? b = 1"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Boolean compared with a String",
+      "source": [
+        "Dim b As Boolean",
+        "b = True",
+        "? b = \"True\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date compared with a number",
+      "source": [
+        "Dim d As Date",
+        "d = #1/1/2020#",
+        "? d = 43831"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Double equality after arithmetic",
+      "source": [
+        "Dim a As Double, b As Double",
+        "a = 0.1 + 0.2: b = 0.3",
+        "? a = b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Single compared with Double",
+      "source": [
+        "Dim a As Single, b As Double",
+        "a = 0.1: b = 0.1",
+        "? a = b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Currency compared with Double",
+      "source": [
+        "Dim a As Currency, b As Double",
+        "a = 0.1: b = 0.1",
+        "? a = b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Decimal compared with Double",
+      "source": [
+        "Dim a As Variant, b As Double",
+        "a = CDec(\"0.1\"): b = 0.1",
+        "? a = b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Not equal",
+      "source": [
+        "Dim a As Integer, b As Integer",
+        "a = 1: b = 2",
+        "? a <> b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Greater or equal",
+      "source": [
+        "Dim a As Integer, b As Integer",
+        "a = 2: b = 2",
+        "? a >= b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Trailing spaces matter in String comparison",
+      "source": [
+        "Dim s As String, t As String",
+        "s = \"a\": t = \"a \"",
+        "? s = t"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Empty String equals vbNullString",
+      "source": [
+        "Dim s As String",
+        "? s = vbNullString"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Case matters under Option Compare Binary",
+      "source": [
+        "Dim s As String, t As String",
+        "s = \"a\": t = \"A\"",
+        "? s = t"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Lower case sorts after upper case under Option Compare Binary",
+      "source": [
+        "Dim s As String, t As String",
+        "s = \"a\": t = \"Z\"",
+        "? s > t"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Is on two Nothings",
+      "source": [
+        "Dim o As Object, p As Object",
+        "? o Is p"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Is Nothing on an unset variable",
+      "source": [
+        "Dim o As Object",
+        "? o Is Nothing"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Is on the same object",
+      "source": [
+        "Dim c As Collection, o As Object",
+        "Set c = New Collection",
+        "Set o = c",
+        "? o Is c"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Is on different objects",
+      "source": [
+        "Dim c As Collection, d As Collection",
+        "Set c = New Collection: Set d = New Collection",
+        "? c Is d"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Like with a wildcard",
+      "source": [
+        "Dim s As String",
+        "s = \"hello\"",
+        "? s Like \"h*o\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Like with a single-character wildcard",
+      "source": [
+        "Dim s As String",
+        "s = \"hello\"",
+        "? s Like \"h?llo\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Like with a digit wildcard",
+      "source": [
+        "Dim s As String",
+        "s = \"a1\"",
+        "? s Like \"a#\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Like with a character list",
+      "source": [
+        "Dim s As String",
+        "s = \"b\"",
+        "? s Like \"[a-c]\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Like with a negated character list",
+      "source": [
+        "Dim s As String",
+        "s = \"b\"",
+        "? s Like \"[!a-c]\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Like is case sensitive under Option Compare Binary",
+      "source": [
+        "Dim s As String",
+        "s = \"A\"",
+        "? s Like \"a\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Like with an escaped bracket",
+      "source": [
+        "Dim s As String",
+        "s = \"[x]\"",
+        "? s Like \"[[]x]\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Like with an empty pattern",
+      "source": [
+        "Dim s As String",
+        "s = \"\"",
+        "? s Like \"\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Like with a star against an empty String",
+      "source": [
+        "Dim s As String",
+        "s = \"\"",
+        "? s Like \"*\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Like with Null",
+      "source": [
+        "? \"a\" Like Null"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Like with Empty",
+      "source": [
+        "Dim v As Variant",
+        "? v Like \"\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Like with a range in the wrong order",
+      "source": [
+        "Dim s As String",
+        "s = \"b\"",
+        "? s Like \"[c-a]\""
+      ],
+      "results": [],
+      "error": {
+        "number": 93,
+        "description": "Invalid pattern string",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Like with an unterminated character list",
+      "source": [
+        "Dim s As String",
+        "s = \"b\"",
+        "? s Like \"[b\""
+      ],
+      "results": [],
+      "error": {
+        "number": 93,
+        "description": "Invalid pattern string",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Like with a number",
+      "source": [
+        "? 123 Like \"1*\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Like with a character list containing a dash at the end",
+      "source": [
+        "Dim s As String",
+        "s = \"-\"",
+        "? s Like \"[a-]\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Not on an Integer",
+      "source": [
+        "Dim a As Integer",
+        "a = 1",
+        "? Not a"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "-2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Not on a Boolean",
+      "source": [
+        "Dim b As Boolean",
+        "b = True",
+        "? Not b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Not on a Long zero",
+      "source": [
+        "Dim a As Long",
+        "? Not a"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "-1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Not on a Double rounds first",
+      "source": [
+        "Dim d As Double",
+        "d = 1.5",
+        "? Not d"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "-3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Not on Null",
+      "source": [
+        "? Not Null"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Not on Empty",
+      "source": [
+        "Dim v As Variant",
+        "? Not v"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "-1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Not on a numeric String",
+      "source": [
+        "Dim s As String",
+        "s = \"1\"",
+        "? Not s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "-2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Not on a Byte",
+      "source": [
+        "Dim b As Byte",
+        "b = 1",
+        "? Not b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Byte",
+            "value": "254"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Not on a Double beyond Long range",
+      "source": [
+        "Dim d As Double",
+        "d = 1E+10",
+        "? Not d"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Not on a Currency",
+      "source": [
+        "Dim c As Currency",
+        "c = 1.5",
+        "? Not c"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "-3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Not on a LongLong",
+      "source": [
+        "Dim l As LongLong",
+        "l = 1",
+        "? Not l"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "-2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "And on Integers",
+      "source": [
+        "Dim a As Integer, b As Integer",
+        "a = 6: b = 3",
+        "? a And b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "And on Booleans",
+      "source": [
+        "Dim a As Boolean, b As Boolean",
+        "a = True: b = False",
+        "? a And b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "And with Null and False",
+      "source": [
+        "? Null And False"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "And with Null and True",
+      "source": [
+        "? Null And True"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "And with Null and zero",
+      "source": [
+        "? Null And 0"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "And with Null and a nonzero number",
+      "source": [
+        "? Null And 6"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Or with Null and True",
+      "source": [
+        "? Null Or True"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Or with Null and False",
+      "source": [
+        "? Null Or False"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Or on Integers",
+      "source": [
+        "Dim a As Integer, b As Integer",
+        "a = 6: b = 3",
+        "? a Or b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Or on a Boolean and an Integer",
+      "source": [
+        "Dim a As Boolean, b As Integer",
+        "a = True: b = 3",
+        "? a Or b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "-1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Xor on Integers",
+      "source": [
+        "Dim a As Integer, b As Integer",
+        "a = 6: b = 3",
+        "? a Xor b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Xor on Booleans",
+      "source": [
+        "Dim a As Boolean, b As Boolean",
+        "a = True: b = True",
+        "? a Xor b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Xor with Null",
+      "source": [
+        "? Null Xor True"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Eqv on Integers",
+      "source": [
+        "Dim a As Integer, b As Integer",
+        "a = 6: b = 3",
+        "? a Eqv b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "-6"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Eqv on Booleans",
+      "source": [
+        "Dim a As Boolean, b As Boolean",
+        "a = True: b = False",
+        "? a Eqv b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Eqv with Null",
+      "source": [
+        "? Null Eqv True"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Imp on Booleans",
+      "source": [
+        "Dim a As Boolean, b As Boolean",
+        "a = True: b = False",
+        "? a Imp b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Imp on Integers",
+      "source": [
+        "Dim a As Integer, b As Integer",
+        "a = 6: b = 3",
+        "? a Imp b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "-5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Imp with a Null antecedent",
+      "source": [
+        "? Null Imp True"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Imp with a Null consequent",
+      "source": [
+        "? True Imp Null"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Imp with False and Null",
+      "source": [
+        "? False Imp Null"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "And on a Long and an Integer",
+      "source": [
+        "Dim a As Long, b As Integer",
+        "a = 65536: b = -1",
+        "? a And b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "65536"
+          }
+        }
+      ]
+    },
+    {
+      "name": "And on Doubles rounds to Long",
+      "source": [
+        "Dim a As Double, b As Double",
+        "a = 6.5: b = 3.5",
+        "? a And b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "And on Byte operands",
+      "source": [
+        "Dim a As Byte, b As Byte",
+        "a = 6: b = 3",
+        "? a And b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Byte",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "And on numeric Strings",
+      "source": [
+        "Dim s As String, t As String",
+        "s = \"6\": t = \"3\"",
+        "? s And t"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "And with Empty",
+      "source": [
+        "Dim v As Variant",
+        "? v And 1"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Or with Empty",
+      "source": [
+        "Dim v As Variant",
+        "? v Or 1"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "And on LongLongs",
+      "source": [
+        "Dim a As LongLong, b As LongLong",
+        "a = 4294967296^: b = -1",
+        "? a And b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "4294967296"
+          }
+        }
+      ]
+    },
+    {
+      "name": "And on a Boolean and a Long",
+      "source": [
+        "Dim a As Boolean, b As Long",
+        "a = True: b = 65536",
+        "? a And b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "65536"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Not is evaluated after the comparison",
+      "source": [
+        "Dim a As Integer, b As Integer",
+        "a = 1: b = 1",
+        "? Not a = b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "And binds tighter than Or",
+      "source": [
+        "Dim a As Boolean, b As Boolean, c As Boolean",
+        "a = True: b = False: c = True",
+        "? a Or b And c"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Comparison of an And result",
+      "source": [
+        "Dim a As Integer",
+        "a = 2",
+        "? (a And 1) = 0"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Plus binds tighter than concatenation",
+      "source": [
+        "Dim a As Integer, b As Integer",
+        "a = 1: b = 2",
+        "? a & b + b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "14"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mod binds tighter than plus",
+      "source": [
+        "Dim a As Integer",
+        "a = 7",
+        "? a + a Mod 3"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Integer division binds tighter than Mod",
+      "source": [
+        "Dim a As Integer",
+        "a = 7",
+        "? a Mod a \\ 2"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Multiplication binds tighter than integer division",
+      "source": [
+        "Dim a As Integer",
+        "a = 7",
+        "? a \\ 2 * 2"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Concatenation binds tighter than comparison",
+      "source": [
+        "Dim a As Integer",
+        "a = 1",
+        "? a & a = \"11\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Comparison binds tighter than Not",
+      "source": [
+        "Dim a As Integer",
+        "a = 1",
+        "? Not a < 2"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Xor binds looser than Or",
+      "source": [
+        "Dim a As Boolean, b As Boolean, c As Boolean",
+        "a = True: b = True: c = True",
+        "? a Xor b Or c"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Eqv binds looser than Xor",
+      "source": [
+        "Dim a As Boolean, b As Boolean, c As Boolean",
+        "a = True: b = True: c = False",
+        "? a Eqv b Xor c"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Imp binds loosest",
+      "source": [
+        "Dim a As Boolean, b As Boolean, c As Boolean",
+        "a = False: b = False: c = True",
+        "? a Imp b Eqv c"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Power of a Double base to a negative integral exponent",
+      "source": [
+        "? 1.05 ^ -12"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": ".556837418177559",
+            "bits": "3FE1D19CB4885FCA"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Power of a Double base to twelve",
+      "source": [
+        "? 1.05 ^ 12"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1.79585632602213",
+            "bits": "3FFCBBD3D7C946B5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Power of a monthly rate factor to 360",
+      "source": [
+        "? (1 + 0.05 / 12) ^ 360"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "4.46774431400611",
+            "bits": "4011DEF85D8E2F4D"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Power of a monthly rate factor to 359",
+      "source": [
+        "? (1 + 0.05 / 12) ^ 359"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "4.44920595585671",
+            "bits": "4011CBFCA5664AB9"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Power of 0.6 to four",
+      "source": [
+        "? 0.6 ^ 4"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": ".1296",
+            "bits": "3FC096BB98C7E282"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Power of 0.6 to five",
+      "source": [
+        "? 0.6 ^ 5"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": ".07776",
+            "bits": "3FB3E81450EFDC9B"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Power with a fractional exponent",
+      "source": [
+        "? 2 ^ 0.5"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1.4142135623731",
+            "bits": "3FF6A09E667F3BCD"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Power of ten to minus three",
+      "source": [
+        "? 10 ^ -3"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": ".001",
+            "bits": "3F50624DD2F1A9FC"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Power close to e",
+      "source": [
+        "? 1.0000001 ^ 10000000"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "2.71828169413208",
+            "bits": "4005BF0A790CE6F2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Power of a rate factor to a half",
+      "source": [
+        "? 1.12 ^ 0.5"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1.05830052442584",
+            "bits": "3FF0EECC87DBFA55"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A Double expression keeps its intermediate results in extended precision",
+      "source": [
+        "Dim x As Double, y As Double, z As Double",
+        "x = 0.05: y = 3: z = 299.5",
+        "? x / y * z"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "4.99166666666667",
+            "bits": "4013F77777777778"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A Double intermediate result may pass the range of a Double",
+      "source": [
+        "Dim big As Double",
+        "big = 1E+308",
+        "? big * 10 / 10"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1E+308",
+            "bits": "7FE1CCF385EBC8A0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A Variant operand rounds the intermediate result to a Double",
+      "source": [
+        "Dim v As Variant, y As Double, z As Double",
+        "v = 0.05: y = 3: z = 299.5",
+        "? v / y * z"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "4.99166666666667",
+            "bits": "4013F77777777777"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A comparison of Double expressions compares their unrounded results",
+      "source": [
+        "Dim a As Double, b As Double, r As Double, z As Double",
+        "a = 0.05: b = 12: z = 299.5",
+        "r = a / b",
+        "? a / b * z = r * z"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A declared String against a Variant holding a number compares as text",
+      "source": [
+        "Dim v As Variant",
+        "Dim s As String",
+        "Const K As String = \"OBJECT\"",
+        "v = 5",
+        "s = \"OBJECT\"",
+        "? v <> s",
+        "? v < s",
+        "? v <> K",
+        "v = 10",
+        "s = \"9\"",
+        "? v < s",
+        "? v < \"9\"",
+        "? s > v"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    }
+  ]
+}

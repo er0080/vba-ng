@@ -1,0 +1,1193 @@
+{
+  "area": "Interaction",
+  "excel": "16.0.20326",
+  "culture": "en-US",
+  "options": [],
+  "cases": [
+    {
+      "name": "IIf picks the true part",
+      "source": [
+        "? IIf(True, \"yes\", \"no\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "yes"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IIf picks the false part",
+      "source": [
+        "? IIf(0, \"yes\", \"no\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "no"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IIf evaluates both parts",
+      "source": [
+        "Dim z As Long",
+        "? IIf(True, 1, 1 / z)"
+      ],
+      "results": [],
+      "error": {
+        "number": 11,
+        "description": "Division by zero",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "IIf with a Null condition",
+      "source": [
+        "? IIf(Null, 1, 2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IIf with a String condition",
+      "source": [
+        "? IIf(\"True\", 1, 2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IIf with a non-numeric String condition",
+      "source": [
+        "? IIf(\"abc\", 1, 2)"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "IIf keeps the part's type",
+      "source": [
+        "Dim i As Integer",
+        "i = 5",
+        "? IIf(True, i, \"x\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IIf with a Null part",
+      "source": [
+        "? IIf(False, 1, Null)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IIf with an Empty condition",
+      "source": [
+        "Dim v As Variant",
+        "? IIf(v, 1, 2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IIf with a fractional condition",
+      "source": [
+        "? IIf(0.4, 1, 2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Choose the second",
+      "source": [
+        "? Choose(2, \"a\", \"b\", \"c\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "b"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Choose out of range returns Null",
+      "source": [
+        "? Choose(4, \"a\", \"b\", \"c\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Choose zero returns Null",
+      "source": [
+        "? Choose(0, \"a\", \"b\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Choose with a fractional index truncates",
+      "source": [
+        "? Choose(1.9, \"a\", \"b\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "a"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Choose evaluates every choice",
+      "source": [
+        "Dim z As Long",
+        "? Choose(1, \"a\", 1 / z)"
+      ],
+      "results": [],
+      "error": {
+        "number": 11,
+        "description": "Division by zero",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Choose with a Null index",
+      "source": [
+        "? Choose(Null, \"a\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 94,
+        "description": "Invalid use of Null",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Choose with a String index",
+      "source": [
+        "? Choose(\"2\", \"a\", \"b\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "b"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Choose keeps the choice's type",
+      "source": [
+        "? Choose(1, CByte(5), \"b\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Byte",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Switch returns the first match",
+      "source": [
+        "? Switch(False, 1, True, 2, True, 3)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Switch with no match returns Null",
+      "source": [
+        "? Switch(False, 1, False, 2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Switch evaluates every expression",
+      "source": [
+        "Dim z As Long",
+        "? Switch(True, 1, True, 1 / z)"
+      ],
+      "results": [],
+      "error": {
+        "number": 11,
+        "description": "Division by zero",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Switch with an odd number of arguments",
+      "source": [
+        "? Switch(True, 1, False)"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Switch with a Null condition",
+      "source": [
+        "? Switch(Null, 1, True, 2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Partition in range",
+      "source": [
+        "? Partition(5, 0, 99, 10)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "  0:  9"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Partition below the start",
+      "source": [
+        "? Partition(-5, 0, 99, 10)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "   : -1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Partition above the stop",
+      "source": [
+        "? Partition(150, 0, 99, 10)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "100:   "
+          }
+        }
+      ]
+    },
+    {
+      "name": "Partition with an interval of one",
+      "source": [
+        "? Partition(5, 0, 9, 1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": " 5: 5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Partition with padding widths",
+      "source": [
+        "? Partition(5, 0, 999, 100)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "   0:  99"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Partition at a boundary",
+      "source": [
+        "? Partition(10, 0, 99, 10)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": " 10: 19"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Partition with an interval larger than the range",
+      "source": [
+        "? Partition(5, 0, 9, 100)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": " 0: 9"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Partition with a zero interval",
+      "source": [
+        "? Partition(5, 0, 9, 0)"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Partition with the start above the stop",
+      "source": [
+        "? Partition(5, 9, 0, 1)"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Partition with Null",
+      "source": [
+        "? Partition(Null, 0, 9, 1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Partition with a negative start",
+      "source": [
+        "? Partition(-5, -10, 10, 5)"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Partition with a fractional number",
+      "source": [
+        "? Partition(5.5, 0, 9, 1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": " 6: 6"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Partition with a large stop",
+      "source": [
+        "? Partition(5, 0, 1000000, 10)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "      0:      9"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Environ with an empty name",
+      "source": [
+        "? Environ(\"\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Environ with an unknown name",
+      "source": [
+        "? Environ(\"VBANG_GOLDEN_UNDEFINED_VARIABLE\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "Environ with a zero index",
+      "source": [
+        "? Environ(0)"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Environ with a negative index",
+      "source": [
+        "? Environ(-1)"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Environ with a huge index",
+      "source": [
+        "? Environ(10000)"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Environ with Null",
+      "source": [
+        "? Environ(Null)"
+      ],
+      "results": [],
+      "error": {
+        "number": 94,
+        "description": "Invalid use of Null",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CreateObject with an unknown class",
+      "source": [
+        "? TypeName(CreateObject(\"VbaNg.Golden.DoesNotExist\"))"
+      ],
+      "results": [],
+      "error": {
+        "number": 429,
+        "description": "ActiveX component can't create object",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CreateObject with an empty class",
+      "source": [
+        "? TypeName(CreateObject(\"\"))"
+      ],
+      "results": [],
+      "error": {
+        "number": 429,
+        "description": "ActiveX component can't create object",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CreateObject of a Scripting Dictionary",
+      "source": [
+        "? TypeName(CreateObject(\"Scripting.Dictionary\"))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Dictionary"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GetObject with an empty path",
+      "source": [
+        "? TypeName(GetObject(\"\"))"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "GetObject with an unknown file",
+      "source": [
+        "? TypeName(GetObject(\"C:\\vbang-golden-does-not-exist.xyz\"))"
+      ],
+      "results": [],
+      "error": {
+        "number": 432,
+        "description": "File name or class name not found during Automation operation",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CallByName on a Collection",
+      "source": [
+        "Dim c As New Collection",
+        "c.Add \"x\"",
+        "? CallByName(c, \"Count\", VbGet)"
+      ],
+      "results": [],
+      "error": {
+        "number": 438,
+        "description": "Object doesn't support this property or method",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CallByName with an unknown member",
+      "source": [
+        "Dim c As New Collection",
+        "? CallByName(c, \"Bogus\", VbGet)"
+      ],
+      "results": [],
+      "error": {
+        "number": 438,
+        "description": "Object doesn't support this property or method",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CallByName with an item argument",
+      "source": [
+        "Dim c As New Collection",
+        "c.Add \"x\"",
+        "? CallByName(c, \"Item\", VbGet, 1)"
+      ],
+      "results": [],
+      "error": {
+        "number": 438,
+        "description": "Object doesn't support this property or method",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CallByName invoking a method",
+      "source": [
+        "Dim c As New Collection",
+        "CallByName c, \"Add\", VbMethod, \"y\"",
+        "? c.Count"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CallByName on Nothing",
+      "source": [
+        "Dim o As Object",
+        "? CallByName(o, \"Count\", VbGet)"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "TypeName of a new Collection",
+      "source": [
+        "? TypeName(New Collection)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Collection"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DoEvents returns zero",
+      "source": [
+        "? DoEvents"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "AppActivate with an unknown title",
+      "source": [
+        "AppActivate \"VbaNg Golden Window That Does Not Exist\"",
+        "? \"activated\""
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Shell with an empty command",
+      "source": [
+        "? Shell(\"\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Shell with an unknown command",
+      "source": [
+        "? Shell(\"vbang-golden-does-not-exist.exe\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 53,
+        "description": "File not found",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Collection Count starts at zero",
+      "source": [
+        "Dim c As New Collection",
+        "? c.Count"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Collection Add and Item",
+      "source": [
+        "Dim c As New Collection",
+        "c.Add \"a\"",
+        "c.Add \"b\"",
+        "? c(1)",
+        "? c.Item(2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "a"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "b"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Collection Add with a key",
+      "source": [
+        "Dim c As New Collection",
+        "c.Add \"a\", \"first\"",
+        "? c(\"first\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "a"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Collection Add with a duplicate key",
+      "source": [
+        "Dim c As New Collection",
+        "c.Add \"a\", \"k\"",
+        "c.Add \"b\", \"k\""
+      ],
+      "results": [],
+      "error": {
+        "number": 457,
+        "description": "This key is already associated with an element of this collection",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Collection Item with an unknown key",
+      "source": [
+        "Dim c As New Collection",
+        "c.Add \"a\", \"k\"",
+        "? c(\"zzz\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Collection Item with an index out of range",
+      "source": [
+        "Dim c As New Collection",
+        "c.Add \"a\"",
+        "? c(2)"
+      ],
+      "results": [],
+      "error": {
+        "number": 9,
+        "description": "Subscript out of range",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Collection Item with index zero",
+      "source": [
+        "Dim c As New Collection",
+        "c.Add \"a\"",
+        "? c(0)"
+      ],
+      "results": [],
+      "error": {
+        "number": 9,
+        "description": "Subscript out of range",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Collection Add before",
+      "source": [
+        "Dim c As New Collection",
+        "c.Add \"a\"",
+        "c.Add \"b\", , 1",
+        "? c(1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "b"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Collection Add after",
+      "source": [
+        "Dim c As New Collection",
+        "c.Add \"a\"",
+        "c.Add \"b\", , , 1",
+        "? c(2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "b"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Collection Add with both before and after",
+      "source": [
+        "Dim c As New Collection",
+        "c.Add \"a\"",
+        "c.Add \"b\", , 1, 1"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Collection Remove",
+      "source": [
+        "Dim c As New Collection",
+        "c.Add \"a\"",
+        "c.Add \"b\"",
+        "c.Remove 1",
+        "? c(1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "b"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Collection Remove with a key",
+      "source": [
+        "Dim c As New Collection",
+        "c.Add \"a\", \"k\"",
+        "c.Remove \"k\"",
+        "? c.Count"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Collection Remove out of range",
+      "source": [
+        "Dim c As New Collection",
+        "c.Remove 1"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Collection keys are case insensitive",
+      "source": [
+        "Dim c As New Collection",
+        "c.Add \"a\", \"Key\"",
+        "? c(\"KEY\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "a"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Collection key of a number",
+      "source": [
+        "Dim c As New Collection",
+        "c.Add \"a\", \"1\"",
+        "? c(1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "a"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Collection Item with a Double index rounds",
+      "source": [
+        "Dim c As New Collection",
+        "c.Add \"a\"",
+        "c.Add \"b\"",
+        "? c(1.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "b"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Collection Item with a String index that is not a key",
+      "source": [
+        "Dim c As New Collection",
+        "c.Add \"a\"",
+        "? c(\"1\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Collection For Each order",
+      "source": [
+        "Dim c As New Collection",
+        "c.Add \"a\"",
+        "c.Add \"b\", , 1",
+        "Dim e As Variant",
+        "For Each e In c",
+        "? e",
+        "Next"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "b"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "a"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Collection holding an object",
+      "source": [
+        "Dim c As New Collection",
+        "c.Add New Collection",
+        "? TypeName(c(1))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Collection"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Collection holding an array",
+      "source": [
+        "Dim c As New Collection",
+        "c.Add Array(1, 2)",
+        "? c(1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Variant()",
+            "bounds": "0 To 1",
+            "items": [
+              {
+                "type": "Integer",
+                "value": "1"
+              },
+              {
+                "type": "Integer",
+                "value": "2"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Collection Item of a Null key",
+      "source": [
+        "Dim c As New Collection",
+        "c.Add \"a\", \"k\"",
+        "? c(Null)"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Collection Add with a numeric key",
+      "source": [
+        "Dim c As New Collection",
+        "c.Add \"a\", 1"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Collection Add with an Empty key",
+      "source": [
+        "Dim c As New Collection",
+        "Dim v As Variant",
+        "c.Add \"a\", v",
+        "? c.Count"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    }
+  ]
+}

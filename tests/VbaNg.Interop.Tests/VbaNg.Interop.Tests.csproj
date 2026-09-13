@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Description>Unit tests of the COM interop layer against the Scripting objects every Windows ships, so no Office is needed (CLAUDE.md R9).</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\VbaNg.Interop\VbaNg.Interop.csproj" />
+    <ProjectReference Include="..\..\src\VbaNg.Runtime\VbaNg.Runtime.csproj" />
+  </ItemGroup>
+
+</Project>

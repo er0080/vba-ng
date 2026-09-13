@@ -1,0 +1,3077 @@
+{
+  "area": "Information",
+  "excel": "16.0.20326",
+  "culture": "en-US",
+  "options": [],
+  "cases": [
+    {
+      "name": "VarType of an Integer literal",
+      "source": [
+        "? VarType(1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a Long literal",
+      "source": [
+        "? VarType(32768)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a Double literal",
+      "source": [
+        "? VarType(1.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a literal beyond Long",
+      "source": [
+        "? VarType(2147483648)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a Single literal",
+      "source": [
+        "? VarType(1!)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a Currency literal",
+      "source": [
+        "? VarType(1@)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "6"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a LongLong literal",
+      "source": [
+        "? VarType(1^)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "20"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a Double literal with an exponent",
+      "source": [
+        "? VarType(1E3)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a hex literal that fits Integer",
+      "source": [
+        "? VarType(&H7FFF)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a hex literal with the sign bit",
+      "source": [
+        "? VarType(&HFFFF)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Value of a hex literal with the sign bit",
+      "source": [
+        "? &HFFFF"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "-1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Value of a hex literal with a Long suffix",
+      "source": [
+        "? &HFFFF&"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "65535"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Value of an eight-digit hex literal",
+      "source": [
+        "? &HFFFFFFFF"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "-1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Value of an eight-digit hex literal with a LongLong suffix",
+      "source": [
+        "? &HFFFFFFFF^"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "4294967295"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Value of a hex literal beyond Long",
+      "source": [
+        "? &H100000000^"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "4294967296"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Value of a five-digit hex literal",
+      "source": [
+        "? &H10000"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "65536"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Value of an octal literal with the sign bit",
+      "source": [
+        "? &O177777"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "-1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Value of an octal literal beyond Integer",
+      "source": [
+        "? &O200000"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "65536"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a String literal",
+      "source": [
+        "? VarType(\"a\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a Boolean",
+      "source": [
+        "? VarType(True)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "11"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a Date literal",
+      "source": [
+        "? VarType(#1/1/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of Empty",
+      "source": [
+        "Dim v As Variant",
+        "? VarType(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of Null",
+      "source": [
+        "? VarType(Null)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a Variant array",
+      "source": [
+        "? VarType(Array())"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "8204"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a String array",
+      "source": [
+        "Dim a() As String",
+        "? VarType(a)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "8200"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a Long array",
+      "source": [
+        "Dim a(1) As Long",
+        "? VarType(a)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "8195"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of an Object variable holding Nothing",
+      "source": [
+        "Dim o As Object",
+        "? VarType(o)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "9"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a Collection",
+      "source": [
+        "Dim c As New Collection",
+        "? VarType(c)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "9"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a Decimal",
+      "source": [
+        "? VarType(CDec(1))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "14"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a Byte",
+      "source": [
+        "? VarType(CByte(1))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "17"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of an Error value",
+      "source": [
+        "? VarType(CVErr(1))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a typed Integer variable",
+      "source": [
+        "Dim i As Integer",
+        "? VarType(i)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a fixed-length String",
+      "source": [
+        "Dim s As String * 3",
+        "? VarType(s)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a Variant assigned a Date",
+      "source": [
+        "Dim v As Variant",
+        "v = #1/1/2020#",
+        "? VarType(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a Variant assigned Nothing",
+      "source": [
+        "Dim v As Variant",
+        "Set v = Nothing",
+        "? VarType(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "9"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a negative literal",
+      "source": [
+        "? VarType(-1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a negated Long literal",
+      "source": [
+        "? VarType(-32768)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeName of an Integer",
+      "source": [
+        "? TypeName(1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Integer"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeName of a Long",
+      "source": [
+        "? TypeName(32768)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Long"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeName of a Double",
+      "source": [
+        "? TypeName(1.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Double"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeName of a String",
+      "source": [
+        "? TypeName(\"a\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "String"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeName of a Boolean",
+      "source": [
+        "? TypeName(True)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Boolean"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeName of a Date",
+      "source": [
+        "? TypeName(#1/1/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Date"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeName of Empty",
+      "source": [
+        "Dim v As Variant",
+        "? TypeName(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Empty"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeName of Null",
+      "source": [
+        "? TypeName(Null)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeName of Nothing",
+      "source": [
+        "? TypeName(Nothing)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Nothing"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeName of an Object variable holding Nothing",
+      "source": [
+        "Dim o As Object",
+        "? TypeName(o)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Nothing"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeName of a Collection",
+      "source": [
+        "Dim c As New Collection",
+        "? TypeName(c)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Collection"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeName of a Variant array",
+      "source": [
+        "? TypeName(Array(1))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Variant()"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeName of a String array",
+      "source": [
+        "Dim a(1) As String",
+        "? TypeName(a)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "String()"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeName of a Long array",
+      "source": [
+        "Dim a() As Long",
+        "? TypeName(a)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Long()"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeName of a two-dimensional array",
+      "source": [
+        "Dim a(1, 1) As Double",
+        "? TypeName(a)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Double()"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeName of a Decimal",
+      "source": [
+        "? TypeName(CDec(1))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Decimal"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeName of a Byte",
+      "source": [
+        "? TypeName(CByte(1))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Byte"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeName of a Currency",
+      "source": [
+        "? TypeName(CCur(1))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Currency"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeName of a Single",
+      "source": [
+        "? TypeName(1!)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Single"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeName of a LongLong",
+      "source": [
+        "? TypeName(1^)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "LongLong"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeName of an Error value",
+      "source": [
+        "? TypeName(CVErr(1))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Error"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeName of the Err object",
+      "source": [
+        "? TypeName(Err)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "ErrObject"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeName of a fixed-length String",
+      "source": [
+        "Dim s As String * 3",
+        "? TypeName(s)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "String"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeName of a Byte array",
+      "source": [
+        "Dim b() As Byte",
+        "? TypeName(b)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Byte()"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeName of an Object array",
+      "source": [
+        "Dim o(1) As Object",
+        "? TypeName(o)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Object()"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeName of a Collection array",
+      "source": [
+        "Dim c(1) As Collection",
+        "? TypeName(c)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Object()"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNumeric of a numeric String",
+      "source": [
+        "? IsNumeric(\"12\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNumeric of a String with spaces",
+      "source": [
+        "? IsNumeric(\" 12 \")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNumeric of an exponent String",
+      "source": [
+        "? IsNumeric(\"1e3\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNumeric of a hex String",
+      "source": [
+        "? IsNumeric(\"&HFF\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNumeric of a String with a thousands separator",
+      "source": [
+        "? IsNumeric(\"1,000\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNumeric of a String with a currency symbol",
+      "source": [
+        "? IsNumeric(\"$1\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNumeric of a String with a trailing minus",
+      "source": [
+        "? IsNumeric(\"1-\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNumeric of a String with a leading plus",
+      "source": [
+        "? IsNumeric(\"+1\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNumeric of a String with a percent",
+      "source": [
+        "? IsNumeric(\"1%\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNumeric of a String with parentheses",
+      "source": [
+        "? IsNumeric(\"(1)\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNumeric of an empty String",
+      "source": [
+        "? IsNumeric(\"\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNumeric of a decimal point only",
+      "source": [
+        "? IsNumeric(\".\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNumeric of a Boolean",
+      "source": [
+        "? IsNumeric(True)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNumeric of a Date",
+      "source": [
+        "? IsNumeric(#1/1/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNumeric of Null",
+      "source": [
+        "? IsNumeric(Null)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNumeric of Empty",
+      "source": [
+        "Dim v As Variant",
+        "? IsNumeric(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNumeric of a String with a tab",
+      "source": [
+        "? IsNumeric(vbTab & \"1\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNumeric of a String with two exponents",
+      "source": [
+        "? IsNumeric(\"1e3e3\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNumeric of a String with a D exponent",
+      "source": [
+        "? IsNumeric(\"1d3\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNumeric of an Error value",
+      "source": [
+        "? IsNumeric(CVErr(1))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNumeric of a Collection",
+      "source": [
+        "Dim c As New Collection",
+        "? IsNumeric(c)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNumeric of the String True",
+      "source": [
+        "? IsNumeric(\"True\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNumeric of a String with a trailing dot",
+      "source": [
+        "? IsNumeric(\"1.\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNumeric of a String with an exponent sign only",
+      "source": [
+        "? IsNumeric(\"1e\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNumeric of a Date String",
+      "source": [
+        "? IsNumeric(\"1/2/2020\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsEmpty of a fresh Variant",
+      "source": [
+        "Dim v As Variant",
+        "? IsEmpty(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsEmpty of an empty String",
+      "source": [
+        "? IsEmpty(\"\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsEmpty of zero",
+      "source": [
+        "? IsEmpty(0)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsEmpty of Null",
+      "source": [
+        "? IsEmpty(Null)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsEmpty of a typed Integer",
+      "source": [
+        "Dim i As Integer",
+        "? IsEmpty(i)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsEmpty after assigning Empty",
+      "source": [
+        "Dim v As Variant",
+        "v = 1",
+        "v = Empty",
+        "? IsEmpty(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsEmpty of an unallocated array",
+      "source": [
+        "Dim a() As Long",
+        "? IsEmpty(a)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNull of Null",
+      "source": [
+        "? IsNull(Null)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNull of an empty String",
+      "source": [
+        "? IsNull(\"\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNull of Empty",
+      "source": [
+        "Dim v As Variant",
+        "? IsNull(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNull of a Null expression",
+      "source": [
+        "? IsNull(Null + 1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsNull of a Variant assigned Null",
+      "source": [
+        "Dim v As Variant",
+        "v = Null",
+        "? IsNull(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsArray of an array",
+      "source": [
+        "? IsArray(Array())"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsArray of a String",
+      "source": [
+        "? IsArray(\"a\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsArray of an unallocated dynamic array",
+      "source": [
+        "Dim a() As Long",
+        "? IsArray(a)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsArray of a Variant holding an array",
+      "source": [
+        "Dim v As Variant",
+        "v = Array(1)",
+        "? IsArray(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsArray of Null",
+      "source": [
+        "? IsArray(Null)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsObject of Nothing",
+      "source": [
+        "Dim o As Object",
+        "? IsObject(o)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsObject of a Collection",
+      "source": [
+        "Dim c As New Collection",
+        "? IsObject(c)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsObject of a String",
+      "source": [
+        "? IsObject(\"a\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsObject of Null",
+      "source": [
+        "? IsObject(Null)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsObject of Empty",
+      "source": [
+        "Dim v As Variant",
+        "? IsObject(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsObject of a Variant holding Nothing",
+      "source": [
+        "Dim v As Variant",
+        "Set v = Nothing",
+        "? IsObject(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsError of an Error value",
+      "source": [
+        "? IsError(CVErr(1))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsError of a number",
+      "source": [
+        "? IsError(1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsError of Null",
+      "source": [
+        "? IsError(Null)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error function of a known number",
+      "source": [
+        "? Error(6)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Overflow"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error function with no argument outside a handler",
+      "source": [
+        "? Error"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error function of zero",
+      "source": [
+        "? Error(0)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error function of an unknown number",
+      "source": [
+        "? Error(1000)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error function of the maximum number",
+      "source": [
+        "? Error(65535)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error function beyond the maximum",
+      "source": [
+        "Dim v As Variant",
+        "v = 65536",
+        "? Error(v)"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Error function of a negative number",
+      "source": [
+        "Dim v As Variant",
+        "v = -1",
+        "? Error(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error function of Null",
+      "source": [
+        "? Error(Null)"
+      ],
+      "results": [],
+      "error": {
+        "number": 94,
+        "description": "Invalid use of Null",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Error function of a String",
+      "source": [
+        "? Error(\"6\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Overflow"
+          }
+        }
+      ]
+    },
+    {
+      "name": "LBound of a fixed array",
+      "source": [
+        "Dim a(2) As Long",
+        "? LBound(a)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "UBound of a fixed array",
+      "source": [
+        "Dim a(2) As Long",
+        "? UBound(a)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bounds with an explicit range",
+      "source": [
+        "Dim a(-3 To 2) As Long",
+        "? LBound(a)",
+        "? UBound(a)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "-3"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bounds of a second dimension",
+      "source": [
+        "Dim a(1 To 2, 3 To 4) As Long",
+        "? LBound(a, 2)",
+        "? UBound(a, 2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "UBound of a dimension that does not exist",
+      "source": [
+        "Dim a(2) As Long",
+        "? UBound(a, 2)"
+      ],
+      "results": [],
+      "error": {
+        "number": 9,
+        "description": "Subscript out of range",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "UBound with a zero dimension",
+      "source": [
+        "Dim a(2) As Long",
+        "? UBound(a, 0)"
+      ],
+      "results": [],
+      "error": {
+        "number": 9,
+        "description": "Subscript out of range",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "UBound of an unallocated dynamic array",
+      "source": [
+        "Dim a() As Long",
+        "? UBound(a)"
+      ],
+      "results": [],
+      "error": {
+        "number": 9,
+        "description": "Subscript out of range",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "LBound of an unallocated dynamic array",
+      "source": [
+        "Dim a() As Long",
+        "? LBound(a)"
+      ],
+      "results": [],
+      "error": {
+        "number": 9,
+        "description": "Subscript out of range",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "UBound of an empty Variant array",
+      "source": [
+        "? UBound(Array())"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "-1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "LBound of an empty Variant array",
+      "source": [
+        "? LBound(Array())"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "UBound of an Array with elements",
+      "source": [
+        "? UBound(Array(1, 2, 3))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "UBound of a Variant holding a String, since the VBE rejects a non-array argument",
+      "source": [
+        "Dim v As Variant",
+        "v = \"abc\"",
+        "? UBound(v)"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "UBound of a Variant holding Null",
+      "source": [
+        "Dim v As Variant",
+        "v = Null",
+        "? UBound(v)"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "UBound of an Empty Variant",
+      "source": [
+        "Dim v As Variant",
+        "? UBound(v)"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "UBound of a Variant holding an array",
+      "source": [
+        "Dim v As Variant",
+        "v = Array(1, 2)",
+        "? UBound(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "UBound returns Long",
+      "source": [
+        "Dim a(2) As Long",
+        "? VarType(UBound(a))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "UBound with a Double dimension rounds",
+      "source": [
+        "Dim a(1, 2) As Long",
+        "? UBound(a, 1.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsMissing of a value",
+      "source": [
+        "? IsMissing(Null)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a call to a String function",
+      "source": [
+        "? VarType(Left(\"abc\", 1))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a call to a String function with a dollar sign",
+      "source": [
+        "? VarType(Left$(\"abc\", 1))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of Mid on Null",
+      "source": [
+        "? VarType(Mid(\"abc\", 1))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of Chr",
+      "source": [
+        "? VarType(Chr(65))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of Len",
+      "source": [
+        "? VarType(Len(\"a\"))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of InStr",
+      "source": [
+        "? VarType(InStr(\"a\", \"a\"))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of Abs of an Integer",
+      "source": [
+        "Dim i As Integer",
+        "i = -1",
+        "? VarType(Abs(i))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of Int of a Currency",
+      "source": [
+        "? VarType(Int(CCur(1.5)))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "6"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a Date addition",
+      "source": [
+        "? VarType(#1/1/2020# + 1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a Boolean sum",
+      "source": [
+        "? VarType(True + True)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a Byte sum",
+      "source": [
+        "? VarType(CByte(1) + CByte(1))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "17"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of an Integer product",
+      "source": [
+        "Dim i As Integer",
+        "i = 2",
+        "? VarType(i * i)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a division",
+      "source": [
+        "Dim i As Integer",
+        "i = 4",
+        "? VarType(i / 2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of an integer division of Bytes",
+      "source": [
+        "? VarType(CByte(4) \\ CByte(2))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "17"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of an integer division of Doubles",
+      "source": [
+        "? VarType(4.5 \\ 2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a Mod of Integers",
+      "source": [
+        "Dim i As Integer",
+        "i = 4",
+        "? VarType(i Mod 3)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of an exponent of Integers",
+      "source": [
+        "Dim i As Integer",
+        "i = 4",
+        "? VarType(i ^ 2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a concatenation",
+      "source": [
+        "? VarType(1 & 2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a comparison",
+      "source": [
+        "? VarType(1 = 2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "11"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a Not",
+      "source": [
+        "Dim i As Integer",
+        "i = 4",
+        "? VarType(Not i)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of an And of Booleans",
+      "source": [
+        "? VarType(True And False)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "11"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of an And of an Integer and a Long",
+      "source": [
+        "Dim i As Integer, l As Long",
+        "? VarType(i And l)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a Currency times a Double",
+      "source": [
+        "? VarType(CCur(1) * 1.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a Single plus a Long",
+      "source": [
+        "Dim s As Single, l As Long",
+        "? VarType(s + l)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a Single plus a Single",
+      "source": [
+        "Dim s As Single, t As Single",
+        "? VarType(s + t)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a Date minus a Date",
+      "source": [
+        "? VarType(#1/2/2020# - #1/1/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a Date plus a Date",
+      "source": [
+        "? VarType(#1/2/2020# + #1/1/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a negated Byte",
+      "source": [
+        "? VarType(-CByte(1))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a negated Boolean",
+      "source": [
+        "? VarType(-True)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a negated Integer",
+      "source": [
+        "Dim i As Integer",
+        "? VarType(-i)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a Decimal sum",
+      "source": [
+        "? VarType(CDec(1) + 1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "14"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a Decimal times a Double",
+      "source": [
+        "? VarType(CDec(1) * 1.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "14"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of an Empty sum",
+      "source": [
+        "Dim v As Variant",
+        "? VarType(v + v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of an Empty concatenation",
+      "source": [
+        "Dim v As Variant",
+        "? VarType(v & v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a Null sum",
+      "source": [
+        "? VarType(Null + 1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a String sum",
+      "source": [
+        "? VarType(\"1\" + \"2\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a String plus a number",
+      "source": [
+        "? VarType(\"1\" + 1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a String minus a number",
+      "source": [
+        "? VarType(\"3\" - 1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a String times a number",
+      "source": [
+        "? VarType(\"3\" * 1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a String and a String with And",
+      "source": [
+        "? VarType(\"3\" And \"1\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a String negated",
+      "source": [
+        "? VarType(-\"3\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of a LongLong plus an Integer",
+      "source": [
+        "Dim l As LongLong",
+        "? VarType(l + 1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "20"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of an IIf result",
+      "source": [
+        "? VarType(IIf(True, 1, \"a\"))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "RGB packs red, green, and blue into a Long",
+      "source": [
+        "? RGB(1, 2, 3)",
+        "? RGB(255, 255, 255)",
+        "? TypeName(RGB(0, 0, 0))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "197121"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "16777215"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "Long"
+          }
+        }
+      ]
+    },
+    {
+      "name": "RGB clamps a component above 255",
+      "source": [
+        "? RGB(300, 0, 0)",
+        "? RGB(0, 256, 0)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "255"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "65280"
+          }
+        }
+      ]
+    },
+    {
+      "name": "RGB with a negative component",
+      "source": [
+        "? RGB(-1, 0, 0)"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "RGB rounds its components",
+      "source": [
+        "? RGB(1.5, 2.5, 3.4)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "197122"
+          }
+        }
+      ]
+    },
+    {
+      "name": "QBColor of the sixteen QuickBasic colors",
+      "source": [
+        "? QBColor(0)",
+        "? QBColor(1)",
+        "? QBColor(2)",
+        "? QBColor(3)",
+        "? QBColor(4)",
+        "? QBColor(5)",
+        "? QBColor(6)",
+        "? QBColor(7)",
+        "? QBColor(8)",
+        "? QBColor(9)",
+        "? QBColor(10)",
+        "? QBColor(11)",
+        "? QBColor(12)",
+        "? QBColor(13)",
+        "? QBColor(14)",
+        "? QBColor(15)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "8388608"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "32768"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Long",
+            "value": "8421376"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Long",
+            "value": "128"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "Long",
+            "value": "8388736"
+          }
+        },
+        {
+          "index": 6,
+          "value": {
+            "type": "Long",
+            "value": "32896"
+          }
+        },
+        {
+          "index": 7,
+          "value": {
+            "type": "Long",
+            "value": "12632256"
+          }
+        },
+        {
+          "index": 8,
+          "value": {
+            "type": "Long",
+            "value": "8421504"
+          }
+        },
+        {
+          "index": 9,
+          "value": {
+            "type": "Long",
+            "value": "16711680"
+          }
+        },
+        {
+          "index": 10,
+          "value": {
+            "type": "Long",
+            "value": "65280"
+          }
+        },
+        {
+          "index": 11,
+          "value": {
+            "type": "Long",
+            "value": "16776960"
+          }
+        },
+        {
+          "index": 12,
+          "value": {
+            "type": "Long",
+            "value": "255"
+          }
+        },
+        {
+          "index": 13,
+          "value": {
+            "type": "Long",
+            "value": "16711935"
+          }
+        },
+        {
+          "index": 14,
+          "value": {
+            "type": "Long",
+            "value": "65535"
+          }
+        },
+        {
+          "index": 15,
+          "value": {
+            "type": "Long",
+            "value": "16777215"
+          }
+        }
+      ]
+    },
+    {
+      "name": "QBColor outside the range",
+      "source": [
+        "? QBColor(16)"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "QBColor of a negative color",
+      "source": [
+        "? QBColor(-1)"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    }
+  ]
+}

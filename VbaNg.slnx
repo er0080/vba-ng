@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/VbaNg.AddIn/VbaNg.AddIn.csproj" />
+    <Project Path="src/VbaNg.Cli/VbaNg.Cli.csproj" />
+    <Project Path="src/VbaNg.Compiler/VbaNg.Compiler.csproj" />
+    <Project Path="src/VbaNg.Import/VbaNg.Import.csproj" />
+    <Project Path="src/VbaNg.Interop/VbaNg.Interop.csproj" />
+    <Project Path="src/VbaNg.Runtime/VbaNg.Runtime.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/VbaNg.Compiler.Tests/VbaNg.Compiler.Tests.csproj" />
+    <Project Path="tests/VbaNg.Golden/VbaNg.Golden.csproj" />
+    <Project Path="tests/VbaNg.Golden.Regen/VbaNg.Golden.Regen.csproj" />
+    <Project Path="tests/VbaNg.Import.Tests/VbaNg.Import.Tests.csproj" />
+    <Project Path="tests/VbaNg.Interop.Tests/VbaNg.Interop.Tests.csproj" />
+    <Project Path="tests/VbaNg.Runtime.Tests/VbaNg.Runtime.Tests.csproj" />
+    <Project Path="tests/VbaNg.E2E/VbaNg.E2E.csproj" />
+  </Folder>
+</Solution>

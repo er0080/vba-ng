@@ -1,0 +1,476 @@
+' Declares: Declare statements (MS-VBAL 5.2.3.5) calling the C entry points every Windows ships.
+' Only deterministic functions are used, so the recording does not depend on the machine: MulDiv
+' and the lstr family from kernel32, CharUpperBuffA, SetRect, and OffsetRect from user32,
+' VariantChangeType from oleaut32, IIDFromString and StringFromGUID2 from ole32, and RtlMoveMemory
+' through an Alias. The cases cover ByVal and
+' ByRef parameters, a string the callee writes into, As Any, records, Variants, and objects of
+' declared types, the return types, and the errors a missing library or entry point raises. A
+' Variant passed ByVal is not here: VariantChangeType given one faulted inside Excel (2026-09-11).
+
+Private Declare PtrSafe Function MulDiv Lib "kernel32" (ByVal number As Long, ByVal numerator As Long, ByVal denominator As Long) As Long
+Private Declare PtrSafe Function lstrlenA Lib "kernel32" (ByVal text As String) As Long
+Private Declare PtrSafe Function lstrcmpA Lib "kernel32" (ByVal left As String, ByVal right As String) As Long
+Private Declare PtrSafe Function lstrcpynA Lib "kernel32" (ByVal target As String, ByVal source As String, ByVal length As Long) As Long
+Private Declare PtrSafe Function CharUpperBuffA Lib "user32" (ByVal text As String, ByVal length As Long) As Long
+Private Declare PtrSafe Sub MoveMemory Lib "kernel32" Alias "RtlMoveMemory" (ByRef destination As Any, ByRef source As Any, ByVal length As LongPtr)
+Private Declare PtrSafe Function GetTickCount Lib "kernel32" () As Long
+Private Declare PtrSafe Function QueryPerformanceFrequency Lib "kernel32" (ByRef frequency As Currency) As Long
+Private Declare PtrSafe Function CallWindowProcA Lib "user32" (ByVal procedure As LongPtr, ByVal first As LongPtr, ByVal second As LongPtr, ByVal third As LongPtr, ByVal fourth As LongPtr) As LongPtr
+Private Declare PtrSafe Function MissingLibrary Lib "vbang-no-such-library" () As Long
+Private Declare PtrSafe Function MissingEntryPoint Lib "kernel32" () As Long
+Private Declare PtrSafe Sub MoveDoubles Lib "kernel32" Alias "RtlMoveMemory" (ByRef destination As Double, ByRef source As Double, ByVal length As LongPtr)
+
+Private Type RECT
+    Left As Long
+    Top As Long
+    Right As Long
+    Bottom As Long
+End Type
+
+Private Type Named
+    Text As String
+    Count As Long
+End Type
+
+Private Type GUID
+    Data1 As Long
+    Data2 As Integer
+    Data3 As Integer
+    Data4(0 To 7) As Byte
+End Type
+
+Private Declare PtrSafe Function SetRect Lib "user32" (ByRef target As RECT, ByVal left As Long, ByVal top As Long, ByVal right As Long, ByVal bottom As Long) As Long
+Private Declare PtrSafe Function OffsetRect Lib "user32" (ByRef target As RECT, ByVal dx As Long, ByVal dy As Long) As Long
+Private Declare PtrSafe Sub CopyNamed Lib "kernel32" Alias "RtlMoveMemory" (ByRef destination As LongPtr, ByRef source As Named, ByVal length As LongPtr)
+Private Declare PtrSafe Function VariantChangeType Lib "oleaut32" (ByRef target As Variant, ByRef source As Variant, ByVal flags As Integer, ByVal vt As Integer) As Long
+Private Declare PtrSafe Sub CopyObject Lib "kernel32" Alias "RtlMoveMemory" (ByRef destination As LongPtr, ByRef source As Object, ByVal length As LongPtr)
+Private Declare PtrSafe Sub PeekObject Lib "kernel32" Alias "RtlMoveMemory" (ByRef destination As LongPtr, ByVal source As Object, ByVal length As LongPtr)
+Private Declare PtrSafe Sub PutObject Lib "kernel32" Alias "RtlMoveMemory" (ByRef destination As Object, ByRef source As LongPtr, ByVal length As LongPtr)
+Private Declare PtrSafe Function IIDFromString Lib "ole32" (ByVal text As LongPtr, ByRef iid As GUID) As Long
+Private Declare PtrSafe Function StringFromGUID2 Lib "ole32" (ByRef iid As GUID, ByVal buffer As LongPtr, ByVal size As Long) As Long
+
+Private Type PICTDESC
+    Size As Long
+    Kind As Long
+    Handle As LongPtr
+    Extra As LongPtr
+End Type
+
+Private Declare PtrSafe Function OleCreatePictureIndirect Lib "oleaut32" (ByRef description As PICTDESC, ByRef iid As GUID, ByVal owns As Long, ByRef picture As IPicture) As Long
+Private Declare PtrSafe Sub PeekPicture Lib "kernel32" Alias "RtlMoveMemory" (ByRef destination As LongPtr, ByVal source As IPicture, ByVal length As LongPtr)
+Private Declare PtrSafe Function lstrlenW Lib "kernel32" (ByVal text As LongPtr) As Long
+Private Declare PtrSafe Sub SysFreeString Lib "oleaut32" (ByVal text As LongPtr)
+Private Declare PtrSafe Function DispCallFunc Lib "oleaut32" (ByVal pvInstance As LongPtr, ByVal oVft As LongPtr, ByVal cc As Long, ByVal vtReturn As Integer, ByVal cActuals As Long, ByRef prgvt As Integer, ByRef prgpvarg As LongPtr, ByRef pvargResult As Variant) As Long
+
+Private Type TNamed
+    Code As String * 3
+    N As Long
+End Type
+
+Private Declare PtrSafe Sub CopyNamedBytes Lib "kernel32" Alias "RtlMoveMemory" (ByRef destination As Byte, ByRef source As TNamed, ByVal length As LongPtr)
+Private Declare PtrSafe Sub FillNamed Lib "kernel32" Alias "RtlMoveMemory" (ByRef destination As TNamed, ByRef source As Byte, ByVal length As LongPtr)
+Private Declare PtrSafe Sub PutFlag Lib "kernel32" Alias "RtlMoveMemory" (ByRef destination As Boolean, ByRef source As Integer, ByVal length As LongPtr)
+Private Declare PtrSafe Sub GetFlag Lib "kernel32" Alias "RtlMoveMemory" (ByRef destination As Integer, ByRef source As Boolean, ByVal length As LongPtr)
+Private Declare PtrSafe Sub CopyArrayPointer Lib "kernel32" Alias "RtlMoveMemory" (ByRef destination As LongPtr, ByRef source() As Long, ByVal length As LongPtr)
+Private Declare PtrSafe Function CreateVectorByte Lib "oleaut32" Alias "SafeArrayCreateVector" (Optional ByVal vt As VbVarType = vbByte, Optional ByVal lower As Long = 0, Optional ByVal count As Long = 0) As Byte()
+Private Declare PtrSafe Function CreateVectorVariant Lib "oleaut32" Alias "SafeArrayCreateVector" (Optional ByVal vt As VbVarType = vbVariant, Optional ByVal lower As Long = 0, Optional ByVal count As Long = 0) As Variant()
+Private Declare PtrSafe Function CreateVectorString Lib "oleaut32" Alias "SafeArrayCreateVector" (Optional ByVal vt As VbVarType = vbString, Optional ByVal lower As Long = 0, Optional ByVal count As Long = 0) As String()
+Private Declare PtrSafe Sub CopyStringPointer Lib "kernel32" Alias "RtlMoveMemory" (ByRef destination As LongPtr, ByRef source As String, ByVal length As LongPtr)
+Private Declare PtrSafe Function SysReAllocString Lib "oleaut32" (ByRef target As String, ByVal text As LongPtr) As Long
+Private Declare PtrSafe Function rtcCallByName Lib "VBE7.dll" (ByVal target As Object, ByVal name As LongPtr, ByVal callType As VbCallType, ByRef arguments() As Variant, ByVal lcid As Long) As Variant
+Private Declare PtrSafe Function rtcCallByNameInto Lib "VBE7.dll" Alias "rtcCallByName" (ByRef result As Variant, ByVal target As Object, ByVal name As LongPtr, ByVal callType As VbCallType, ByRef arguments() As Variant, ByVal lcid As Long) As Long
+
+Public Function AddFour(ByVal first As LongPtr, ByVal second As LongPtr, ByVal third As LongPtr, ByVal fourth As LongPtr) As LongPtr
+    AddFour = first + second + third + fourth
+End Function
+
+Public Function LengthOf(ByVal text As String, ByVal second As LongPtr, ByVal third As LongPtr, ByVal fourth As LongPtr) As LongPtr
+    LengthOf = Len(text)
+End Function
+
+Public Function LengthOfReference(ByRef text As String, ByVal second As LongPtr, ByVal third As LongPtr, ByVal fourth As LongPtr) As LongPtr
+    LengthOfReference = Len(text)
+    text = text & "!"
+End Function
+
+Public Function KindOfReference(ByRef value As Variant, ByVal second As LongPtr, ByVal third As LongPtr, ByVal fourth As LongPtr) As LongPtr
+    KindOfReference = VarType(value)
+    value = value & "?"
+End Function
+
+Public Function KindOf(ByVal value As Variant, ByVal second As LongPtr, ByVal third As LongPtr, ByVal fourth As LongPtr) As LongPtr
+    KindOf = VarType(value)
+End Function
+
+Private Function MakeRect(ByVal left As Long) As RECT
+    MakeRect.Left = left
+End Function
+
+Public Function Suffixed(ByVal text As String, ByVal second As LongPtr, ByVal third As LongPtr, ByVal fourth As LongPtr) As String
+    Suffixed = text & "_jr"
+End Function
+
+' A vtable call through DispCallFunc with up to three pointer-sized arguments; the HRESULT comes back.
+Private Function VCall(ByVal instance As LongPtr, ByVal slot As Long, ByVal count As Long, Optional ByVal a As LongPtr, Optional ByVal b As LongPtr, Optional ByVal c As LongPtr) As Long
+    Dim types(2) As Integer, args(2) As Variant, pointers(2) As LongPtr, result As Variant, i As Long
+    args(0) = a: args(1) = b: args(2) = c
+    For i = 0 To 2
+        types(i) = vbLongLong
+        pointers(i) = VarPtr(args(i))
+    Next
+    DispCallFunc instance, slot * 8, 4, vbLong, count, types(0), pointers(0), result
+    VCall = result
+End Function
+
+' Callbacks whose result is a Variant, which a native caller receives through a hidden pointer.
+Private Function Doubled(ByVal n As Long) As Variant
+    Doubled = "x" & (n * 2)
+End Function
+
+Private Function Unset(ByVal n As Long) As Variant
+End Function
+
+' A Declare with ByVal Long parameters and a Long result
+? MulDiv(7, 6, 3)
+? MulDiv(10, 3, 4)
+? MulDiv(1, 1, 0)
+? TypeName(MulDiv(1, 1, 1))
+
+' A ByVal String parameter reaches the callee as its text
+? lstrlenA("hello")
+? lstrlenA("")
+? lstrlenA("a" & vbNullChar & "b")
+? Sgn(lstrcmpA("a", "b"))
+? lstrcmpA("a", "a")
+? Sgn(lstrcmpA("b", "a"))
+
+' The callee writes into the buffer of a ByVal String
+Dim s As String
+s = "abc"
+? CharUpperBuffA(s, Len(s))
+? s
+? Len(s)
+
+' A string built with Space is the usual output buffer
+Dim buffer As String
+buffer = Space(16)
+? lstrcpynA(buffer, "written", 8) <> 0
+? Left(buffer, 7)
+? Len(buffer)
+
+' ByRef As Any copies the bytes of one variable into another
+Dim source As Long, target As Long
+source = 123456789
+MoveMemory target, source, 4
+? target
+
+' The bits of a Long read as a Single
+Dim bits As Long, single_ As Single
+bits = 1065353216
+MoveMemory single_, bits, 4
+? single_
+
+' A ByRef parameter of a declared type receives what the callee writes
+Dim frequency As Currency
+? QueryPerformanceFrequency(frequency) <> 0
+? frequency > 0
+? TypeName(frequency)
+
+' A Declare with no parameters
+? TypeName(GetTickCount())
+? GetTickCount() > 0
+
+' A library that does not exist
+? MissingLibrary()
+
+' An entry point that does not exist
+? MissingEntryPoint()
+
+' AddressOf hands a procedure of this project to a callback
+? CallWindowProcA(AddressOf AddFour, 1, 2, 3, 4)
+? CallWindowProcA(AddressOf AddFour, 10, 20, 30, 40)
+
+' An array element passed ByRef hands the callee the elements that follow it
+Dim a(1 To 3) As Double, b(1 To 3) As Double
+a(1) = 1.5: a(2) = 2.5: a(3) = 3.5
+MoveDoubles b(1), a(1), 24
+? b(1)
+? b(2)
+? b(3)
+
+' A record passed ByRef to a Declare of its type is its own block
+Dim r As RECT
+? SetRect(r, 1, 2, 30, 40)
+? r.Left & "," & r.Top & "," & r.Right & "," & r.Bottom
+? OffsetRect(r, 5, -2)
+? r.Left & "," & r.Top & "," & r.Right & "," & r.Bottom
+
+' A record element of an array passed ByRef to a Declare is its place in the array
+Dim rs(1 To 2) As RECT
+? SetRect(rs(2), 7, 8, 9, 10)
+? rs(2).Right & "," & rs(1).Right
+
+' A record with a String member reaches a Declare with the string in ANSI
+Dim n As Named, p As LongPtr, bytes(0 To 3) As Byte
+n.Text = "abc"
+n.Count = 5
+CopyNamed p, n, 8
+MoveMemory bytes(0), ByVal p, 4
+? bytes(0) & "," & bytes(1) & "," & bytes(2) & "," & bytes(3)
+? n.Text & "," & n.Count
+
+' A Variant passed ByRef to a Declare is its VARIANT
+Dim source As Variant, target As Variant
+source = 42
+? VariantChangeType(target, source, 0, vbString)
+? TypeName(target) & ":" & target & ":" & TypeName(source)
+
+' A Variant element of an array passed ByRef to a Declare is its place in the array
+Dim values As Variant, target As Variant
+values = Array(1, "7")
+? VariantChangeType(target, values(1), 0, vbLong)
+? TypeName(target) & ":" & target
+
+' An object passed ByRef to a Declare is the address of its pointer
+Dim o As Object, p As LongPtr
+Set o = New Collection
+CopyObject p, o, 8
+? p = ObjPtr(o)
+
+' An object passed ByVal to a Declare is its interface pointer
+Dim o As Object, first As LongPtr, second As LongPtr
+Set o = New Collection
+PeekObject first, o, 8
+MoveMemory second, ByVal ObjPtr(o), 8
+? first = second
+? first <> 0
+
+' A Declare writes an interface pointer into an object passed ByRef, without AddRef
+Dim a As Object, b As Object, p As LongPtr, zero As LongPtr
+Set a = New Collection
+p = ObjPtr(a)
+PutObject b, p, 8
+? b Is a
+PutObject b, zero, 8
+? b Is Nothing
+
+' A record with a fixed-size array member reaches a Declare as its block
+Dim g As GUID, text As String, back As String
+text = "{00020400-0000-0000-C000-000000000046}"
+? IIDFromString(StrPtr(text), g)
+? Hex(g.Data1) & "," & g.Data2 & "," & g.Data3 & "," & Hex(g.Data4(0)) & "," & Hex(g.Data4(7))
+back = String(38, " ")
+? StringFromGUID2(g, StrPtr(back), 39)
+? back
+
+' A Boolean passed ByRef to a Declare is its two bytes
+Dim f As Boolean, n As Integer
+n = -1
+PutFlag f, n, 2
+? f
+f = True
+n = 0
+GetFlag n, f, 2
+? n
+
+' An array passed ByRef to a Declare is the address of its descriptor pointer
+Dim items() As Long, p As LongPtr, dims As Integer
+ReDim items(1 To 3)
+CopyArrayPointer p, items, 8
+MoveMemory dims, ByVal p, 2
+? dims
+? p <> 0
+
+' A Declare returning an array hands the caller a new array
+Dim b() As Byte
+b = CreateVectorByte(vbByte, 1, 3)
+? LBound(b) & "," & UBound(b)
+b(2) = 7
+? b(2)
+
+' A Declare returning an array of Variants hands the caller empty Variants
+Dim v() As Variant
+v = CreateVectorVariant(vbVariant, 0, 2)
+? LBound(v) & "," & UBound(v) & "," & IsEmpty(v(1))
+
+' A String passed ByRef to a Declare travels as a pointer to a copy of its text in ANSI
+Dim s As String, p As LongPtr, bytes(0 To 3) As Byte
+s = "abc"
+CopyStringPointer p, s, 8
+MoveMemory bytes(0), ByVal p, 4
+? bytes(0) & "," & bytes(1) & "," & bytes(2) & "," & bytes(3)
+? p <> StrPtr(s)
+? s
+
+' A Declare that replaces a ByRef String's BSTR hands back its bytes read as ANSI
+Dim s As String, w As String
+s = "a"
+w = "xyz"
+? SysReAllocString(s, StrPtr(w))
+? Len(s) & ":" & AscW(Left$(s, 1)) & ":" & AscW(Mid$(s, 2, 1))
+
+' A Declare returning an array of Strings hands the caller null Strings
+Dim t() As String
+t = CreateVectorString(vbString, 0, 2)
+? UBound(t) & "," & (StrPtr(t(1)) = 0)
+
+' VBE7's rtcCallByName calls a member by name, as CallByName does
+Dim c As Object, arguments() As Variant, name As String, r As Variant
+Set c = New Collection
+c.Add "first"
+c.Add "second"
+ReDim arguments(0 To 0)
+arguments(0) = 2
+name = "Item"
+? rtcCallByName(c, StrPtr(name), VbMethod, arguments, 0)
+rtcCallByNameInto r, c, StrPtr(name), VbMethod, arguments, 0
+? r
+
+' A callback's ByVal String parameter receives the BSTR a DLL passes
+Dim text As String
+text = "hello"
+? CallWindowProcA(AddressOf LengthOf, StrPtr(text), 0, 0, 0)
+
+' A callback's ByRef String parameter is the String whose address a DLL passes
+Dim text As String
+text = "hey"
+? CallWindowProcA(AddressOf LengthOfReference, VarPtr(text), 0, 0, 0)
+? text
+
+' A callback's ByRef Variant parameter is the Variant whose address a DLL passes
+Dim value As Variant
+value = 42
+? CallWindowProcA(AddressOf KindOfReference, VarPtr(value), 0, 0, 0)
+? value
+
+' A callback's ByVal Variant parameter receives the VARIANT a DLL passes by address
+Dim value As Variant
+value = "x"
+? CallWindowProcA(AddressOf KindOf, VarPtr(value), 0, 0, 0)
+
+' A Declare hands back an interface pointer through a ByRef parameter of that interface's type
+Dim description As PICTDESC, iid As GUID, picture As IPicture, text As String
+description.Size = 24
+text = "{7BF80980-BF32-101A-8BBB-00AA00300CAB}"
+? IIDFromString(StrPtr(text), iid)
+? OleCreatePictureIndirect(description, iid, 0, picture)
+? picture Is Nothing
+
+' An object passed ByVal to a Declare parameter of an interface's type is that interface's pointer
+Dim description As PICTDESC, iid As GUID, picture As IPicture, text As String, first As LongPtr, second As LongPtr
+description.Size = 24
+text = "{7BF80980-BF32-101A-8BBB-00AA00300CAB}"
+? IIDFromString(StrPtr(text), iid)
+? OleCreatePictureIndirect(description, iid, 0, picture)
+PeekPicture first, picture, 8
+MoveMemory second, ByVal ObjPtr(picture), 8
+? first = second
+? first <> 0
+
+' A record with a fixed-length string member reaches a Declare with the string as ANSI bytes
+Dim r As TNamed, b(0 To 7) As Byte
+r.Code = "ab"
+r.N = 258
+CopyNamedBytes b(0), r, 8
+? b(0) & "," & b(1) & "," & b(2)
+? b(4) & "," & b(5) & "," & b(6) & "," & b(7)
+
+' A Declare writing into a record with a fixed-length string member writes its ANSI bytes
+Dim r As TNamed, b(0 To 7) As Byte
+b(0) = 120: b(1) = 121: b(2) = 122: b(4) = 7
+FillNamed r, b(0), 8
+? r.Code & "," & r.N
+
+' A record that is not a variable reaches a Declare as a temporary
+? OffsetRect(MakeRect(5), 1, 1)
+? SetRect(MakeRect(5), 1, 2, 3, 4)
+
+' A callback's String result is a BSTR the native caller receives and owns
+Dim text As String, p As LongPtr
+text = "name"
+p = CallWindowProcA(AddressOf Suffixed, StrPtr(text), 0, 0, 0)
+? lstrlenW(p)
+SysFreeString p
+
+' A Collection's enumerator answers IEnumVARIANT, walked through its vtable
+Dim c As New Collection, e As IUnknown, pe As LongPtr, v As Variant, fetched As Long, iid(3) As Long, hr As Long
+c.Add 10: c.Add 20: c.Add 30
+iid(0) = &H20404: iid(1) = 0: iid(2) = &HC0&: iid(3) = &H46000000
+Set e = c.[_NewEnum]
+hr = VCall(ObjPtr(e), 0, 2, VarPtr(iid(0)), VarPtr(pe))
+? hr
+? pe <> 0
+hr = VCall(pe, 3, 3, 1, VarPtr(v), VarPtr(fetched))
+? hr
+? v
+? fetched
+hr = VCall(pe, 4, 1, 1)
+? hr
+hr = VCall(pe, 3, 3, 1, VarPtr(v), VarPtr(fetched))
+? hr
+? v
+v = Empty
+hr = VCall(pe, 3, 3, 1, VarPtr(v), VarPtr(fetched))
+? hr
+? fetched
+? IsEmpty(v)
+hr = VCall(pe, 5, 0)
+? hr
+hr = VCall(pe, 3, 3, 1, VarPtr(v), VarPtr(fetched))
+? v
+VCall pe, 2, 0
+
+' IEnumVARIANT hands several items at once and says when fewer remain
+Dim c As New Collection, e As IUnknown, pe As LongPtr, items(2) As Variant, fetched As Long, iid(3) As Long, hr As Long
+c.Add 10: c.Add 20: c.Add 30
+iid(0) = &H20404: iid(1) = 0: iid(2) = &HC0&: iid(3) = &H46000000
+Set e = c.[_NewEnum]
+hr = VCall(ObjPtr(e), 0, 2, VarPtr(iid(0)), VarPtr(pe))
+hr = VCall(pe, 3, 3, 2, VarPtr(items(0)), VarPtr(fetched))
+? hr
+? fetched
+? items(0) & "," & items(1)
+hr = VCall(pe, 3, 3, 2, VarPtr(items(0)), VarPtr(fetched))
+? hr
+? fetched
+? items(0)
+hr = VCall(pe, 4, 1, 1)
+? hr
+VCall pe, 2, 0
+
+' IEnumVARIANT Clone continues from the same place
+Dim c As New Collection, e As IUnknown, pe As LongPtr, pc As LongPtr, v As Variant, fetched As Long, iid(3) As Long, hr As Long
+c.Add 10: c.Add 20: c.Add 30
+iid(0) = &H20404: iid(1) = 0: iid(2) = &HC0&: iid(3) = &H46000000
+Set e = c.[_NewEnum]
+hr = VCall(ObjPtr(e), 0, 2, VarPtr(iid(0)), VarPtr(pe))
+hr = VCall(pe, 3, 3, 1, VarPtr(v), VarPtr(fetched))
+hr = VCall(pe, 6, 1, VarPtr(pc))
+? hr
+? pc <> 0
+If pc <> 0 Then
+    hr = VCall(pc, 3, 3, 1, VarPtr(v), VarPtr(fetched))
+    ? v
+    hr = VCall(pe, 3, 3, 1, VarPtr(v), VarPtr(fetched))
+    ? v
+    VCall pc, 2, 0
+End If
+VCall pe, 2, 0
+
+' A Collection itself does not answer IEnumVARIANT
+Dim c As New Collection, pe As LongPtr, iid(3) As Long, hr As Long
+iid(0) = &H20404: iid(1) = 0: iid(2) = &HC0&: iid(3) = &H46000000
+hr = VCall(ObjPtr(c), 0, 2, VarPtr(iid(0)), VarPtr(pe))
+? Hex(hr)
+? pe
+
+' A callback's Variant result reaches its native caller through the hidden result pointer
+Dim result As Variant, types(0) As Integer, pointers(0) As LongPtr, arg As Variant
+arg = 7&
+types(0) = vbLong
+pointers(0) = VarPtr(arg)
+? DispCallFunc(0, AddressOf Doubled, 4, vbVariant, 1, types(0), pointers(0), result)
+? TypeName(result) & " " & result
+result = Empty
+? DispCallFunc(0, AddressOf Unset, 4, vbVariant, 1, types(0), pointers(0), result)
+? TypeName(result)

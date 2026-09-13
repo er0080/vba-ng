@@ -1,0 +1,58 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "type": "shell",
+      "command": "dotnet",
+      "args": ["build"],
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "test",
+      "type": "shell",
+      "command": "dotnet",
+      "args": ["test"],
+      "group": { "kind": "test", "isDefault": true },
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "vbang build Hello sample",
+      "type": "shell",
+      "command": "dotnet",
+      "args": ["run", "--project", "src/VbaNg.Cli", "--no-build", "--", "build", "samples/Hello/Hello.vbang"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "debug: prepare Quickstart sample",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "tools/Prepare-Debug.ps1", "-Project", "samples/Quickstart/Quickstart.vbang"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      // Closes throwaway Excel instances (any that loaded the dev add-in, which locks the build
+      // output), builds the solution, then builds the sample with vbang.
+      "label": "debug: prepare Hello sample",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "tools/Prepare-Debug.ps1", "-Project", "samples/Hello/Hello.vbang"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "debug: prepare Storage sample",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "tools/Prepare-Debug.ps1", "-Project", "samples/Storage/Storage.vbang"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "debug: prepare",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "tools/Prepare-Debug.ps1"],
+      "problemMatcher": "$msCompile"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <RootNamespace>VbaNg.Golden.Regen</RootNamespace>
+    <IsTestProject>false</IsTestProject>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Description>Regenerates tests/VbaNg.Golden/Goldens from real VBA in a throwaway hidden Excel (CLAUDE.md R16, R31).</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The case model, recorder generator, and golden format are shared with the test project. -->
+    <Compile Include="..\VbaNg.Golden\Harness\*.cs" LinkBase="Harness" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\VbaNg.Compiler\VbaNg.Compiler.csproj" />
+  </ItemGroup>
+
+</Project>

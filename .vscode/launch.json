@@ -1,0 +1,92 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // The README quickstart. Builds everything, starts Excel with the add-in and
+      // samples/Quickstart/Quickstart.xlsx, and runs Greeting.SayHello once Excel is ready:
+      // "Hello, world" lands in B2 and in the Debug Console. The sheet's button runs the same
+      // procedure, so clicking it hits a breakpoint in Greeting.bas too.
+      "name": "Debug Quickstart sample in Excel",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "C:\\Program Files\\Microsoft Office\\Root\\Office16\\EXCEL.EXE",
+      "args": [
+        "${workspaceFolder}\\src\\VbaNg.AddIn\\bin\\Debug\\net10.0-windows\\VbaNg.AddIn-AddIn64.xll",
+        "${workspaceFolder}\\samples\\Quickstart\\Quickstart.xlsx"
+      ],
+      "env": {
+        "VBANG_PROJECT": "${workspaceFolder}\\samples\\Quickstart\\Quickstart.vbang",
+        "VBANG_RUN": "Greeting.SayHello"
+      },
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false,
+      "justMyCode": false,
+      "preLaunchTask": "debug: prepare Quickstart sample"
+    },
+    {
+      // One keypress: build, start Excel with the add-in and the sample workbook, run Hello.Main,
+      // break in Hello.bas. The add-in reads VBANG_PROJECT and VBANG_RUN and runs the procedure
+      // once Excel is ready; Debug.Print output appears in the Debug Console. Stopping the
+      // session closes Excel. The workbook matters: without one Excel sits on its Start screen
+      // and queued macros wait until a workbook is opened.
+      "name": "Debug Hello sample in Excel",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "C:\\Program Files\\Microsoft Office\\Root\\Office16\\EXCEL.EXE",
+      "args": [
+        "${workspaceFolder}\\src\\VbaNg.AddIn\\bin\\Debug\\net10.0-windows\\VbaNg.AddIn-AddIn64.xll",
+        "${workspaceFolder}\\samples\\Hello\\Hello.xlsx"
+      ],
+      "env": {
+        "VBANG_PROJECT": "${workspaceFolder}\\samples\\Hello\\Hello.vbang",
+        "VBANG_RUN": "Hello.Main"
+      },
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false,
+      "justMyCode": false,
+      "preLaunchTask": "debug: prepare Hello sample"
+    },
+    {
+      // The locals window check (ARCHITECTURE.md section 10): runs Locals.Inspect, which fills
+      // every kind of storage the memory model keeps in native memory and stops on Stop; the
+      // Locals pane should read each variable as VBA's would. The workbook is only there so
+      // Excel leaves its Start screen; any workbook serves.
+      "name": "Debug Storage sample in Excel",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "C:\\Program Files\\Microsoft Office\\Root\\Office16\\EXCEL.EXE",
+      "args": [
+        "${workspaceFolder}\\src\\VbaNg.AddIn\\bin\\Debug\\net10.0-windows\\VbaNg.AddIn-AddIn64.xll",
+        "${workspaceFolder}\\samples\\Hello\\Hello.xlsx"
+      ],
+      "env": {
+        "VBANG_PROJECT": "${workspaceFolder}\\samples\\Storage\\Storage.vbang",
+        "VBANG_RUN": "Locals.Inspect"
+      },
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false,
+      "justMyCode": false,
+      "preLaunchTask": "debug: prepare Storage sample"
+    },
+    {
+      "name": "Launch Excel with vba-ng add-in",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "C:\\Program Files\\Microsoft Office\\Root\\Office16\\EXCEL.EXE",
+      "args": [
+        "${workspaceFolder}\\src\\VbaNg.AddIn\\bin\\Debug\\net10.0-windows\\VbaNg.AddIn-AddIn64.xll"
+      ],
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false,
+      "justMyCode": false,
+      "preLaunchTask": "debug: prepare"
+    },
+    {
+      "name": "Attach to Excel",
+      "type": "coreclr",
+      "request": "attach",
+      "processName": "EXCEL",
+      "justMyCode": false
+    }
+  ]
+}

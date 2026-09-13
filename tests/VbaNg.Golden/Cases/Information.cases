@@ -1,0 +1,674 @@
+' Information: VarType, TypeName, the Is functions, literal typing, result types, and array bounds.
+
+' VarType of an Integer literal
+? VarType(1)
+
+' VarType of a Long literal
+? VarType(32768)
+
+' VarType of a Double literal
+? VarType(1.5)
+
+' VarType of a literal beyond Long
+? VarType(2147483648)
+
+' VarType of a Single literal
+? VarType(1!)
+
+' VarType of a Currency literal
+? VarType(1@)
+
+' VarType of a LongLong literal
+? VarType(1^)
+
+' VarType of a Double literal with an exponent
+? VarType(1E3)
+
+' VarType of a hex literal that fits Integer
+? VarType(&H7FFF)
+
+' VarType of a hex literal with the sign bit
+? VarType(&HFFFF)
+
+' Value of a hex literal with the sign bit
+? &HFFFF
+
+' Value of a hex literal with a Long suffix
+? &HFFFF&
+
+' Value of an eight-digit hex literal
+? &HFFFFFFFF
+
+' Value of an eight-digit hex literal with a LongLong suffix
+? &HFFFFFFFF^
+
+' Value of a hex literal beyond Long
+? &H100000000^
+
+' Value of a five-digit hex literal
+? &H10000
+
+' Value of an octal literal with the sign bit
+? &O177777
+
+' Value of an octal literal beyond Integer
+? &O200000
+
+' VarType of a String literal
+? VarType("a")
+
+' VarType of a Boolean
+? VarType(True)
+
+' VarType of a Date literal
+? VarType(#1/1/2020#)
+
+' VarType of Empty
+Dim v As Variant
+? VarType(v)
+
+' VarType of Null
+? VarType(Null)
+
+' VarType of a Variant array
+? VarType(Array())
+
+' VarType of a String array
+Dim a() As String
+? VarType(a)
+
+' VarType of a Long array
+Dim a(1) As Long
+? VarType(a)
+
+' VarType of an Object variable holding Nothing
+Dim o As Object
+? VarType(o)
+
+' VarType of a Collection
+Dim c As New Collection
+? VarType(c)
+
+' VarType of a Decimal
+? VarType(CDec(1))
+
+' VarType of a Byte
+? VarType(CByte(1))
+
+' VarType of an Error value
+? VarType(CVErr(1))
+
+' VarType of a typed Integer variable
+Dim i As Integer
+? VarType(i)
+
+' VarType of a fixed-length String
+Dim s As String * 3
+? VarType(s)
+
+' VarType of a Variant assigned a Date
+Dim v As Variant
+v = #1/1/2020#
+? VarType(v)
+
+' VarType of a Variant assigned Nothing
+Dim v As Variant
+Set v = Nothing
+? VarType(v)
+
+' VarType of a negative literal
+? VarType(-1)
+
+' VarType of a negated Long literal
+? VarType(-32768)
+
+' TypeName of an Integer
+? TypeName(1)
+
+' TypeName of a Long
+? TypeName(32768)
+
+' TypeName of a Double
+? TypeName(1.5)
+
+' TypeName of a String
+? TypeName("a")
+
+' TypeName of a Boolean
+? TypeName(True)
+
+' TypeName of a Date
+? TypeName(#1/1/2020#)
+
+' TypeName of Empty
+Dim v As Variant
+? TypeName(v)
+
+' TypeName of Null
+? TypeName(Null)
+
+' TypeName of Nothing
+? TypeName(Nothing)
+
+' TypeName of an Object variable holding Nothing
+Dim o As Object
+? TypeName(o)
+
+' TypeName of a Collection
+Dim c As New Collection
+? TypeName(c)
+
+' TypeName of a Variant array
+? TypeName(Array(1))
+
+' TypeName of a String array
+Dim a(1) As String
+? TypeName(a)
+
+' TypeName of a Long array
+Dim a() As Long
+? TypeName(a)
+
+' TypeName of a two-dimensional array
+Dim a(1, 1) As Double
+? TypeName(a)
+
+' TypeName of a Decimal
+? TypeName(CDec(1))
+
+' TypeName of a Byte
+? TypeName(CByte(1))
+
+' TypeName of a Currency
+? TypeName(CCur(1))
+
+' TypeName of a Single
+? TypeName(1!)
+
+' TypeName of a LongLong
+? TypeName(1^)
+
+' TypeName of an Error value
+? TypeName(CVErr(1))
+
+' TypeName of the Err object
+? TypeName(Err)
+
+' TypeName of a fixed-length String
+Dim s As String * 3
+? TypeName(s)
+
+' TypeName of a Byte array
+Dim b() As Byte
+? TypeName(b)
+
+' TypeName of an Object array
+Dim o(1) As Object
+? TypeName(o)
+
+' TypeName of a Collection array
+Dim c(1) As Collection
+? TypeName(c)
+
+' IsNumeric of a numeric String
+? IsNumeric("12")
+
+' IsNumeric of a String with spaces
+? IsNumeric(" 12 ")
+
+' IsNumeric of an exponent String
+? IsNumeric("1e3")
+
+' IsNumeric of a hex String
+? IsNumeric("&HFF")
+
+' IsNumeric of a String with a thousands separator
+? IsNumeric("1,000")
+
+' IsNumeric of a String with a currency symbol
+? IsNumeric("$1")
+
+' IsNumeric of a String with a trailing minus
+? IsNumeric("1-")
+
+' IsNumeric of a String with a leading plus
+? IsNumeric("+1")
+
+' IsNumeric of a String with a percent
+? IsNumeric("1%")
+
+' IsNumeric of a String with parentheses
+? IsNumeric("(1)")
+
+' IsNumeric of an empty String
+? IsNumeric("")
+
+' IsNumeric of a decimal point only
+? IsNumeric(".")
+
+' IsNumeric of a Boolean
+? IsNumeric(True)
+
+' IsNumeric of a Date
+? IsNumeric(#1/1/2020#)
+
+' IsNumeric of Null
+? IsNumeric(Null)
+
+' IsNumeric of Empty
+Dim v As Variant
+? IsNumeric(v)
+
+' IsNumeric of a String with a tab
+? IsNumeric(vbTab & "1")
+
+' IsNumeric of a String with two exponents
+? IsNumeric("1e3e3")
+
+' IsNumeric of a String with a D exponent
+? IsNumeric("1d3")
+
+' IsNumeric of an Error value
+? IsNumeric(CVErr(1))
+
+' IsNumeric of a Collection
+Dim c As New Collection
+? IsNumeric(c)
+
+' IsNumeric of the String True
+? IsNumeric("True")
+
+' IsNumeric of a String with a trailing dot
+? IsNumeric("1.")
+
+' IsNumeric of a String with an exponent sign only
+? IsNumeric("1e")
+
+' IsNumeric of a Date String
+? IsNumeric("1/2/2020")
+
+' IsEmpty of a fresh Variant
+Dim v As Variant
+? IsEmpty(v)
+
+' IsEmpty of an empty String
+? IsEmpty("")
+
+' IsEmpty of zero
+? IsEmpty(0)
+
+' IsEmpty of Null
+? IsEmpty(Null)
+
+' IsEmpty of a typed Integer
+Dim i As Integer
+? IsEmpty(i)
+
+' IsEmpty after assigning Empty
+Dim v As Variant
+v = 1
+v = Empty
+? IsEmpty(v)
+
+' IsEmpty of an unallocated array
+Dim a() As Long
+? IsEmpty(a)
+
+' IsNull of Null
+? IsNull(Null)
+
+' IsNull of an empty String
+? IsNull("")
+
+' IsNull of Empty
+Dim v As Variant
+? IsNull(v)
+
+' IsNull of a Null expression
+? IsNull(Null + 1)
+
+' IsNull of a Variant assigned Null
+Dim v As Variant
+v = Null
+? IsNull(v)
+
+' IsArray of an array
+? IsArray(Array())
+
+' IsArray of a String
+? IsArray("a")
+
+' IsArray of an unallocated dynamic array
+Dim a() As Long
+? IsArray(a)
+
+' IsArray of a Variant holding an array
+Dim v As Variant
+v = Array(1)
+? IsArray(v)
+
+' IsArray of Null
+? IsArray(Null)
+
+' IsObject of Nothing
+Dim o As Object
+? IsObject(o)
+
+' IsObject of a Collection
+Dim c As New Collection
+? IsObject(c)
+
+' IsObject of a String
+? IsObject("a")
+
+' IsObject of Null
+? IsObject(Null)
+
+' IsObject of Empty
+Dim v As Variant
+? IsObject(v)
+
+' IsObject of a Variant holding Nothing
+Dim v As Variant
+Set v = Nothing
+? IsObject(v)
+
+' IsError of an Error value
+? IsError(CVErr(1))
+
+' IsError of a number
+? IsError(1)
+
+' IsError of Null
+? IsError(Null)
+
+' Error function of a known number
+? Error(6)
+
+' Error function with no argument outside a handler
+? Error
+
+' Error function of zero
+? Error(0)
+
+' Error function of an unknown number
+? Error(1000)
+
+' Error function of the maximum number
+? Error(65535)
+
+' Error function beyond the maximum
+Dim v As Variant
+v = 65536
+? Error(v)
+
+' Error function of a negative number
+Dim v As Variant
+v = -1
+? Error(v)
+
+' Error function of Null
+? Error(Null)
+
+' Error function of a String
+? Error("6")
+
+' LBound of a fixed array
+Dim a(2) As Long
+? LBound(a)
+
+' UBound of a fixed array
+Dim a(2) As Long
+? UBound(a)
+
+' Bounds with an explicit range
+Dim a(-3 To 2) As Long
+? LBound(a)
+? UBound(a)
+
+' Bounds of a second dimension
+Dim a(1 To 2, 3 To 4) As Long
+? LBound(a, 2)
+? UBound(a, 2)
+
+' UBound of a dimension that does not exist
+Dim a(2) As Long
+? UBound(a, 2)
+
+' UBound with a zero dimension
+Dim a(2) As Long
+? UBound(a, 0)
+
+' UBound of an unallocated dynamic array
+Dim a() As Long
+? UBound(a)
+
+' LBound of an unallocated dynamic array
+Dim a() As Long
+? LBound(a)
+
+' UBound of an empty Variant array
+? UBound(Array())
+
+' LBound of an empty Variant array
+? LBound(Array())
+
+' UBound of an Array with elements
+? UBound(Array(1, 2, 3))
+
+' UBound of a Variant holding a String, since the VBE rejects a non-array argument
+Dim v As Variant
+v = "abc"
+? UBound(v)
+
+' UBound of a Variant holding Null
+Dim v As Variant
+v = Null
+? UBound(v)
+
+' UBound of an Empty Variant
+Dim v As Variant
+? UBound(v)
+
+' UBound of a Variant holding an array
+Dim v As Variant
+v = Array(1, 2)
+? UBound(v)
+
+' UBound returns Long
+Dim a(2) As Long
+? VarType(UBound(a))
+
+' UBound with a Double dimension rounds
+Dim a(1, 2) As Long
+? UBound(a, 1.5)
+
+' IsMissing of a value
+? IsMissing(Null)
+
+' VarType of a call to a String function
+? VarType(Left("abc", 1))
+
+' VarType of a call to a String function with a dollar sign
+? VarType(Left$("abc", 1))
+
+' VarType of Mid on Null
+? VarType(Mid("abc", 1))
+
+' VarType of Chr
+? VarType(Chr(65))
+
+' VarType of Len
+? VarType(Len("a"))
+
+' VarType of InStr
+? VarType(InStr("a", "a"))
+
+' VarType of Abs of an Integer
+Dim i As Integer
+i = -1
+? VarType(Abs(i))
+
+' VarType of Int of a Currency
+? VarType(Int(CCur(1.5)))
+
+' VarType of a Date addition
+? VarType(#1/1/2020# + 1)
+
+' VarType of a Boolean sum
+? VarType(True + True)
+
+' VarType of a Byte sum
+? VarType(CByte(1) + CByte(1))
+
+' VarType of an Integer product
+Dim i As Integer
+i = 2
+? VarType(i * i)
+
+' VarType of a division
+Dim i As Integer
+i = 4
+? VarType(i / 2)
+
+' VarType of an integer division of Bytes
+? VarType(CByte(4) \ CByte(2))
+
+' VarType of an integer division of Doubles
+? VarType(4.5 \ 2)
+
+' VarType of a Mod of Integers
+Dim i As Integer
+i = 4
+? VarType(i Mod 3)
+
+' VarType of an exponent of Integers
+Dim i As Integer
+i = 4
+? VarType(i ^ 2)
+
+' VarType of a concatenation
+? VarType(1 & 2)
+
+' VarType of a comparison
+? VarType(1 = 2)
+
+' VarType of a Not
+Dim i As Integer
+i = 4
+? VarType(Not i)
+
+' VarType of an And of Booleans
+? VarType(True And False)
+
+' VarType of an And of an Integer and a Long
+Dim i As Integer, l As Long
+? VarType(i And l)
+
+' VarType of a Currency times a Double
+? VarType(CCur(1) * 1.5)
+
+' VarType of a Single plus a Long
+Dim s As Single, l As Long
+? VarType(s + l)
+
+' VarType of a Single plus a Single
+Dim s As Single, t As Single
+? VarType(s + t)
+
+' VarType of a Date minus a Date
+? VarType(#1/2/2020# - #1/1/2020#)
+
+' VarType of a Date plus a Date
+? VarType(#1/2/2020# + #1/1/2020#)
+
+' VarType of a negated Byte
+? VarType(-CByte(1))
+
+' VarType of a negated Boolean
+? VarType(-True)
+
+' VarType of a negated Integer
+Dim i As Integer
+? VarType(-i)
+
+' VarType of a Decimal sum
+? VarType(CDec(1) + 1)
+
+' VarType of a Decimal times a Double
+? VarType(CDec(1) * 1.5)
+
+' VarType of an Empty sum
+Dim v As Variant
+? VarType(v + v)
+
+' VarType of an Empty concatenation
+Dim v As Variant
+? VarType(v & v)
+
+' VarType of a Null sum
+? VarType(Null + 1)
+
+' VarType of a String sum
+? VarType("1" + "2")
+
+' VarType of a String plus a number
+? VarType("1" + 1)
+
+' VarType of a String minus a number
+? VarType("3" - 1)
+
+' VarType of a String times a number
+? VarType("3" * 1)
+
+' VarType of a String and a String with And
+? VarType("3" And "1")
+
+' VarType of a String negated
+? VarType(-"3")
+
+' VarType of a LongLong plus an Integer
+Dim l As LongLong
+? VarType(l + 1)
+
+' VarType of an IIf result
+? VarType(IIf(True, 1, "a"))
+
+' RGB packs red, green, and blue into a Long
+? RGB(1, 2, 3)
+? RGB(255, 255, 255)
+? TypeName(RGB(0, 0, 0))
+
+' RGB clamps a component above 255
+? RGB(300, 0, 0)
+? RGB(0, 256, 0)
+
+' RGB with a negative component
+? RGB(-1, 0, 0)
+
+' RGB rounds its components
+? RGB(1.5, 2.5, 3.4)
+
+' QBColor of the sixteen QuickBasic colors
+? QBColor(0)
+? QBColor(1)
+? QBColor(2)
+? QBColor(3)
+? QBColor(4)
+? QBColor(5)
+? QBColor(6)
+? QBColor(7)
+? QBColor(8)
+? QBColor(9)
+? QBColor(10)
+? QBColor(11)
+? QBColor(12)
+? QBColor(13)
+? QBColor(14)
+? QBColor(15)
+
+' QBColor outside the range
+? QBColor(16)
+
+' QBColor of a negative color
+? QBColor(-1)

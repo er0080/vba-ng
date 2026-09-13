@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Description>End-to-end tests that drive a hidden throwaway Excel with the add-in loaded (CLAUDE.md R9, R17). Skipped unless VBANG_E2E is set.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\VbaNg.Compiler\VbaNg.Compiler.csproj" />
+    <ProjectReference Include="..\..\src\VbaNg.Import\VbaNg.Import.csproj" />
+    <ProjectReference Include="..\..\src\VbaNg.Interop\VbaNg.Interop.csproj" />
+    <ProjectReference Include="..\..\src\VbaNg.Runtime\VbaNg.Runtime.csproj" />
+  </ItemGroup>
+
+</Project>

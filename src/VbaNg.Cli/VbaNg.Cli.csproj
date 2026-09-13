@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <AssemblyName>vbang</AssemblyName>
+    <RootNamespace>VbaNg.Cli</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Description>vbang: the vba-ng command-line toolchain.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VbaNg.Compiler\VbaNg.Compiler.csproj" />
+    <ProjectReference Include="..\VbaNg.Import\VbaNg.Import.csproj" />
+    <ProjectReference Include="..\VbaNg.Interop\VbaNg.Interop.csproj" />
+    <ProjectReference Include="..\VbaNg.Runtime\VbaNg.Runtime.csproj" />
+  </ItemGroup>
+
+</Project>

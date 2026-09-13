@@ -1,0 +1,34 @@
+<Project>
+
+  <!-- Shared settings for every project. Target frameworks are set per project:
+       net10.0 for portable libraries, net10.0-windows for anything touching COM or Excel-DNA. -->
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <Deterministic>true</Deterministic>
+
+    <!-- A committed lock file per project, so CI can restore in locked mode and a dependency
+         change has to arrive as a reviewable diff rather than whatever NuGet resolves that day. -->
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <PlatformTarget>x64</PlatformTarget>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <Authors>vba-ng contributors</Authors>
+    <Product>vba-ng</Product>
+
+    <!-- The only place the version is written down. Everything that prints or stamps a version reads
+         it off the assembly, so a release is one edit here. CI overrides it on the command line:
+         -p:Version=1.0.0-rc1 wins outright, or -p:VersionSuffix= for a final release. -->
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <VersionSuffix>alpha1</VersionSuffix>
+
+    <!-- Keep the commit out of the informational version. vbang stamps out/build.json with it to
+         decide whether a project is stale, and a version that changed every commit would rebuild
+         every project on every commit. -->
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+  </PropertyGroup>
+
+</Project>

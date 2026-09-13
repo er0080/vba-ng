@@ -1,0 +1,298 @@
+{
+  "area": "Lexer",
+  "excel": "16.0.20326",
+  "culture": "en-US",
+  "options": [],
+  "cases": [
+    {
+      "name": "A string literal left open is closed by the end of the line",
+      "source": [
+        "Dim s As String",
+        "s = \"open",
+        "? s",
+        "? Len(s)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "open"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A line continuation inside a comment continues the comment",
+      "source": [
+        "Dim n As Long",
+        "n = 1",
+        "' this comment continues _",
+        "n = 2",
+        "? n"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A suffixed name declared with a suffix",
+      "source": [
+        "Dim x&",
+        "x& = 5",
+        "? x& + 1",
+        "? TypeName(x)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "6"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "Long"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A suffixed name before a parenthesis is an array",
+      "source": [
+        "Dim x&(5)",
+        "x&(3) = 7",
+        "? x&(3)",
+        "? UBound(x)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "7"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A Single suffix before a separator",
+      "source": [
+        "Dim y!",
+        "y! = 1.5",
+        "? y!",
+        "? TypeName(y)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Single",
+            "value": "1.5",
+            "bits": "3FC00000"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "Single"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The bare octal prefix in operand position",
+      "source": [
+        "? &17"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "15"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The hexadecimal prefix after an operand is a literal",
+      "source": [
+        "Dim x As Long",
+        "x = 1",
+        "? x + &H10"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "17"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Whitespace after the continuation character",
+      "source": [
+        "Dim n As Long",
+        "n = 1 + _",
+        "    2",
+        "? n"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The reversed less-or-equal operator",
+      "source": [
+        "? 1 =< 2",
+        "? 3 =< 2"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The reversed greater-or-equal operator",
+      "source": [
+        "? 2 => 1",
+        "? 2 => 3"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The reversed not-equal operator",
+      "source": [
+        "? 1 >< 2",
+        "? 2 >< 2"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A name followed by a colon at the start of a line is a label",
+      "source": [
+        "Dim x As Long",
+        "Beep: x = 1",
+        "? x"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A statement after a label on the same line runs",
+      "source": [
+        "Dim x As Long",
+        "Start: x = 3",
+        "? x"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A line number followed by a colon",
+      "source": [
+        "Dim x As Long",
+        "10: x = 4",
+        "? x"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    }
+  ]
+}

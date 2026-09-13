@@ -1,0 +1,1938 @@
+{
+  "area": "Constants",
+  "excel": "16.0.20326",
+  "culture": "en-US",
+  "options": [],
+  "cases": [
+    {
+      "name": "vbCrLf",
+      "source": [
+        "? vbCrLf"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "\r\n"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbCr",
+      "source": [
+        "? vbCr"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "\r"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbLf",
+      "source": [
+        "? vbLf"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "\n"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbNewLine",
+      "source": [
+        "? vbNewLine"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "\r\n"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbTab",
+      "source": [
+        "? vbTab"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "\t"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbBack",
+      "source": [
+        "? vbBack"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "\b"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbFormFeed",
+      "source": [
+        "? vbFormFeed"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "\f"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbVerticalTab",
+      "source": [
+        "? vbVerticalTab"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "\u000B"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbNullChar",
+      "source": [
+        "? vbNullChar"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "\u0000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbNullString equals the empty String",
+      "source": [
+        "? vbNullString = \"\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Len of vbNullString",
+      "source": [
+        "? Len(vbNullString)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of vbNullString",
+      "source": [
+        "? VarType(vbNullString)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbObjectError",
+      "source": [
+        "? vbObjectError"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "-2147221504"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbEmpty",
+      "source": [
+        "? vbEmpty"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbNull",
+      "source": [
+        "? vbNull"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbInteger",
+      "source": [
+        "? vbInteger"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbLong",
+      "source": [
+        "? vbLong"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbSingle",
+      "source": [
+        "? vbSingle"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbDouble",
+      "source": [
+        "? vbDouble"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbCurrency",
+      "source": [
+        "? vbCurrency"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "6"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbDate",
+      "source": [
+        "? vbDate"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbString",
+      "source": [
+        "? vbString"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbObject",
+      "source": [
+        "? vbObject"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "9"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbError",
+      "source": [
+        "? vbError"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbBoolean",
+      "source": [
+        "? vbBoolean"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "11"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbVariant",
+      "source": [
+        "? vbVariant"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "12"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbDataObject",
+      "source": [
+        "? vbDataObject"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "13"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbDecimal",
+      "source": [
+        "? vbDecimal"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "14"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbByte",
+      "source": [
+        "? vbByte"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "17"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbLongLong",
+      "source": [
+        "? vbLongLong"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "20"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbUserDefinedType",
+      "source": [
+        "? vbUserDefinedType"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "36"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbArray",
+      "source": [
+        "? vbArray"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "8192"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbTrue",
+      "source": [
+        "? vbTrue"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "-1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbFalse",
+      "source": [
+        "? vbFalse"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbUseDefault",
+      "source": [
+        "? vbUseDefault"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "-2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbBinaryCompare",
+      "source": [
+        "? vbBinaryCompare"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbTextCompare",
+      "source": [
+        "? vbTextCompare"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbDatabaseCompare",
+      "source": [
+        "? vbDatabaseCompare"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbSunday",
+      "source": [
+        "? vbSunday"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbMonday",
+      "source": [
+        "? vbMonday"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbSaturday",
+      "source": [
+        "? vbSaturday"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbUseSystemDayOfWeek",
+      "source": [
+        "? vbUseSystemDayOfWeek"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbUseSystem",
+      "source": [
+        "? vbUseSystem"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbFirstJan1",
+      "source": [
+        "? vbFirstJan1"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbFirstFourDays",
+      "source": [
+        "? vbFirstFourDays"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbFirstFullWeek",
+      "source": [
+        "? vbFirstFullWeek"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbGeneralDate",
+      "source": [
+        "? vbGeneralDate"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbLongDate",
+      "source": [
+        "? vbLongDate"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbShortDate",
+      "source": [
+        "? vbShortDate"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbLongTime",
+      "source": [
+        "? vbLongTime"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbShortTime",
+      "source": [
+        "? vbShortTime"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbUpperCase",
+      "source": [
+        "? vbUpperCase"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbLowerCase",
+      "source": [
+        "? vbLowerCase"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbProperCase",
+      "source": [
+        "? vbProperCase"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbWide",
+      "source": [
+        "? vbWide"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbNarrow",
+      "source": [
+        "? vbNarrow"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbKatakana",
+      "source": [
+        "? vbKatakana"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "16"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbHiragana",
+      "source": [
+        "? vbHiragana"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "32"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbUnicode",
+      "source": [
+        "? vbUnicode"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "64"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbFromUnicode",
+      "source": [
+        "? vbFromUnicode"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "128"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbBlack",
+      "source": [
+        "? vbBlack"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbRed",
+      "source": [
+        "? vbRed"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "255"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbGreen",
+      "source": [
+        "? vbGreen"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "65280"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbYellow",
+      "source": [
+        "? vbYellow"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "65535"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbBlue",
+      "source": [
+        "? vbBlue"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "16711680"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbMagenta",
+      "source": [
+        "? vbMagenta"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "16711935"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbCyan",
+      "source": [
+        "? vbCyan"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "16776960"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbWhite",
+      "source": [
+        "? vbWhite"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "16777215"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbOKOnly",
+      "source": [
+        "? vbOKOnly"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbOKCancel",
+      "source": [
+        "? vbOKCancel"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbAbortRetryIgnore",
+      "source": [
+        "? vbAbortRetryIgnore"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbYesNoCancel",
+      "source": [
+        "? vbYesNoCancel"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbYesNo",
+      "source": [
+        "? vbYesNo"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbRetryCancel",
+      "source": [
+        "? vbRetryCancel"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbCritical",
+      "source": [
+        "? vbCritical"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "16"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbQuestion",
+      "source": [
+        "? vbQuestion"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "32"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbExclamation",
+      "source": [
+        "? vbExclamation"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "48"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbInformation",
+      "source": [
+        "? vbInformation"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "64"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbDefaultButton1",
+      "source": [
+        "? vbDefaultButton1"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbDefaultButton2",
+      "source": [
+        "? vbDefaultButton2"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "256"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbDefaultButton3",
+      "source": [
+        "? vbDefaultButton3"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "512"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbDefaultButton4",
+      "source": [
+        "? vbDefaultButton4"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "768"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbApplicationModal",
+      "source": [
+        "? vbApplicationModal"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbSystemModal",
+      "source": [
+        "? vbSystemModal"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "4096"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbMsgBoxHelpButton",
+      "source": [
+        "? vbMsgBoxHelpButton"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "16384"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbMsgBoxSetForeground",
+      "source": [
+        "? vbMsgBoxSetForeground"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "65536"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbMsgBoxRight",
+      "source": [
+        "? vbMsgBoxRight"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "524288"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbMsgBoxRtlReading",
+      "source": [
+        "? vbMsgBoxRtlReading"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1048576"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbOK",
+      "source": [
+        "? vbOK"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbCancel",
+      "source": [
+        "? vbCancel"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbAbort",
+      "source": [
+        "? vbAbort"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbRetry",
+      "source": [
+        "? vbRetry"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbIgnore",
+      "source": [
+        "? vbIgnore"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbYes",
+      "source": [
+        "? vbYes"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "6"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbNo",
+      "source": [
+        "? vbNo"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbNormal",
+      "source": [
+        "? vbNormal"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbReadOnly",
+      "source": [
+        "? vbReadOnly"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbHidden",
+      "source": [
+        "? vbHidden"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbSystem",
+      "source": [
+        "? vbSystem"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbVolume",
+      "source": [
+        "? vbVolume"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbDirectory",
+      "source": [
+        "? vbDirectory"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "16"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbArchive",
+      "source": [
+        "? vbArchive"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "32"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbAlias",
+      "source": [
+        "? vbAlias"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "64"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbHide",
+      "source": [
+        "? vbHide"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbNormalFocus",
+      "source": [
+        "? vbNormalFocus"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbMinimizedFocus",
+      "source": [
+        "? vbMinimizedFocus"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbMaximizedFocus",
+      "source": [
+        "? vbMaximizedFocus"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbNormalNoFocus",
+      "source": [
+        "? vbNormalNoFocus"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbMinimizedNoFocus",
+      "source": [
+        "? vbMinimizedNoFocus"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "6"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbKeyLButton",
+      "source": [
+        "? vbKeyLButton"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbKeyReturn",
+      "source": [
+        "? vbKeyReturn"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "13"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbKeyEscape",
+      "source": [
+        "? vbKeyEscape"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "27"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbKeySpace",
+      "source": [
+        "? vbKeySpace"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "32"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbKey0",
+      "source": [
+        "? vbKey0"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "48"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbKeyA",
+      "source": [
+        "? vbKeyA"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "65"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbKeyNumpad0",
+      "source": [
+        "? vbKeyNumpad0"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "96"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbKeyF1",
+      "source": [
+        "? vbKeyF1"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "112"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbGet",
+      "source": [
+        "? vbGet"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbLet",
+      "source": [
+        "? vbLet"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbSet",
+      "source": [
+        "? vbSet"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbMethod",
+      "source": [
+        "? vbMethod"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbCalGreg",
+      "source": [
+        "? vbCalGreg"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbCalHijri",
+      "source": [
+        "? vbCalHijri"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbIMEModeNoControl",
+      "source": [
+        "? vbIMEModeNoControl"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbLinguisticCasing",
+      "source": [
+        "? vbLinguisticCasing"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Empty"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbSimplifiedChinese",
+      "source": [
+        "? vbSimplifiedChinese"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Empty"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbTraditionalChinese",
+      "source": [
+        "? vbTraditionalChinese"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Empty"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbHangul",
+      "source": [
+        "? vbHangul"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Empty"
+          }
+        }
+      ]
+    },
+    {
+      "name": "vbSubOutOfRange? undefined name records Empty",
+      "source": [
+        "? vbNotAConstant"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Empty"
+          }
+        }
+      ]
+    }
+  ]
+}

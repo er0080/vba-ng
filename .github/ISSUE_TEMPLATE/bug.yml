@@ -1,0 +1,45 @@
+name: Bug
+description: Something vba-ng does wrong, crashes on, or refuses to build.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Run `vbang report` in your project folder first. It writes one zip with the manifest, your
+        sources, the build's diagnostics, the generated C#, the project's log, and the add-in's
+        status. It never includes the workbook, so the bundle is safe to attach here.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did, and what vba-ng did instead.
+      placeholder: Opened Budget.xlsx with the add-in loaded, clicked the Refresh button, and nothing happened.
+    validations:
+      required: true
+  - type: textarea
+    id: what-vba-does
+    attributes:
+      label: What VBA does
+      description: >
+        The same workbook or the same code under Excel's own VBA, if you can still run it. vba-ng
+        is meant to be bug-for-bug compatible, so this is the yardstick for everything except a
+        crash or a build error.
+      placeholder: The same macro in the .xlsm writes "12 rows" to A1.
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. vbang build Budget.vbang
+        2. Open Budget.xlsx
+        3. Click Refresh
+    validations:
+      required: true
+  - type: input
+    id: bundle
+    attributes:
+      label: Bundle
+      description: Attach the zip `vbang report` wrote by dragging it into this issue, then say so here.
+      placeholder: vbang-report-Budget-20260912-093000.zip attached
+    validations:
+      required: true

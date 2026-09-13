@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Description>Runtime library for compiled vba-ng projects: the VBA type system, operators, intrinsic library, and host services.</Description>
+    <!-- CA1720: the public surface uses VBA's own type and function names (Integer, Long, String, Int) by design (CLAUDE.md R21). -->
+    <NoWarn>$(NoWarn);CA1720</NoWarn>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="VbaNg.Runtime.Tests" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,70 @@
+# Everything that does not need Excel, which is the whole build and all but 24 of the tests.
+#
+# GitHub-hosted runners have no Office, and that is fine here: "dotnet build and dotnet test never
+# require Excel" is one of this repository's rules, so this workflow enforces the rule rather than
+# testing a convenient subset. A unit test that quietly grows a dependency on Excel fails here.
+#
+# The Excel half (the E2E tests, the corpus spec suites, the benchmarks, golden regeneration) runs
+# on a developer machine through tools/Invoke-Gate.ps1. See docs/measurements.md for which suite
+# needs what.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    # Windows only: the add-in and everything touching COM target net10.0-windows.
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install the pinned SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      # Locked mode fails if a packages.lock.json does not match the project, so a dependency
+      # change has to be committed rather than resolved differently on every machine.
+      - name: Restore
+        run: dotnet restore --locked-mode
+
+      - name: Build
+        run: dotnet build --no-restore
+
+      - name: Style
+        run: dotnet format --verify-no-changes
+
+      # Unit and golden replay tests. The E2E project's tests skip themselves without VBANG_E2E,
+      # and the corpus tests without VBANG_CORPUS.
+      - name: Test
+        run: dotnet test --no-build
+
+      - name: The version is written down once
+        run: powershell -ExecutionPolicy Bypass -File tools/Test-VersionSingleSource.ps1
+
+      # The goldens are the one measurement this runner can take, so it also checks that
+      # docs/measurements.md still matches what the replay just reported.
+      - name: The measurements doc matches the report
+        run: powershell -ExecutionPolicy Bypass -File tools/Update-Measurements.ps1 -Verify
+
+      - name: Keep the reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports
+          path: |
+            tests/VbaNg.Golden/bin/**/golden-report.txt
+            tests/VbaNg.Golden/bin/**/golden-leaks.txt
+          if-no-files-found: warn

@@ -1,0 +1,234 @@
+{
+  "area": "ArraysBase1",
+  "excel": "16.0.20326",
+  "culture": "en-US",
+  "options": [
+    "Option Base 1"
+  ],
+  "cases": [
+    {
+      "name": "Array under Option Base 1",
+      "source": [
+        "? Array(1, 2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Variant()",
+            "bounds": "1 To 2",
+            "items": [
+              {
+                "type": "Integer",
+                "value": "1"
+              },
+              {
+                "type": "Integer",
+                "value": "2"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Split ignores Option Base",
+      "source": [
+        "? Split(\"a b\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String()",
+            "bounds": "0 To 1",
+            "items": [
+              {
+                "type": "String",
+                "value": "a"
+              },
+              {
+                "type": "String",
+                "value": "b"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dim without a lower bound uses base 1",
+      "source": [
+        "Dim a(2) As Long",
+        "? LBound(a)",
+        "? UBound(a)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Explicit bounds override the base",
+      "source": [
+        "Dim a(0 To 1) As Long",
+        "? LBound(a)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ReDim uses base 1",
+      "source": [
+        "Dim a() As Long",
+        "ReDim a(3)",
+        "? LBound(a)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ReDim in a Variant uses base 1",
+      "source": [
+        "Dim v As Variant",
+        "ReDim v(3)",
+        "? LBound(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Array with no elements under base 1",
+      "source": [
+        "? Array()"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Variant()",
+            "bounds": "1 To 0",
+            "items": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "Empty Array bounds under base 1",
+      "source": [
+        "? LBound(Array())",
+        "? UBound(Array())"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Two-dimensional array under base 1",
+      "source": [
+        "Dim a(2, 2) As Long",
+        "? LBound(a, 2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Byte array from a String under base 1",
+      "source": [
+        "Dim b() As Byte",
+        "b = \"hi\"",
+        "? LBound(b)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Filter result under base 1",
+      "source": [
+        "? LBound(Filter(Array(\"a\", \"b\"), \"a\"))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Index zero under base 1",
+      "source": [
+        "Dim a(2) As Long",
+        "? a(0)"
+      ],
+      "results": [],
+      "error": {
+        "number": 9,
+        "description": "Subscript out of range",
+        "source": "VBAProject"
+      }
+    }
+  ]
+}

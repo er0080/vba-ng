@@ -1,0 +1,1643 @@
+{
+  "area": "ControlFlow",
+  "excel": "16.0.20326",
+  "culture": "en-US",
+  "options": [],
+  "declarations": [
+    "Private calls As Long",
+    "",
+    "Private Function Counted(ByVal value As Long) As Long",
+    "    calls = calls + 1",
+    "    Counted = value",
+    "End Function",
+    "",
+    "Private Function Limit(ByVal value As Long) As Long",
+    "    calls = calls + 1",
+    "    Limit = value",
+    "End Function"
+  ],
+  "cases": [
+    {
+      "name": "Select Case with Is",
+      "source": [
+        "Dim n As Long, s As String",
+        "n = 7",
+        "Select Case n",
+        "    Case Is < 5: s = \"small\"",
+        "    Case Is < 10: s = \"medium\"",
+        "    Case Else: s = \"large\"",
+        "End Select",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "medium"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Select Case with a list and a range",
+      "source": [
+        "Dim n As Long, s As String",
+        "n = 4",
+        "Select Case n",
+        "    Case 1, 3, 5: s = \"odd\"",
+        "    Case 2 To 4: s = \"low even\"",
+        "    Case Else: s = \"other\"",
+        "End Select",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "low even"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Select Case takes the first matching clause",
+      "source": [
+        "Dim s As String",
+        "Select Case 3",
+        "    Case 1 To 5: s = \"range\"",
+        "    Case 3: s = \"exact\"",
+        "End Select",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "range"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Select Case evaluates the selector once",
+      "source": [
+        "Dim s As String",
+        "calls = 0",
+        "Select Case Counted(2)",
+        "    Case 1: s = \"one\"",
+        "    Case 2: s = \"two\"",
+        "    Case 3: s = \"three\"",
+        "End Select",
+        "? s",
+        "? calls"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "two"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Select Case evaluates the clauses until one matches",
+      "source": [
+        "Dim s As String",
+        "calls = 0",
+        "Select Case 3",
+        "    Case Counted(1): s = \"one\"",
+        "    Case Counted(2), Counted(3): s = \"two or three\"",
+        "    Case Counted(4): s = \"four\"",
+        "End Select",
+        "? s",
+        "? calls"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "two or three"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Select Case with a String range",
+      "source": [
+        "Dim s As String",
+        "Select Case \"m\"",
+        "    Case \"a\" To \"f\": s = \"early\"",
+        "    Case \"g\" To \"p\": s = \"middle\"",
+        "    Case Else: s = \"late\"",
+        "End Select",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "middle"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Select Case compares a String selector with a number",
+      "source": [
+        "Dim s As String",
+        "Select Case \"10\"",
+        "    Case 10: s = \"number\"",
+        "    Case \"10\": s = \"text\"",
+        "    Case Else: s = \"none\"",
+        "End Select",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "number"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Select Case compares a Variant number with a String clause",
+      "source": [
+        "Dim v As Variant, s As String",
+        "v = 10",
+        "Select Case v",
+        "    Case \"10\": s = \"text\"",
+        "    Case 10: s = \"number\"",
+        "    Case Else: s = \"none\"",
+        "End Select",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "text"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Select Case on an Empty selector",
+      "source": [
+        "Dim v As Variant, s As String",
+        "Select Case v",
+        "    Case 0: s = \"zero\"",
+        "    Case \"\": s = \"empty text\"",
+        "    Case Else: s = \"none\"",
+        "End Select",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "zero"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Select Case on a Null selector",
+      "source": [
+        "Dim v As Variant, s As String",
+        "v = Null",
+        "s = \"untouched\"",
+        "Select Case v",
+        "    Case 0: s = \"zero\"",
+        "    Case Null: s = \"null\"",
+        "    Case Else: s = \"else\"",
+        "End Select",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "else"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Select Case with a Null clause",
+      "source": [
+        "Dim s As String",
+        "Select Case 1",
+        "    Case Null: s = \"null\"",
+        "    Case 1: s = \"one\"",
+        "End Select",
+        "? s"
+      ],
+      "results": [],
+      "error": {
+        "number": 94,
+        "description": "Invalid use of Null",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Select Case with Is and To in one clause",
+      "source": [
+        "Dim s As String, n As Long",
+        "For n = 1 To 12",
+        "    Select Case n",
+        "        Case Is < 3, 5 To 7, Is > 10: s = s & \"*\"",
+        "        Case Else: s = s & \".\"",
+        "    End Select",
+        "Next",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "**..***...**"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Select Case on a Boolean",
+      "source": [
+        "Dim s As String",
+        "Select Case 5 > 3",
+        "    Case True: s = \"yes\"",
+        "    Case False: s = \"no\"",
+        "End Select",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "yes"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Select Case with a reversed range matches nothing",
+      "source": [
+        "Dim s As String",
+        "s = \"none\"",
+        "Select Case 3",
+        "    Case 5 To 1: s = \"reversed\"",
+        "End Select",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "none"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Select Case with a Double selector and Long clauses",
+      "source": [
+        "Dim s As String",
+        "Select Case 2.5",
+        "    Case 1, 2, 3: s = \"integer\"",
+        "    Case 2 To 3: s = \"range\"",
+        "End Select",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "range"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Select Case without any Case",
+      "source": [
+        "Dim s As String",
+        "s = \"before\"",
+        "Select Case 1",
+        "End Select",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "before"
+          }
+        }
+      ]
+    },
+    {
+      "name": "For with a Single counter and a fractional step",
+      "source": [
+        "Dim x As Single, count As Long",
+        "For x = 0 To 1 Step 0.1",
+        "    count = count + 1",
+        "Next",
+        "? count",
+        "? x"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Single",
+            "value": "1",
+            "bits": "3F800001"
+          }
+        }
+      ]
+    },
+    {
+      "name": "For with a Double counter and a fractional step",
+      "source": [
+        "Dim x As Double, count As Long",
+        "For x = 0 To 1 Step 0.1",
+        "    count = count + 1",
+        "Next",
+        "? count",
+        "? x"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "11"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Double",
+            "value": "1.1",
+            "bits": "3FF1999999999999"
+          }
+        }
+      ]
+    },
+    {
+      "name": "For with a Double counter stepping down",
+      "source": [
+        "Dim x As Double, count As Long",
+        "For x = 1 To 0 Step -0.25",
+        "    count = count + 1",
+        "Next",
+        "? count",
+        "? x"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Double",
+            "value": "-.25",
+            "bits": "BFD0000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The limit is captured before the loop",
+      "source": [
+        "Dim i As Long, n As Long, count As Long",
+        "n = 3",
+        "For i = 1 To n",
+        "    n = 10",
+        "    count = count + 1",
+        "Next",
+        "? count",
+        "? i"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The step is captured before the loop",
+      "source": [
+        "Dim i As Long, s As Long, count As Long",
+        "s = 1",
+        "For i = 1 To 6 Step s",
+        "    s = 5",
+        "    count = count + 1",
+        "Next",
+        "? count"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "6"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The start is evaluated once and the limit once",
+      "source": [
+        "Dim i As Long, count As Long",
+        "calls = 0",
+        "For i = Counted(1) To Limit(3)",
+        "    count = count + 1",
+        "Next",
+        "? count",
+        "? calls"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The counter changed inside the loop is honored",
+      "source": [
+        "Dim i As Long, count As Long",
+        "For i = 1 To 10",
+        "    i = i + 1",
+        "    count = count + 1",
+        "Next",
+        "? count",
+        "? i"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "11"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The counter after a loop that ran",
+      "source": [
+        "Dim i As Long",
+        "For i = 1 To 3",
+        "Next",
+        "? i"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The counter after a loop that did not run",
+      "source": [
+        "Dim i As Long",
+        "For i = 5 To 3",
+        "Next",
+        "? i"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The counter after Exit For",
+      "source": [
+        "Dim i As Long",
+        "For i = 1 To 10",
+        "    If i = 4 Then Exit For",
+        "Next",
+        "? i"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "For with a negative step",
+      "source": [
+        "Dim i As Long, s As String",
+        "For i = 5 To 1 Step -2",
+        "    s = s & i",
+        "Next",
+        "? s",
+        "? i"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "531"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "-1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "For with a Variant counter",
+      "source": [
+        "Dim v As Variant, s As String",
+        "For v = 1 To 3",
+        "    s = s & TypeName(v) & \" \"",
+        "Next",
+        "? s",
+        "? v"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Integer Integer Integer "
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "For with a Variant counter and a Double limit",
+      "source": [
+        "Dim v As Variant, count As Long",
+        "For v = 1 To 2.5 Step 0.5",
+        "    count = count + 1",
+        "Next",
+        "? count",
+        "? TypeName(v)",
+        "? v"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "Double"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Double",
+            "value": "3",
+            "bits": "4008000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "For with a Byte counter to the last value",
+      "source": [
+        "Dim b As Byte, count As Long",
+        "For b = 250 To 255",
+        "    count = count + 1",
+        "    If count > 10 Then Exit For",
+        "Next",
+        "? count",
+        "? b"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "For with an Integer counter to the last value",
+      "source": [
+        "Dim n As Integer, count As Long",
+        "For n = 32760 To 32767",
+        "    count = count + 1",
+        "    If count > 10 Then Exit For",
+        "Next",
+        "? count",
+        "? n"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "For with a Long limit beyond an Integer counter",
+      "source": [
+        "Dim n As Integer, count As Long",
+        "For n = 32000 To 40000",
+        "    count = count + 1",
+        "    If count > 1000 Then Exit For",
+        "Next",
+        "? count",
+        "? n"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "For with a Currency counter",
+      "source": [
+        "Dim c As Currency, count As Long",
+        "For c = 0 To 1 Step 0.25",
+        "    count = count + 1",
+        "Next",
+        "? count",
+        "? c"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Currency",
+            "value": "1.25",
+            "bits": "00000000000030D4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "For with a String limit",
+      "source": [
+        "Dim i As Long, count As Long",
+        "For i = 1 To \"3\"",
+        "    count = count + 1",
+        "Next",
+        "? count"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "For with a Null limit",
+      "source": [
+        "Dim i As Long",
+        "For i = 1 To Null",
+        "Next",
+        "? i"
+      ],
+      "results": [],
+      "error": {
+        "number": 94,
+        "description": "Invalid use of Null",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Nested For reusing the outer counter after the inner loop",
+      "source": [
+        "Dim i As Long, j As Long, s As String",
+        "For i = 1 To 2",
+        "    For j = 1 To 2",
+        "        s = s & i & j & \" \"",
+        "    Next j",
+        "Next i",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "11 12 21 22 "
+          }
+        }
+      ]
+    },
+    {
+      "name": "Next with the counters named",
+      "source": [
+        "Dim i As Long, j As Long, s As String",
+        "For i = 1 To 2",
+        "    For j = 1 To 2",
+        "        s = s & i * j",
+        "Next j, i",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1224"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Do While at the top",
+      "source": [
+        "Dim n As Long, count As Long",
+        "n = 3",
+        "Do While n > 0",
+        "    n = n - 1",
+        "    count = count + 1",
+        "Loop",
+        "? count"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Do While at the top never runs when false",
+      "source": [
+        "Dim count As Long",
+        "Do While False",
+        "    count = count + 1",
+        "Loop",
+        "? count"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Do Loop While at the bottom runs once",
+      "source": [
+        "Dim count As Long",
+        "Do",
+        "    count = count + 1",
+        "Loop While False",
+        "? count"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Do Until at the top",
+      "source": [
+        "Dim n As Long, count As Long",
+        "Do Until n >= 3",
+        "    n = n + 1",
+        "    count = count + 1",
+        "Loop",
+        "? count"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Do Loop Until at the bottom",
+      "source": [
+        "Dim n As Long, count As Long",
+        "Do",
+        "    n = n + 1",
+        "    count = count + 1",
+        "Loop Until n >= 3",
+        "? count"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Do without a condition and Exit Do",
+      "source": [
+        "Dim n As Long",
+        "Do",
+        "    n = n + 1",
+        "    If n = 5 Then Exit Do",
+        "Loop",
+        "? n"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "While Wend",
+      "source": [
+        "Dim n As Long, count As Long",
+        "n = 3",
+        "While n > 0",
+        "    n = n - 1",
+        "    count = count + 1",
+        "Wend",
+        "? count"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Exit Do leaves the innermost Do",
+      "source": [
+        "Dim i As Long, j As Long, s As String",
+        "Do",
+        "    i = i + 1",
+        "    j = 0",
+        "    Do",
+        "        j = j + 1",
+        "        If j = 2 Then Exit Do",
+        "    Loop",
+        "    s = s & i & \":\" & j & \" \"",
+        "    If i = 2 Then Exit Do",
+        "Loop",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1:2 2:2 "
+          }
+        }
+      ]
+    },
+    {
+      "name": "Exit For from inside Select Case",
+      "source": [
+        "Dim i As Long, s As String",
+        "For i = 1 To 10",
+        "    Select Case i",
+        "        Case 3: Exit For",
+        "        Case Else: s = s & i",
+        "    End Select",
+        "Next",
+        "? s",
+        "? i"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "12"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Exit Do from inside a With block",
+      "source": [
+        "Dim c As Collection, n As Long",
+        "Set c = New Collection",
+        "c.Add 1: c.Add 2: c.Add 3",
+        "Do",
+        "    With c",
+        "        n = n + .Item(1)",
+        "        If n >= 3 Then Exit Do",
+        "    End With",
+        "Loop",
+        "? n"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Exit For from inside an If inside a Do",
+      "source": [
+        "Dim i As Long, n As Long",
+        "For i = 1 To 5",
+        "    Do",
+        "        n = n + 1",
+        "        If n = 3 Then Exit For",
+        "    Loop While n < 10",
+        "Next",
+        "? n",
+        "? i"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GoTo out of a With block",
+      "source": [
+        "Dim c As Collection, s As String",
+        "Set c = New Collection",
+        "c.Add \"x\"",
+        "With c",
+        "    s = .Item(1)",
+        "    GoTo Done",
+        "    s = \"not reached\"",
+        "End With",
+        "Done:",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "x"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GoTo out of a For loop",
+      "source": [
+        "Dim i As Long, s As String",
+        "For i = 1 To 5",
+        "    s = s & i",
+        "    If i = 3 Then GoTo Out",
+        "Next",
+        "Out:",
+        "? s",
+        "? i"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "123"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GoTo out of nested loops then a new loop with the same counter",
+      "source": [
+        "Dim i As Long, j As Long, s As String",
+        "For i = 1 To 3",
+        "    For j = 1 To 3",
+        "        If i * j = 4 Then GoTo Found",
+        "    Next",
+        "Next",
+        "Found:",
+        "s = i & \",\" & j",
+        "For i = 1 To 2",
+        "    s = s & \"|\" & i",
+        "Next",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "2,2|1|2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "For Each over an array",
+      "source": [
+        "Dim a(1 To 3) As Long, v As Variant, s As String",
+        "a(1) = 10: a(2) = 20: a(3) = 30",
+        "For Each v In a",
+        "    s = s & v & \" \"",
+        "Next",
+        "? s",
+        "? TypeName(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "10 20 30 "
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "Empty"
+          }
+        }
+      ]
+    },
+    {
+      "name": "For Each over an empty array",
+      "source": [
+        "Dim a() As String, v As Variant, count As Long",
+        "a = Split(\"\", \",\")",
+        "For Each v In a",
+        "    count = count + 1",
+        "Next",
+        "? count",
+        "? TypeName(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "Empty"
+          }
+        }
+      ]
+    },
+    {
+      "name": "For Each over a two-dimensional array goes column-major",
+      "source": [
+        "Dim a(1 To 2, 1 To 2) As Long, v As Variant, s As String",
+        "a(1, 1) = 11: a(1, 2) = 12: a(2, 1) = 21: a(2, 2) = 22",
+        "For Each v In a",
+        "    s = s & v & \" \"",
+        "Next",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "11 21 12 22 "
+          }
+        }
+      ]
+    },
+    {
+      "name": "For Each with Exit For leaves the element in the variable",
+      "source": [
+        "Dim a(1 To 3) As Long, v As Variant",
+        "a(1) = 10: a(2) = 20: a(3) = 30",
+        "For Each v In a",
+        "    If v = 20 Then Exit For",
+        "Next",
+        "? v"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "20"
+          }
+        }
+      ]
+    },
+    {
+      "name": "For Each over an array changed inside the loop",
+      "source": [
+        "Dim a(1 To 3) As Long, v As Variant, s As String",
+        "a(1) = 1: a(2) = 2: a(3) = 3",
+        "For Each v In a",
+        "    a(3) = 30",
+        "    s = s & v & \" \"",
+        "Next",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1 2 30 "
+          }
+        }
+      ]
+    },
+    {
+      "name": "For Each over an array of arrays",
+      "source": [
+        "Dim outer(1 To 2) As Variant, v As Variant, s As String",
+        "outer(1) = Array(1, 2)",
+        "outer(2) = Array(3)",
+        "For Each v In outer",
+        "    s = s & UBound(v) & \" \"",
+        "Next",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1 0 "
+          }
+        }
+      ]
+    },
+    {
+      "name": "For Each element assignment does not write back",
+      "source": [
+        "Dim a(1 To 2) As Long, v As Variant",
+        "a(1) = 1: a(2) = 2",
+        "For Each v In a",
+        "    v = v * 10",
+        "Next",
+        "? a(1)",
+        "? a(2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "If on a numeric String",
+      "source": [
+        "Dim s As String",
+        "If \"1\" Then s = \"true\" Else s = \"false\"",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "true"
+          }
+        }
+      ]
+    },
+    {
+      "name": "If on a zero String",
+      "source": [
+        "Dim s As String",
+        "If \"0\" Then s = \"true\" Else s = \"false\"",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "false"
+          }
+        }
+      ]
+    },
+    {
+      "name": "If on a non-numeric String",
+      "source": [
+        "Dim s As String",
+        "If \"abc\" Then s = \"true\" Else s = \"false\"",
+        "? s"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "If on Null",
+      "source": [
+        "Dim s As String",
+        "If Null Then s = \"true\" Else s = \"false\"",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "false"
+          }
+        }
+      ]
+    },
+    {
+      "name": "If on Empty",
+      "source": [
+        "Dim v As Variant, s As String",
+        "If v Then s = \"true\" Else s = \"false\"",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "false"
+          }
+        }
+      ]
+    },
+    {
+      "name": "If on an object",
+      "source": [
+        "Dim c As Collection, s As String",
+        "Set c = New Collection",
+        "If c Then s = \"true\" Else s = \"false\"",
+        "? s"
+      ],
+      "results": [],
+      "error": {
+        "number": 450,
+        "description": "Wrong number of arguments or invalid property assignment",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "If on Nothing",
+      "source": [
+        "Dim c As Collection, s As String",
+        "If c Then s = \"true\" Else s = \"false\"",
+        "? s"
+      ],
+      "results": [],
+      "error": {
+        "number": 91,
+        "description": "Object variable or With block variable not set",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "If on a Double fraction",
+      "source": [
+        "Dim s As String",
+        "If 0.001 Then s = \"true\" Else s = \"false\"",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "true"
+          }
+        }
+      ]
+    },
+    {
+      "name": "If on a Date",
+      "source": [
+        "Dim s As String",
+        "If #1/1/1900# Then s = \"true\" Else s = \"false\"",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "true"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ElseIf chain takes the first true branch",
+      "source": [
+        "Dim n As Long, s As String",
+        "n = 5",
+        "If n < 3 Then",
+        "    s = \"low\"",
+        "ElseIf n < 6 Then",
+        "    s = \"mid\"",
+        "ElseIf n < 6 Then",
+        "    s = \"mid again\"",
+        "Else",
+        "    s = \"high\"",
+        "End If",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "mid"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Single-line If with several statements",
+      "source": [
+        "Dim a As Long, b As Long",
+        "If True Then a = 1: b = 2 Else a = 3: b = 4",
+        "? a",
+        "? b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Single-line If with several statements in the Else",
+      "source": [
+        "Dim a As Long, b As Long",
+        "If False Then a = 1: b = 2 Else a = 3: b = 4",
+        "? a",
+        "? b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Single-line If runs the statements after the colon only when true",
+      "source": [
+        "Dim a As Long, b As Long",
+        "If False Then a = 1: b = 2",
+        "? a",
+        "? b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The If condition is evaluated once",
+      "source": [
+        "Dim s As String",
+        "calls = 0",
+        "If Counted(1) Then s = \"yes\"",
+        "? calls"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A While loop over a Variant condition",
+      "source": [
+        "Dim v As Variant, count As Long",
+        "v = 3",
+        "While v",
+        "    v = v - 1",
+        "    count = count + 1",
+        "Wend",
+        "? count"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,628 @@
+' ControlFlow: the Select Case forms, For with Single, Double, Variant, and Byte counters and
+' with bounds and steps changed inside the loop, the Do and While forms, Exit from nested
+' blocks, GoTo out of With and For, For Each over arrays, and what If accepts as a condition
+' (MS-VBAL 5.4.2). The Procedures area covers the lowering the code generator does; this area
+' records the values.
+
+Private calls As Long
+
+Private Function Counted(ByVal value As Long) As Long
+    calls = calls + 1
+    Counted = value
+End Function
+
+Private Function Limit(ByVal value As Long) As Long
+    calls = calls + 1
+    Limit = value
+End Function
+
+' Select Case with Is
+Dim n As Long, s As String
+n = 7
+Select Case n
+    Case Is < 5: s = "small"
+    Case Is < 10: s = "medium"
+    Case Else: s = "large"
+End Select
+? s
+
+' Select Case with a list and a range
+Dim n As Long, s As String
+n = 4
+Select Case n
+    Case 1, 3, 5: s = "odd"
+    Case 2 To 4: s = "low even"
+    Case Else: s = "other"
+End Select
+? s
+
+' Select Case takes the first matching clause
+Dim s As String
+Select Case 3
+    Case 1 To 5: s = "range"
+    Case 3: s = "exact"
+End Select
+? s
+
+' Select Case evaluates the selector once
+Dim s As String
+calls = 0
+Select Case Counted(2)
+    Case 1: s = "one"
+    Case 2: s = "two"
+    Case 3: s = "three"
+End Select
+? s
+? calls
+
+' Select Case evaluates the clauses until one matches
+Dim s As String
+calls = 0
+Select Case 3
+    Case Counted(1): s = "one"
+    Case Counted(2), Counted(3): s = "two or three"
+    Case Counted(4): s = "four"
+End Select
+? s
+? calls
+
+' Select Case with a String range
+Dim s As String
+Select Case "m"
+    Case "a" To "f": s = "early"
+    Case "g" To "p": s = "middle"
+    Case Else: s = "late"
+End Select
+? s
+
+' Select Case compares a String selector with a number
+Dim s As String
+Select Case "10"
+    Case 10: s = "number"
+    Case "10": s = "text"
+    Case Else: s = "none"
+End Select
+? s
+
+' Select Case compares a Variant number with a String clause
+Dim v As Variant, s As String
+v = 10
+Select Case v
+    Case "10": s = "text"
+    Case 10: s = "number"
+    Case Else: s = "none"
+End Select
+? s
+
+' Select Case on an Empty selector
+Dim v As Variant, s As String
+Select Case v
+    Case 0: s = "zero"
+    Case "": s = "empty text"
+    Case Else: s = "none"
+End Select
+? s
+
+' Select Case on a Null selector
+Dim v As Variant, s As String
+v = Null
+s = "untouched"
+Select Case v
+    Case 0: s = "zero"
+    Case Null: s = "null"
+    Case Else: s = "else"
+End Select
+? s
+
+' Select Case with a Null clause
+Dim s As String
+Select Case 1
+    Case Null: s = "null"
+    Case 1: s = "one"
+End Select
+? s
+
+' Select Case with Is and To in one clause
+Dim s As String, n As Long
+For n = 1 To 12
+    Select Case n
+        Case Is < 3, 5 To 7, Is > 10: s = s & "*"
+        Case Else: s = s & "."
+    End Select
+Next
+? s
+
+' Select Case on a Boolean
+Dim s As String
+Select Case 5 > 3
+    Case True: s = "yes"
+    Case False: s = "no"
+End Select
+? s
+
+' Select Case with a reversed range matches nothing
+Dim s As String
+s = "none"
+Select Case 3
+    Case 5 To 1: s = "reversed"
+End Select
+? s
+
+' Select Case with a Double selector and Long clauses
+Dim s As String
+Select Case 2.5
+    Case 1, 2, 3: s = "integer"
+    Case 2 To 3: s = "range"
+End Select
+? s
+
+' Select Case without any Case
+Dim s As String
+s = "before"
+Select Case 1
+End Select
+? s
+
+' For with a Single counter and a fractional step
+Dim x As Single, count As Long
+For x = 0 To 1 Step 0.1
+    count = count + 1
+Next
+? count
+? x
+
+' For with a Double counter and a fractional step
+Dim x As Double, count As Long
+For x = 0 To 1 Step 0.1
+    count = count + 1
+Next
+? count
+? x
+
+' For with a Double counter stepping down
+Dim x As Double, count As Long
+For x = 1 To 0 Step -0.25
+    count = count + 1
+Next
+? count
+? x
+
+' The limit is captured before the loop
+Dim i As Long, n As Long, count As Long
+n = 3
+For i = 1 To n
+    n = 10
+    count = count + 1
+Next
+? count
+? i
+
+' The step is captured before the loop
+Dim i As Long, s As Long, count As Long
+s = 1
+For i = 1 To 6 Step s
+    s = 5
+    count = count + 1
+Next
+? count
+
+' The start is evaluated once and the limit once
+Dim i As Long, count As Long
+calls = 0
+For i = Counted(1) To Limit(3)
+    count = count + 1
+Next
+? count
+? calls
+
+' The counter changed inside the loop is honored
+Dim i As Long, count As Long
+For i = 1 To 10
+    i = i + 1
+    count = count + 1
+Next
+? count
+? i
+
+' The counter after a loop that ran
+Dim i As Long
+For i = 1 To 3
+Next
+? i
+
+' The counter after a loop that did not run
+Dim i As Long
+For i = 5 To 3
+Next
+? i
+
+' The counter after Exit For
+Dim i As Long
+For i = 1 To 10
+    If i = 4 Then Exit For
+Next
+? i
+
+' For with a negative step
+Dim i As Long, s As String
+For i = 5 To 1 Step -2
+    s = s & i
+Next
+? s
+? i
+
+' For with a Variant counter
+Dim v As Variant, s As String
+For v = 1 To 3
+    s = s & TypeName(v) & " "
+Next
+? s
+? v
+
+' For with a Variant counter and a Double limit
+Dim v As Variant, count As Long
+For v = 1 To 2.5 Step 0.5
+    count = count + 1
+Next
+? count
+? TypeName(v)
+? v
+
+' For with a Byte counter to the last value
+Dim b As Byte, count As Long
+For b = 250 To 255
+    count = count + 1
+    If count > 10 Then Exit For
+Next
+? count
+? b
+
+' For with an Integer counter to the last value
+Dim n As Integer, count As Long
+For n = 32760 To 32767
+    count = count + 1
+    If count > 10 Then Exit For
+Next
+? count
+? n
+
+' For with a Long limit beyond an Integer counter
+Dim n As Integer, count As Long
+For n = 32000 To 40000
+    count = count + 1
+    If count > 1000 Then Exit For
+Next
+? count
+? n
+
+' For with a Currency counter
+Dim c As Currency, count As Long
+For c = 0 To 1 Step 0.25
+    count = count + 1
+Next
+? count
+? c
+
+' For with a String limit
+Dim i As Long, count As Long
+For i = 1 To "3"
+    count = count + 1
+Next
+? count
+
+' For with a Null limit
+Dim i As Long
+For i = 1 To Null
+Next
+? i
+
+' Nested For reusing the outer counter after the inner loop
+Dim i As Long, j As Long, s As String
+For i = 1 To 2
+    For j = 1 To 2
+        s = s & i & j & " "
+    Next j
+Next i
+? s
+
+' Next with the counters named
+Dim i As Long, j As Long, s As String
+For i = 1 To 2
+    For j = 1 To 2
+        s = s & i * j
+Next j, i
+? s
+
+' Do While at the top
+Dim n As Long, count As Long
+n = 3
+Do While n > 0
+    n = n - 1
+    count = count + 1
+Loop
+? count
+
+' Do While at the top never runs when false
+Dim count As Long
+Do While False
+    count = count + 1
+Loop
+? count
+
+' Do Loop While at the bottom runs once
+Dim count As Long
+Do
+    count = count + 1
+Loop While False
+? count
+
+' Do Until at the top
+Dim n As Long, count As Long
+Do Until n >= 3
+    n = n + 1
+    count = count + 1
+Loop
+? count
+
+' Do Loop Until at the bottom
+Dim n As Long, count As Long
+Do
+    n = n + 1
+    count = count + 1
+Loop Until n >= 3
+? count
+
+' Do without a condition and Exit Do
+Dim n As Long
+Do
+    n = n + 1
+    If n = 5 Then Exit Do
+Loop
+? n
+
+' While Wend
+Dim n As Long, count As Long
+n = 3
+While n > 0
+    n = n - 1
+    count = count + 1
+Wend
+? count
+
+' Exit Do leaves the innermost Do
+Dim i As Long, j As Long, s As String
+Do
+    i = i + 1
+    j = 0
+    Do
+        j = j + 1
+        If j = 2 Then Exit Do
+    Loop
+    s = s & i & ":" & j & " "
+    If i = 2 Then Exit Do
+Loop
+? s
+
+' Exit For from inside Select Case
+Dim i As Long, s As String
+For i = 1 To 10
+    Select Case i
+        Case 3: Exit For
+        Case Else: s = s & i
+    End Select
+Next
+? s
+? i
+
+' Exit Do from inside a With block
+Dim c As Collection, n As Long
+Set c = New Collection
+c.Add 1: c.Add 2: c.Add 3
+Do
+    With c
+        n = n + .Item(1)
+        If n >= 3 Then Exit Do
+    End With
+Loop
+? n
+
+' Exit For from inside an If inside a Do
+Dim i As Long, n As Long
+For i = 1 To 5
+    Do
+        n = n + 1
+        If n = 3 Then Exit For
+    Loop While n < 10
+Next
+? n
+? i
+
+' GoTo out of a With block
+Dim c As Collection, s As String
+Set c = New Collection
+c.Add "x"
+With c
+    s = .Item(1)
+    GoTo Done
+    s = "not reached"
+End With
+Done:
+? s
+
+' GoTo out of a For loop
+Dim i As Long, s As String
+For i = 1 To 5
+    s = s & i
+    If i = 3 Then GoTo Out
+Next
+Out:
+? s
+? i
+
+' GoTo out of nested loops then a new loop with the same counter
+Dim i As Long, j As Long, s As String
+For i = 1 To 3
+    For j = 1 To 3
+        If i * j = 4 Then GoTo Found
+    Next
+Next
+Found:
+s = i & "," & j
+For i = 1 To 2
+    s = s & "|" & i
+Next
+? s
+
+' For Each over an array
+Dim a(1 To 3) As Long, v As Variant, s As String
+a(1) = 10: a(2) = 20: a(3) = 30
+For Each v In a
+    s = s & v & " "
+Next
+? s
+? TypeName(v)
+
+' For Each over an empty array
+Dim a() As String, v As Variant, count As Long
+a = Split("", ",")
+For Each v In a
+    count = count + 1
+Next
+? count
+? TypeName(v)
+
+' For Each over a two-dimensional array goes column-major
+Dim a(1 To 2, 1 To 2) As Long, v As Variant, s As String
+a(1, 1) = 11: a(1, 2) = 12: a(2, 1) = 21: a(2, 2) = 22
+For Each v In a
+    s = s & v & " "
+Next
+? s
+
+' For Each with Exit For leaves the element in the variable
+Dim a(1 To 3) As Long, v As Variant
+a(1) = 10: a(2) = 20: a(3) = 30
+For Each v In a
+    If v = 20 Then Exit For
+Next
+? v
+
+' For Each over an array changed inside the loop
+Dim a(1 To 3) As Long, v As Variant, s As String
+a(1) = 1: a(2) = 2: a(3) = 3
+For Each v In a
+    a(3) = 30
+    s = s & v & " "
+Next
+? s
+
+' For Each over an array of arrays
+Dim outer(1 To 2) As Variant, v As Variant, s As String
+outer(1) = Array(1, 2)
+outer(2) = Array(3)
+For Each v In outer
+    s = s & UBound(v) & " "
+Next
+? s
+
+' For Each element assignment does not write back
+Dim a(1 To 2) As Long, v As Variant
+a(1) = 1: a(2) = 2
+For Each v In a
+    v = v * 10
+Next
+? a(1)
+? a(2)
+
+' If on a numeric String
+Dim s As String
+If "1" Then s = "true" Else s = "false"
+? s
+
+' If on a zero String
+Dim s As String
+If "0" Then s = "true" Else s = "false"
+? s
+
+' If on a non-numeric String
+Dim s As String
+If "abc" Then s = "true" Else s = "false"
+? s
+
+' If on Null
+Dim s As String
+If Null Then s = "true" Else s = "false"
+? s
+
+' If on Empty
+Dim v As Variant, s As String
+If v Then s = "true" Else s = "false"
+? s
+
+' If on an object
+Dim c As Collection, s As String
+Set c = New Collection
+If c Then s = "true" Else s = "false"
+? s
+
+' If on Nothing
+Dim c As Collection, s As String
+If c Then s = "true" Else s = "false"
+? s
+
+' If on a Double fraction
+Dim s As String
+If 0.001 Then s = "true" Else s = "false"
+? s
+
+' If on a Date
+Dim s As String
+If #1/1/1900# Then s = "true" Else s = "false"
+? s
+
+' ElseIf chain takes the first true branch
+Dim n As Long, s As String
+n = 5
+If n < 3 Then
+    s = "low"
+ElseIf n < 6 Then
+    s = "mid"
+ElseIf n < 6 Then
+    s = "mid again"
+Else
+    s = "high"
+End If
+? s
+
+' Single-line If with several statements
+Dim a As Long, b As Long
+If True Then a = 1: b = 2 Else a = 3: b = 4
+? a
+? b
+
+' Single-line If with several statements in the Else
+Dim a As Long, b As Long
+If False Then a = 1: b = 2 Else a = 3: b = 4
+? a
+? b
+
+' Single-line If runs the statements after the colon only when true
+Dim a As Long, b As Long
+If False Then a = 1: b = 2
+? a
+? b
+
+' The If condition is evaluated once
+Dim s As String
+calls = 0
+If Counted(1) Then s = "yes"
+? calls
+
+' A While loop over a Variant condition
+Dim v As Variant, count As Long
+v = 3
+While v
+    v = v - 1
+    count = count + 1
+Wend
+? count

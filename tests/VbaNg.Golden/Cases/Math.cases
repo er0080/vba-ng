@@ -1,0 +1,323 @@
+' Math: the Math module of the VBA standard library plus the Rnd generator.
+
+' Abs of a negative Integer keeps the type
+Dim i As Integer
+i = -5
+? Abs(i)
+
+' Abs of the Integer minimum overflows
+Dim i As Integer
+i = -32768
+? Abs(i)
+
+' Abs of the Long minimum overflows
+Dim l As Long
+l = -2147483648#
+? Abs(l)
+
+' Abs of a Double
+? Abs(-1.5)
+
+' Abs of a Currency
+? Abs(CCur(-1.5))
+
+' Abs of a numeric String
+? Abs("-5")
+
+' Abs of Null
+? Abs(Null)
+
+' Abs of Empty
+Dim v As Variant
+? Abs(v)
+
+' Abs of a Boolean
+? Abs(True)
+
+' Abs of a Decimal
+? Abs(CDec("-1.5"))
+
+' Abs of a Byte
+? Abs(CByte(5))
+
+' Abs of a Date
+? Abs(#1/2/2020#)
+
+' Sgn of a negative
+? Sgn(-2.5)
+
+' Sgn of zero
+? Sgn(0)
+
+' Sgn of a positive Currency
+? Sgn(CCur(2))
+
+' Sgn of Null
+? Sgn(Null)
+
+' Sgn of a numeric String
+? Sgn("-3")
+
+' Sgn returns Integer
+? VarType(Sgn(5))
+
+' Sgn of Empty
+Dim v As Variant
+? Sgn(v)
+
+' Sqr of four
+? Sqr(4)
+
+' Sqr of two
+? Sqr(2)
+
+' Sqr of a negative
+? Sqr(-1)
+
+' Sqr of an Integer returns Double
+Dim i As Integer
+i = 9
+? Sqr(i)
+
+' Sqr of Null
+? Sqr(Null)
+
+' Sqr of a numeric String
+? Sqr("16")
+
+' Sqr of a Currency
+? Sqr(CCur(2))
+
+' Sqr of zero
+? Sqr(0)
+
+' Sqr of a large value
+Dim d As Double
+d = 1E+300
+? Sqr(d)
+
+' Exp of one
+? Exp(1)
+
+' Exp of zero
+? Exp(0)
+
+' Exp overflow
+Dim d As Double
+d = 710
+? Exp(d)
+
+' Exp of a large negative
+Dim d As Double
+d = -750
+? Exp(d)
+
+' Exp of a half
+? Exp(0.5)
+
+' Log of e
+? Log(Exp(1))
+
+' Log of ten
+? Log(10)
+
+' Log of zero
+? Log(0)
+
+' Log of a negative
+? Log(-1)
+
+' Log of one
+? Log(1)
+
+' Log of two
+? Log(2)
+
+' Sin of one
+? Sin(1)
+
+' Sin of zero
+? Sin(0)
+
+' Sin of pi
+? Sin(4 * Atn(1))
+
+' Sin of a large angle
+Dim d As Double
+d = 1E+10
+? Sin(d)
+
+' Cos of one
+? Cos(1)
+
+' Cos of pi
+? Cos(4 * Atn(1))
+
+' Tan of one
+? Tan(1)
+
+' Tan of half pi
+? Tan(2 * Atn(1))
+
+' Atn of one
+? Atn(1)
+
+' Atn of a large value
+Dim d As Double
+d = 1E+300
+? Atn(d)
+
+' Atn of a negative
+? Atn(-0.5)
+
+' Round to an integer
+? Round(2.5)
+
+' Round half to even upward
+? Round(3.5)
+
+' Round a negative half to even
+? Round(-2.5)
+
+' Round with digits
+? Round(2.675, 2)
+
+' Round with digits on a binary fraction
+? Round(1.005, 2)
+
+' Round with digits at a half that is exact
+? Round(0.125, 2)
+
+' Round with digits at 0.375
+? Round(0.375, 2)
+
+' Round of a Double returns Double
+? VarType(Round(1.5))
+
+' Round of an Integer returns Integer
+Dim i As Integer
+i = 5
+? Round(i)
+
+' Round of a Currency returns Currency
+? Round(CCur("1.23456"), 2)
+
+' Round of a Currency at a half
+? Round(CCur("2.5"))
+
+' Round of a Decimal
+? Round(CDec("2.5"))
+
+' Round of a Decimal with digits
+? Round(CDec("2.675"), 2)
+
+' Round of a numeric String
+? Round("2.5")
+
+' Round with negative digits
+? Round(1234, -2)
+
+' Round of Null
+? Round(Null)
+
+' Round of Empty
+Dim v As Variant
+? Round(v)
+
+' Round of a Single
+Dim s As Single
+s = 2.5
+? Round(s)
+
+' Round of a Single with digits
+Dim s As Single
+s = 1.25
+? Round(s, 1)
+
+' Round of a Boolean
+? Round(True)
+
+' Round of a Date
+? Round(#1/2/2020 6:00:00 PM#)
+
+' Round of a large Double
+Dim d As Double
+d = 1E+20
+? Round(d)
+
+' Round with more digits than the value has
+? Round(1.5, 5)
+
+' Round with a Double digits argument
+? Round(1.25, 1.5)
+
+' Round with too many digits
+? Round(1.5, 30)
+
+' Rnd with a negative seed restarts the generator
+? Rnd(-1)
+
+' Rnd sequence after a fixed seed
+Dim r As Single
+r = Rnd(-1)
+? Rnd
+? Rnd
+? Rnd
+
+' Rnd of zero repeats the last value
+Dim r As Single
+r = Rnd(-1)
+r = Rnd
+? Rnd(0)
+? Rnd(0)
+
+' Rnd returns Single
+Dim r As Single
+r = Rnd(-1)
+? VarType(Rnd)
+
+' Randomize with a seed after a reset
+Dim r As Single
+r = Rnd(-1)
+Randomize 1
+? Rnd
+
+' Randomize with a different seed
+Dim r As Single
+r = Rnd(-1)
+Randomize 42
+? Rnd
+
+' Randomize with a fractional seed
+Dim r As Single
+r = Rnd(-1)
+Randomize 1.5
+? Rnd
+
+' Rnd of a positive argument advances
+Dim r As Single
+r = Rnd(-1)
+? Rnd(5)
+
+' Rnd of a negative argument seeds from the number
+? Rnd(-2)
+? Rnd(-2)
+
+' Rnd of a negative fraction
+? Rnd(-0.5)
+
+' Rnd of a large negative
+? Rnd(-1000000)
+
+' Int of Rnd times ten after a seed
+Dim r As Single
+r = Rnd(-1)
+? Int(Rnd * 10)
+
+' Rnd with a Null argument
+? Rnd(Null)
+
+' Rnd with a String argument
+Dim r As Single
+r = Rnd(-1)
+? Rnd("1")

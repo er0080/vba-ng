@@ -1,0 +1,546 @@
+' Arrays: bounds, Array and Split, ReDim (MS-VBAL 5.4.3.3), Erase, and copy semantics under Option Base 0.
+
+Private Sub Stretch(s As String)
+    s = s & "hello"
+End Sub
+
+' Array builds a Variant array from base zero
+? Array(1, "a", True)
+
+' Array with no elements
+? Array()
+
+' Array nested
+? Array(1, Array(2, 3))
+
+' Array of a Long variable keeps the subtype
+Dim l As Long
+l = 5
+? Array(l)
+
+' Array of Null and Empty
+? Array(Null, Empty)
+
+' Fixed array default elements are zero
+Dim a(1) As Long
+? a
+
+' Fixed String array default elements are empty
+Dim a(1) As String
+? a
+
+' Fixed Variant array default elements are Empty
+Dim a(1)
+? a
+
+' Fixed Boolean array default elements
+Dim a(0) As Boolean
+? a
+
+' Fixed Date array default elements
+Dim a(0) As Date
+? a
+
+' Fixed Object array default elements
+Dim a(0) As Object
+? a
+
+' Fixed Currency array default elements
+Dim a(0) As Currency
+? a
+
+' Fixed Byte array default elements
+Dim a(0) As Byte
+? a
+
+' Two-dimensional array in row-major listing
+Dim a(1, 2) As Integer
+a(0, 0) = 1: a(0, 1) = 2: a(0, 2) = 3
+a(1, 0) = 4: a(1, 1) = 5: a(1, 2) = 6
+? a
+
+' Array with explicit lower bounds
+Dim a(5 To 6) As Integer
+a(5) = 1: a(6) = 2
+? a
+
+' Index below the lower bound
+Dim a(1 To 2) As Integer
+? a(0)
+
+' Index above the upper bound
+Dim a(2) As Integer
+? a(3)
+
+' Index with a Double rounds
+Dim a(2) As Integer
+a(2) = 7
+? a(1.5)
+
+' Index with a Double rounds half to even
+Dim a(2) As Integer
+a(2) = 7
+? a(2.5)
+
+' Index with a String
+Dim a(2) As Integer
+a(2) = 7
+? a("2")
+
+' Index with Null
+Dim a(2) As Integer
+? a(Null)
+
+' Index with Empty
+Dim a(2) As Integer
+a(0) = 7
+Dim v As Variant
+? a(v)
+
+' Wrong number of dimensions through a Variant, since the VBE rejects it on a declared array
+Dim a(2) As Integer
+Dim v As Variant
+v = a
+? v(1, 1)
+
+' Unallocated array element
+Dim a() As Integer
+? a(0)
+
+' ReDim allocates
+Dim a() As Integer
+ReDim a(2)
+? UBound(a)
+
+' ReDim without Preserve clears
+Dim a() As Integer
+ReDim a(2)
+a(1) = 5
+ReDim a(2)
+? a(1)
+
+' ReDim Preserve keeps elements
+Dim a() As Integer
+ReDim a(2)
+a(1) = 5
+ReDim Preserve a(4)
+? a
+
+' ReDim Preserve shrinks
+Dim a() As Integer
+ReDim a(4)
+a(1) = 5: a(4) = 9
+ReDim Preserve a(1)
+? a
+
+' ReDim Preserve changes the lower bound
+Dim a() As Integer
+ReDim a(2)
+a(1) = 5
+ReDim Preserve a(1 To 3)
+? a
+
+' ReDim Preserve on the last dimension
+Dim a() As Integer
+ReDim a(1, 1)
+a(1, 1) = 5
+ReDim Preserve a(1, 2)
+? a
+
+' ReDim Preserve on a leading dimension
+Dim a() As Integer
+ReDim a(1, 1)
+ReDim Preserve a(2, 1)
+? a
+
+' ReDim Preserve changing the number of dimensions
+Dim a() As Integer
+ReDim a(1)
+ReDim Preserve a(1, 1)
+? a
+
+' ReDim Preserve of an unallocated array
+Dim a() As Integer
+ReDim Preserve a(2)
+? a
+
+' ReDim with a negative upper bound
+Dim a() As Integer
+Dim n As Long
+n = -1
+ReDim a(n)
+? UBound(a)
+
+' ReDim with a lower bound above the upper bound
+Dim a() As Integer
+Dim n As Long
+n = 5
+ReDim a(n To 2)
+? UBound(a)
+
+' ReDim a Variant makes it an array
+Dim v As Variant
+ReDim v(2)
+? v
+
+' ReDim a Variant with a type
+Dim v As Variant
+ReDim v(1) As String
+? v
+
+' ReDim with a Double bound rounds
+Dim a() As Integer
+ReDim a(2.5)
+? UBound(a)
+
+' ReDim with a String bound
+Dim a() As Integer
+ReDim a("2")
+? UBound(a)
+
+' Erase of a dynamic array deallocates
+Dim a() As Integer
+ReDim a(2)
+Erase a
+? a
+
+' Erase of a fixed array resets the elements
+Dim a(1) As Integer
+a(0) = 5
+Erase a
+? a
+
+' Erase of a fixed String array
+Dim a(1) As String
+a(0) = "x"
+Erase a
+? a
+
+' Erase of a Variant array
+Dim v As Variant
+v = Array(1, 2)
+Erase v
+? v
+
+' Erase of a fixed Object array
+Dim a(0) As Object
+Set a(0) = New Collection
+Erase a
+? a
+
+' Assigning an array copies it
+Dim a(1) As Integer, b() As Integer
+a(0) = 1
+b = a
+b(0) = 9
+? a(0)
+
+' Assigning an array to a Variant copies it
+Dim a(1) As Integer, v As Variant
+a(0) = 1
+v = a
+v(0) = 9
+? a(0)
+
+' Assigning a Variant array to a typed array
+Dim v As Variant, b() As Integer
+v = Array(1, 2)
+b = v
+? b
+
+' Assigning a Variant holding a String array to a String array
+Dim v As Variant, b() As String
+v = Split("a b")
+b = v
+? b
+
+' An element of a Variant array keeps its own type
+Dim v As Variant
+v = Array(CByte(1), CCur(2))
+? v(1)
+
+' Assigning to an element of a Variant array
+Dim v As Variant
+v = Array(1, 2)
+v(0) = "x"
+? v
+
+' Assigning to an element of a typed array coerces
+Dim a(0) As Integer
+a(0) = "12"
+? a
+
+' Assigning beyond the element type range
+Dim a(0) As Byte
+Dim n As Long
+n = 300
+a(0) = n
+? a
+
+' Nested array element access
+Dim v As Variant
+v = Array(Array(1, 2), Array(3))
+? v(0)(1)
+
+' Split result assigned to a String array
+Dim s() As String
+s = Split("a b")
+? s
+
+' Array size with Dim of zero
+Dim a(0) As Long
+? UBound(a)
+
+' Three-dimensional array bounds
+Dim a(1, 2, 3) As Long
+? UBound(a, 3)
+
+' Three-dimensional array items are not listed
+Dim a(1, 1, 1) As Long
+? a
+
+' A Variant holding a two-dimensional array
+Dim v As Variant
+Dim a(1, 1) As String
+a(0, 0) = "a": a(0, 1) = "b": a(1, 0) = "c": a(1, 1) = "d"
+v = a
+? v
+
+' For Each over an array visits elements in memory order
+Dim a(1, 1) As Integer
+a(0, 0) = 1: a(0, 1) = 2: a(1, 0) = 3: a(1, 1) = 4
+Dim e As Variant
+For Each e In a
+? e
+Next
+
+' For Each over an empty array
+Dim e As Variant
+For Each e In Array()
+? e
+Next
+? "done"
+
+' For Each over an unallocated array
+Dim a() As Long
+Dim e As Variant
+For Each e In a
+? e
+Next
+? "done"
+
+' For Each over a String array
+Dim s() As String
+s = Split("x y")
+Dim e As Variant
+For Each e In s
+? e
+Next
+
+' For Each variable after the loop
+Dim e As Variant
+For Each e In Array(1, 2)
+Next
+? e
+
+' TypeName after ReDim in a Variant with a type
+Dim v As Variant
+ReDim v(1) As String
+? TypeName(v)
+
+' VarType after ReDim in a Variant with a type
+Dim v As Variant
+ReDim v(1) As Long
+? VarType(v)
+
+' A dynamic array of Variants with ReDim As
+Dim v() As Variant
+ReDim v(1)
+? v
+
+' Array element assignment with a Set
+Dim a(0) As Object
+Set a(0) = New Collection
+? a
+
+' Byte array from a String
+Dim b() As Byte
+b = "hi"
+? b
+
+' Byte array from an empty String
+Dim b() As Byte
+b = ""
+? b
+
+' Array with the same element assigned twice
+Dim a(1) As Long
+a(0) = 1
+a(0) = 2
+? a
+
+' A Long array element incremented
+Dim a(0) As Long
+a(0) = a(0) + 1
+? a(0)
+
+' An Integer array element overflowed
+Dim a(0) As Integer
+a(0) = 32767
+a(0) = a(0) + 1
+? a(0)
+
+' Array of ten thousand Longs bounds
+Dim a(9999) As Long
+? UBound(a)
+
+' Assigning arrays of different element types
+Dim v As Variant, b() As Long
+v = Array("1", "2")
+b = v
+? b
+
+
+' For Each over a Split result lives for the loop
+Dim e As Variant, r As String
+For Each e In Split("p q r")
+    r = r & e & "|"
+Next
+? r
+
+' Exit For out of a For Each over a Split result
+Dim e As Variant, r As String
+For Each e In Split("p q r")
+    r = r & e
+    If e = "q" Then Exit For
+Next
+? r
+
+' ReDim inside a For Each over the array raises 10 and leaves it as it was
+Dim a() As Long, e As Variant
+ReDim a(2): a(0) = 1: a(1) = 2: a(2) = 3
+On Error Resume Next
+For Each e In a
+ReDim a(5)
+? Err.Number
+Exit For
+Next
+On Error GoTo 0
+? UBound(a)
+? a(1)
+
+' ReDim Preserve inside a For Each over the array raises 10
+Dim a() As Long, e As Variant
+ReDim a(2): a(0) = 1: a(1) = 2: a(2) = 3
+On Error Resume Next
+For Each e In a
+ReDim Preserve a(5)
+? Err.Number
+Exit For
+Next
+On Error GoTo 0
+? UBound(a)
+
+' Erase inside a For Each over the array raises 10
+Dim a() As Long, e As Variant
+ReDim a(2): a(0) = 1: a(1) = 2: a(2) = 3
+On Error Resume Next
+For Each e In a
+Erase a
+? Err.Number
+Exit For
+Next
+On Error GoTo 0
+? UBound(a)
+? a(2)
+
+' Assigning to an array inside a For Each over it raises 10
+Dim a() As Long, b() As Long, e As Variant
+ReDim a(2): a(0) = 1: a(1) = 2: a(2) = 3
+ReDim b(0): b(0) = 9
+On Error Resume Next
+For Each e In a
+a = b
+? Err.Number
+Exit For
+Next
+On Error GoTo 0
+? UBound(a)
+? a(0)
+
+' Assigning to a Variant holding the array inside a For Each over it raises 10
+Dim v As Variant, e As Variant
+v = Array(1, 2, 3)
+On Error Resume Next
+For Each e In v
+v = 5
+? Err.Number
+Exit For
+Next
+On Error GoTo 0
+? IsArray(v)
+? UBound(v)
+
+' For Each reads the array's elements as they are when it reaches them
+Dim a() As Long, e As Variant
+ReDim a(2): a(0) = 1: a(1) = 2: a(2) = 3
+For Each e In a
+If e = 1 Then a(2) = 99
+? e
+Next
+
+' A fixed-length String array's elements start as nulls
+Dim a(1) As String * 3
+? Len(a(0))
+? AscW(a(0))
+? LenB(a(1))
+
+' A fixed-length String array element pads and truncates
+Dim a(1) As String * 3
+a(0) = "ab"
+a(1) = "abcdef"
+? "[" & a(0) & "]"
+? a(1)
+
+' Erase on a fixed-length String array resets its elements
+Dim a(1) As String * 3
+a(0) = "abc"
+Erase a
+? Len(a(0))
+? AscW(a(0))
+
+' A dynamic fixed-length String array through ReDim, ReDim Preserve, and Erase
+Dim d() As String * 3, n As Long
+ReDim d(1)
+? Len(d(0)) & " " & AscW(d(1))
+d(0) = "xy"
+ReDim Preserve d(2)
+? "[" & d(0) & "]"
+? Len(d(2)) & " " & AscW(d(2))
+Erase d
+On Error Resume Next
+n = UBound(d)
+? Err.Number
+On Error GoTo 0
+
+' A fixed-length String array element passed ByRef takes the change cut to its length
+Dim a(1) As String * 3
+a(0) = "ab"
+Stretch a(0)
+? "[" & a(0) & "]"
+
+' Elements of typed integer arrays compare as integers, alone and inside a Boolean operator
+Dim b() As Long
+ReDim b(0 To 1)
+b(0) = 2
+b(1) = 5
+Dim c As Long
+c = 3
+? c >= b(0) And c <= b(1)
+Dim m(0 To 1) As Integer
+Dim n(0 To 1) As Long
+m(0) = 1
+n(0) = 4
+? m(0) < n(0)
+? n(0) = 4
+? n(1) > m(0)

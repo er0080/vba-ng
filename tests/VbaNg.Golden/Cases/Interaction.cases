@@ -1,0 +1,313 @@
+' Interaction: IIf, Choose, Switch, Partition, Environ, object creation, and Collection.
+' MsgBox, InputBox, SendKeys, and Beep are left out: they are modal, interactive, or audible.
+
+' IIf picks the true part
+? IIf(True, "yes", "no")
+
+' IIf picks the false part
+? IIf(0, "yes", "no")
+
+' IIf evaluates both parts
+Dim z As Long
+? IIf(True, 1, 1 / z)
+
+' IIf with a Null condition
+? IIf(Null, 1, 2)
+
+' IIf with a String condition
+? IIf("True", 1, 2)
+
+' IIf with a non-numeric String condition
+? IIf("abc", 1, 2)
+
+' IIf keeps the part's type
+Dim i As Integer
+i = 5
+? IIf(True, i, "x")
+
+' IIf with a Null part
+? IIf(False, 1, Null)
+
+' IIf with an Empty condition
+Dim v As Variant
+? IIf(v, 1, 2)
+
+' IIf with a fractional condition
+? IIf(0.4, 1, 2)
+
+' Choose the second
+? Choose(2, "a", "b", "c")
+
+' Choose out of range returns Null
+? Choose(4, "a", "b", "c")
+
+' Choose zero returns Null
+? Choose(0, "a", "b")
+
+' Choose with a fractional index truncates
+? Choose(1.9, "a", "b")
+
+' Choose evaluates every choice
+Dim z As Long
+? Choose(1, "a", 1 / z)
+
+' Choose with a Null index
+? Choose(Null, "a")
+
+' Choose with a String index
+? Choose("2", "a", "b")
+
+' Choose keeps the choice's type
+? Choose(1, CByte(5), "b")
+
+' Switch returns the first match
+? Switch(False, 1, True, 2, True, 3)
+
+' Switch with no match returns Null
+? Switch(False, 1, False, 2)
+
+' Switch evaluates every expression
+Dim z As Long
+? Switch(True, 1, True, 1 / z)
+
+' Switch with an odd number of arguments
+? Switch(True, 1, False)
+
+' Switch with a Null condition
+? Switch(Null, 1, True, 2)
+
+' Partition in range
+? Partition(5, 0, 99, 10)
+
+' Partition below the start
+? Partition(-5, 0, 99, 10)
+
+' Partition above the stop
+? Partition(150, 0, 99, 10)
+
+' Partition with an interval of one
+? Partition(5, 0, 9, 1)
+
+' Partition with padding widths
+? Partition(5, 0, 999, 100)
+
+' Partition at a boundary
+? Partition(10, 0, 99, 10)
+
+' Partition with an interval larger than the range
+? Partition(5, 0, 9, 100)
+
+' Partition with a zero interval
+? Partition(5, 0, 9, 0)
+
+' Partition with the start above the stop
+? Partition(5, 9, 0, 1)
+
+' Partition with Null
+? Partition(Null, 0, 9, 1)
+
+' Partition with a negative start
+? Partition(-5, -10, 10, 5)
+
+' Partition with a fractional number
+? Partition(5.5, 0, 9, 1)
+
+' Partition with a large stop
+? Partition(5, 0, 1000000, 10)
+
+' Environ with an empty name
+? Environ("")
+
+' Environ with an unknown name
+? Environ("VBANG_GOLDEN_UNDEFINED_VARIABLE")
+
+' Environ with a zero index
+? Environ(0)
+
+' Environ with a negative index
+? Environ(-1)
+
+' Environ with a huge index
+? Environ(10000)
+
+' Environ with Null
+? Environ(Null)
+
+' CreateObject with an unknown class
+? TypeName(CreateObject("VbaNg.Golden.DoesNotExist"))
+
+' CreateObject with an empty class
+? TypeName(CreateObject(""))
+
+' CreateObject of a Scripting Dictionary
+? TypeName(CreateObject("Scripting.Dictionary"))
+
+' GetObject with an empty path
+? TypeName(GetObject(""))
+
+' GetObject with an unknown file
+? TypeName(GetObject("C:\vbang-golden-does-not-exist.xyz"))
+
+' CallByName on a Collection
+Dim c As New Collection
+c.Add "x"
+? CallByName(c, "Count", VbGet)
+
+' CallByName with an unknown member
+Dim c As New Collection
+? CallByName(c, "Bogus", VbGet)
+
+' CallByName with an item argument
+Dim c As New Collection
+c.Add "x"
+? CallByName(c, "Item", VbGet, 1)
+
+' CallByName invoking a method
+Dim c As New Collection
+CallByName c, "Add", VbMethod, "y"
+? c.Count
+
+' CallByName on Nothing
+Dim o As Object
+? CallByName(o, "Count", VbGet)
+
+' TypeName of a new Collection
+? TypeName(New Collection)
+
+' DoEvents returns zero
+? DoEvents
+
+' AppActivate with an unknown title
+AppActivate "VbaNg Golden Window That Does Not Exist"
+? "activated"
+
+' Shell with an empty command
+? Shell("")
+
+' Shell with an unknown command
+? Shell("vbang-golden-does-not-exist.exe")
+
+' Collection Count starts at zero
+Dim c As New Collection
+? c.Count
+
+' Collection Add and Item
+Dim c As New Collection
+c.Add "a"
+c.Add "b"
+? c(1)
+? c.Item(2)
+
+' Collection Add with a key
+Dim c As New Collection
+c.Add "a", "first"
+? c("first")
+
+' Collection Add with a duplicate key
+Dim c As New Collection
+c.Add "a", "k"
+c.Add "b", "k"
+
+' Collection Item with an unknown key
+Dim c As New Collection
+c.Add "a", "k"
+? c("zzz")
+
+' Collection Item with an index out of range
+Dim c As New Collection
+c.Add "a"
+? c(2)
+
+' Collection Item with index zero
+Dim c As New Collection
+c.Add "a"
+? c(0)
+
+' Collection Add before
+Dim c As New Collection
+c.Add "a"
+c.Add "b", , 1
+? c(1)
+
+' Collection Add after
+Dim c As New Collection
+c.Add "a"
+c.Add "b", , , 1
+? c(2)
+
+' Collection Add with both before and after
+Dim c As New Collection
+c.Add "a"
+c.Add "b", , 1, 1
+
+' Collection Remove
+Dim c As New Collection
+c.Add "a"
+c.Add "b"
+c.Remove 1
+? c(1)
+
+' Collection Remove with a key
+Dim c As New Collection
+c.Add "a", "k"
+c.Remove "k"
+? c.Count
+
+' Collection Remove out of range
+Dim c As New Collection
+c.Remove 1
+
+' Collection keys are case insensitive
+Dim c As New Collection
+c.Add "a", "Key"
+? c("KEY")
+
+' Collection key of a number
+Dim c As New Collection
+c.Add "a", "1"
+? c(1)
+
+' Collection Item with a Double index rounds
+Dim c As New Collection
+c.Add "a"
+c.Add "b"
+? c(1.5)
+
+' Collection Item with a String index that is not a key
+Dim c As New Collection
+c.Add "a"
+? c("1")
+
+' Collection For Each order
+Dim c As New Collection
+c.Add "a"
+c.Add "b", , 1
+Dim e As Variant
+For Each e In c
+? e
+Next
+
+' Collection holding an object
+Dim c As New Collection
+c.Add New Collection
+? TypeName(c(1))
+
+' Collection holding an array
+Dim c As New Collection
+c.Add Array(1, 2)
+? c(1)
+
+' Collection Item of a Null key
+Dim c As New Collection
+c.Add "a", "k"
+? c(Null)
+
+' Collection Add with a numeric key
+Dim c As New Collection
+c.Add "a", 1
+
+' Collection Add with an Empty key
+Dim c As New Collection
+Dim v As Variant
+c.Add "a", v
+? c.Count

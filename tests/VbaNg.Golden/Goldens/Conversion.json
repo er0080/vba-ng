@@ -1,0 +1,5087 @@
+{
+  "area": "Conversion",
+  "excel": "16.0.20326",
+  "culture": "en-US",
+  "options": [],
+  "cases": [
+    {
+      "name": "CInt rounds half to even",
+      "source": [
+        "? CInt(2.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CInt rounds half to even upward",
+      "source": [
+        "? CInt(3.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CInt rounds a negative half to even",
+      "source": [
+        "? CInt(-2.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "-2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CInt of a value just above half",
+      "source": [
+        "? CInt(2.5000001)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CInt overflow",
+      "source": [
+        "Dim v As Variant",
+        "v = 32768",
+        "? CInt(v)"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CInt of a value that rounds to the maximum",
+      "source": [
+        "Dim v As Variant",
+        "v = 32767.4",
+        "? CInt(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "32767"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CInt of a value that rounds past the maximum",
+      "source": [
+        "Dim v As Variant",
+        "v = 32767.5",
+        "? CInt(v)"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CInt of a numeric String",
+      "source": [
+        "? CInt(\"12\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "12"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CInt of a String with spaces",
+      "source": [
+        "? CInt(\" 12 \")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "12"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CInt of a String with an exponent",
+      "source": [
+        "? CInt(\"1e3\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CInt of a hex String",
+      "source": [
+        "? CInt(\"&H10\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "16"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CInt of an octal String",
+      "source": [
+        "? CInt(\"&O10\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CInt of a String with a thousands separator",
+      "source": [
+        "? CInt(\"1,000\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CInt of an empty String",
+      "source": [
+        "? CInt(\"\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CInt of a non-numeric String",
+      "source": [
+        "? CInt(\"abc\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CInt of a String with a trailing letter",
+      "source": [
+        "? CInt(\"12abc\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CInt of a decimal String rounds",
+      "source": [
+        "? CInt(\"2.5\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CInt of a String with a leading plus",
+      "source": [
+        "? CInt(\"+5\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CInt of a String with a trailing minus",
+      "source": [
+        "? CInt(\"5-\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "-5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CInt of a String with a currency symbol",
+      "source": [
+        "? CInt(\"$5\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CInt of a String with a percent sign",
+      "source": [
+        "? CInt(\"50%\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CInt of a String with parentheses",
+      "source": [
+        "? CInt(\"(5)\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "-5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CInt of True",
+      "source": [
+        "? CInt(True)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "-1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CInt of Empty",
+      "source": [
+        "Dim v As Variant",
+        "? CInt(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CInt of Null",
+      "source": [
+        "? CInt(Null)"
+      ],
+      "results": [],
+      "error": {
+        "number": 94,
+        "description": "Invalid use of Null",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CInt of a Date",
+      "source": [
+        "? CInt(#1/1/2020#)"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CInt of a Currency",
+      "source": [
+        "? CInt(CCur(2.5))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CInt of a Decimal",
+      "source": [
+        "? CInt(CDec(2.5))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CInt of a Single",
+      "source": [
+        "Dim s As Single",
+        "s = 2.5",
+        "? CInt(s)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CInt of a String that is only a decimal point",
+      "source": [
+        "? CInt(\".\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CInt of a String with a trailing tab",
+      "source": [
+        "? CInt(\"7\" & vbTab)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CInt of a String with a leading newline",
+      "source": [
+        "? CInt(vbLf & \"7\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CInt of an Error value",
+      "source": [
+        "? CInt(CVErr(5))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CLng rounds half to even",
+      "source": [
+        "? CLng(2.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CLng rounds a negative half to even",
+      "source": [
+        "? CLng(-3.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "-4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CLng overflow",
+      "source": [
+        "Dim d As Double",
+        "d = 2147483648#",
+        "? CLng(d)"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CLng of the Long minimum",
+      "source": [
+        "Dim d As Double",
+        "d = -2147483648#",
+        "? CLng(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "-2147483648"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CLng of a hex String with sixteen bits set",
+      "source": [
+        "? CLng(\"&HFFFF\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "65535"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CLng of a hex String with a Long suffix",
+      "source": [
+        "? CLng(\"&HFFFF&\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CLng of a String with an exponent and a decimal",
+      "source": [
+        "? CLng(\"1.5e3\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1500"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CLng of a Boolean",
+      "source": [
+        "? CLng(True)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "-1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CLng of a Date at noon",
+      "source": [
+        "? CLng(#1/1/2020 12:00:00 PM#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "43832"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CLng of a Date just before noon",
+      "source": [
+        "? CLng(#1/1/2020 11:59:59 AM#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "43831"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CLng of a Date at noon on an odd serial",
+      "source": [
+        "? CLng(#1/2/2020 12:00:00 PM#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "43832"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CLngLng of a large Double",
+      "source": [
+        "Dim d As Double",
+        "d = 1E+15",
+        "? CLngLng(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "1000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CLngLng rounds half to even",
+      "source": [
+        "? CLngLng(2.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CLngLng overflow",
+      "source": [
+        "Dim d As Double",
+        "d = 1E+19",
+        "? CLngLng(d)"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CLngPtr of a value",
+      "source": [
+        "? CLngPtr(5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CByte of 255",
+      "source": [
+        "? CByte(255)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Byte",
+            "value": "255"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CByte overflow",
+      "source": [
+        "Dim v As Variant",
+        "v = 256",
+        "? CByte(v)"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CByte of a negative",
+      "source": [
+        "Dim v As Variant",
+        "v = -1",
+        "? CByte(v)"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CByte of a small negative that rounds to zero",
+      "source": [
+        "Dim v As Variant",
+        "v = -0.4",
+        "? CByte(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Byte",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CByte rounds half to even",
+      "source": [
+        "? CByte(2.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Byte",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CByte of a String",
+      "source": [
+        "? CByte(\"200\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Byte",
+            "value": "200"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CByte of True",
+      "source": [
+        "? CByte(True)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Byte",
+            "value": "255"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CBool of the String True",
+      "source": [
+        "? CBool(\"True\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CBool of the String false in lower case",
+      "source": [
+        "? CBool(\"false\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CBool of a numeric String",
+      "source": [
+        "? CBool(\"1\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CBool of a zero String",
+      "source": [
+        "? CBool(\"0\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CBool of a non-numeric String",
+      "source": [
+        "? CBool(\"abc\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CBool of zero",
+      "source": [
+        "? CBool(0)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CBool of a fraction",
+      "source": [
+        "? CBool(0.1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CBool of Empty",
+      "source": [
+        "Dim v As Variant",
+        "? CBool(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CBool of Null",
+      "source": [
+        "? CBool(Null)"
+      ],
+      "results": [],
+      "error": {
+        "number": 94,
+        "description": "Invalid use of Null",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CBool of an empty String",
+      "source": [
+        "? CBool(\"\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CBool of a String with spaces",
+      "source": [
+        "? CBool(\" True \")"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CBool of a hash-delimited String",
+      "source": [
+        "? CBool(\"#TRUE#\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CBool of a negative String",
+      "source": [
+        "? CBool(\"-1\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CBool of a Date",
+      "source": [
+        "? CBool(#1/1/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDbl of a String",
+      "source": [
+        "? CDbl(\"1.5\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1.5",
+            "bits": "3FF8000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDbl of a String with an exponent",
+      "source": [
+        "? CDbl(\"1.5E+300\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1.5E+300",
+            "bits": "7E41EB2D66005835"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDbl of a String with a leading dot",
+      "source": [
+        "? CDbl(\".5\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": ".5",
+            "bits": "3FE0000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDbl of a String with a trailing dot",
+      "source": [
+        "? CDbl(\"5.\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "5",
+            "bits": "4014000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDbl of a String with thousands separators",
+      "source": [
+        "? CDbl(\"1,234.5\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1234.5",
+            "bits": "40934A0000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDbl of a String with a misplaced thousands separator",
+      "source": [
+        "? CDbl(\"12,34.5\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1234.5",
+            "bits": "40934A0000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDbl of a Currency",
+      "source": [
+        "? CDbl(CCur(1.5))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1.5",
+            "bits": "3FF8000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDbl of a Single keeps the Single value",
+      "source": [
+        "Dim s As Single",
+        "s = 0.1",
+        "? CDbl(s)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": ".100000001490116",
+            "bits": "3FB99999A0000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDbl of a Date",
+      "source": [
+        "? CDbl(#1/1/2020 6:00:00 AM#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "43831.25",
+            "bits": "40E566E800000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDbl of True",
+      "source": [
+        "? CDbl(True)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "-1",
+            "bits": "BFF0000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDbl of Empty",
+      "source": [
+        "Dim v As Variant",
+        "? CDbl(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "0",
+            "bits": "0000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDbl of Null",
+      "source": [
+        "? CDbl(Null)"
+      ],
+      "results": [],
+      "error": {
+        "number": 94,
+        "description": "Invalid use of Null",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CDbl of a Decimal",
+      "source": [
+        "? CDbl(CDec(\"0.1\"))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": ".1",
+            "bits": "3FB999999999999A"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDbl overflow from a String",
+      "source": [
+        "? CDbl(\"1E400\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CDbl of a hex String",
+      "source": [
+        "? CDbl(\"&HFF\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "255",
+            "bits": "406FE00000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CSng of a Double",
+      "source": [
+        "? CSng(0.1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Single",
+            "value": ".1",
+            "bits": "3DCCCCCD"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CSng of a String",
+      "source": [
+        "? CSng(\"3.14159265358979\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Single",
+            "value": "3.141593",
+            "bits": "40490FDB"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CSng overflow",
+      "source": [
+        "Dim d As Double",
+        "d = 1E+39",
+        "? CSng(d)"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CSng of a Long beyond twenty-four bits",
+      "source": [
+        "Dim l As Long",
+        "l = 16777217",
+        "? CSng(l)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Single",
+            "value": "1.677722E+07",
+            "bits": "4B800000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CSng of a tiny Double underflows to zero",
+      "source": [
+        "Dim d As Double",
+        "d = 1E-50",
+        "? CSng(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Single",
+            "value": "0",
+            "bits": "00000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CCur of a Double",
+      "source": [
+        "? CCur(1.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Currency",
+            "value": "1.5",
+            "bits": "0000000000003A98"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CCur rounds to four places",
+      "source": [
+        "? CCur(1.00005)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Currency",
+            "value": "1.0001",
+            "bits": "0000000000002711"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CCur rounds a fifth-place five",
+      "source": [
+        "? CCur(1.00015)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Currency",
+            "value": "1.0002",
+            "bits": "0000000000002712"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CCur rounds a fifth-place four down",
+      "source": [
+        "? CCur(1.00004)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Currency",
+            "value": "1",
+            "bits": "0000000000002710"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CCur of a negative that rounds",
+      "source": [
+        "? CCur(-1.00005)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Currency",
+            "value": "-1.0001",
+            "bits": "FFFFFFFFFFFFD8EF"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CCur of a String",
+      "source": [
+        "? CCur(\"1.5\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Currency",
+            "value": "1.5",
+            "bits": "0000000000003A98"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CCur of a String with a currency symbol",
+      "source": [
+        "? CCur(\"$1.50\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Currency",
+            "value": "1.5",
+            "bits": "0000000000003A98"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CCur overflow",
+      "source": [
+        "Dim d As Double",
+        "d = 1E+15",
+        "? CCur(d)"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CCur of True",
+      "source": [
+        "? CCur(True)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Currency",
+            "value": "-1",
+            "bits": "FFFFFFFFFFFFD8F0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CCur of Null",
+      "source": [
+        "? CCur(Null)"
+      ],
+      "results": [],
+      "error": {
+        "number": 94,
+        "description": "Invalid use of Null",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CCur of Empty",
+      "source": [
+        "Dim v As Variant",
+        "? CCur(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Currency",
+            "value": "0",
+            "bits": "0000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CCur of a Decimal with more than four places",
+      "source": [
+        "? CCur(CDec(\"1.23456\"))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Currency",
+            "value": "1.2346",
+            "bits": "000000000000303A"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDec of a String",
+      "source": [
+        "? CDec(\"0.1\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Decimal",
+            "value": ".1",
+            "bytes": "0E000100000000000100000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDec of a String with many digits",
+      "source": [
+        "? CDec(\"1234567890123456789012345678\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Decimal",
+            "value": "1234567890123456789012345678",
+            "bytes": "0E000000EB35FD034EF338BE917A796D"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDec of a Double",
+      "source": [
+        "? CDec(0.1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Decimal",
+            "value": ".1",
+            "bytes": "0E000100000000000100000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDec of a String with trailing zeros keeps the scale",
+      "source": [
+        "? CDec(\"1.500\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Decimal",
+            "value": "1.5",
+            "bytes": "0E000100000000000F00000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDec of a negative",
+      "source": [
+        "? CDec(\"-1.5\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Decimal",
+            "value": "-1.5",
+            "bytes": "0E000180000000000F00000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDec of a Currency",
+      "source": [
+        "? CDec(CCur(1.5))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Decimal",
+            "value": "1.5",
+            "bytes": "0E00040000000000983A000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDec overflow",
+      "source": [
+        "? CDec(\"1E29\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CDec of True",
+      "source": [
+        "? CDec(True)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Decimal",
+            "value": "-1",
+            "bytes": "0E000080000000000100000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDec of Null",
+      "source": [
+        "? CDec(Null)"
+      ],
+      "results": [],
+      "error": {
+        "number": 94,
+        "description": "Invalid use of Null",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CDec of an Integer",
+      "source": [
+        "Dim i As Integer",
+        "i = 5",
+        "? CDec(i)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Decimal",
+            "value": "5",
+            "bytes": "0E000000000000000500000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDec of a Double with an exponent",
+      "source": [
+        "? CDec(1E+20)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Decimal",
+            "value": "100000000000000000000",
+            "bytes": "0E00000005000000000010632D5EC76B"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDec of a String with an exponent",
+      "source": [
+        "? CDec(\"1E-5\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Decimal",
+            "value": ".00001",
+            "bytes": "0E000500000000000100000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDec of zero",
+      "source": [
+        "? CDec(0)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Decimal",
+            "value": "0",
+            "bytes": "0E000000000000000000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDec of a negative zero String",
+      "source": [
+        "? CDec(\"-0.0\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Decimal",
+            "value": "0",
+            "bytes": "0E000180000000000000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDec of Strings with trailing zeros and the scale each keeps",
+      "source": [
+        "? CDec(\"1.0\")",
+        "? CDec(\"1.000\")",
+        "? CDec(\"0.00\")",
+        "? CDec(\"10.0\")",
+        "? CDec(\"100\")",
+        "? CDec(\"1.50\")",
+        "? CDec(\"0\")",
+        "? CDec(\"-0\")",
+        "? CDec(\".0\")",
+        "? CDec(\"0.10\")",
+        "? CDec(\"1E2\")",
+        "? CDec(\"1.5E1\")",
+        "? CDec(\"1.50E1\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Decimal",
+            "value": "1",
+            "bytes": "0E000000000000000100000000000000"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Decimal",
+            "value": "1",
+            "bytes": "0E000000000000000100000000000000"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Decimal",
+            "value": "0",
+            "bytes": "0E000200000000000000000000000000"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Decimal",
+            "value": "10",
+            "bytes": "0E000000000000000A00000000000000"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Decimal",
+            "value": "100",
+            "bytes": "0E000000000000006400000000000000"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "Decimal",
+            "value": "1.5",
+            "bytes": "0E000100000000000F00000000000000"
+          }
+        },
+        {
+          "index": 6,
+          "value": {
+            "type": "Decimal",
+            "value": "0",
+            "bytes": "0E000000000000000000000000000000"
+          }
+        },
+        {
+          "index": 7,
+          "value": {
+            "type": "Decimal",
+            "value": "0",
+            "bytes": "0E000080000000000000000000000000"
+          }
+        },
+        {
+          "index": 8,
+          "value": {
+            "type": "Decimal",
+            "value": "0",
+            "bytes": "0E000100000000000000000000000000"
+          }
+        },
+        {
+          "index": 9,
+          "value": {
+            "type": "Decimal",
+            "value": ".1",
+            "bytes": "0E000100000000000100000000000000"
+          }
+        },
+        {
+          "index": 10,
+          "value": {
+            "type": "Decimal",
+            "value": "100",
+            "bytes": "0E000000000000006400000000000000"
+          }
+        },
+        {
+          "index": 11,
+          "value": {
+            "type": "Decimal",
+            "value": "15",
+            "bytes": "0E000000000000000F00000000000000"
+          }
+        },
+        {
+          "index": 12,
+          "value": {
+            "type": "Decimal",
+            "value": "15",
+            "bytes": "0E000000000000000F00000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of True",
+      "source": [
+        "? CStr(True)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of False",
+      "source": [
+        "? CStr(False)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a Double",
+      "source": [
+        "? CStr(1.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1.5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a Double with fifteen digits",
+      "source": [
+        "Dim d As Double",
+        "d = 1 / 3",
+        "? CStr(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "0.333333333333333"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a Double that needs an exponent",
+      "source": [
+        "Dim d As Double",
+        "d = 1E+20",
+        "? CStr(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1E+20"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a small Double",
+      "source": [
+        "Dim d As Double",
+        "d = 0.0001",
+        "? CStr(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "0.0001"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a smaller Double",
+      "source": [
+        "Dim d As Double",
+        "d = 0.00001",
+        "? CStr(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "0.00001"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a Double at the exponent threshold",
+      "source": [
+        "Dim d As Double",
+        "d = 123456789012345#",
+        "? CStr(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "123456789012345"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a Double just past the exponent threshold",
+      "source": [
+        "Dim d As Double",
+        "d = 1234567890123456#",
+        "? CStr(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1.23456789012346E+15"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a Double with sixteen significant digits",
+      "source": [
+        "Dim d As Double",
+        "d = 0.1234567890123456",
+        "? CStr(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "0.123456789012346"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a negative fraction",
+      "source": [
+        "Dim d As Double",
+        "d = -0.5",
+        "? CStr(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "-0.5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a positive fraction keeps the leading zero",
+      "source": [
+        "Dim d As Double",
+        "d = 0.5",
+        "? CStr(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "0.5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of negative zero",
+      "source": [
+        "Dim d As Double",
+        "d = -1",
+        "d = d * 0",
+        "? CStr(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "-0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a Single",
+      "source": [
+        "Dim s As Single",
+        "s = 0.1",
+        "? CStr(s)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "0.1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a Single with seven digits",
+      "source": [
+        "Dim s As Single",
+        "s = 1 / 3",
+        "? CStr(s)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "0.3333333"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a large Single",
+      "source": [
+        "Dim s As Single",
+        "s = 1E+20",
+        "? CStr(s)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1E+20"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a Currency",
+      "source": [
+        "? CStr(CCur(1.5))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1.5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a Currency with four places",
+      "source": [
+        "? CStr(CCur(\"1.2345\"))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1.2345"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a whole Currency",
+      "source": [
+        "? CStr(CCur(2))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a Decimal",
+      "source": [
+        "? CStr(CDec(\"1.500\"))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1.5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a Date",
+      "source": [
+        "? CStr(#1/2/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1/2/2020"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a Date with time",
+      "source": [
+        "? CStr(#1/2/2020 3:04:05 PM#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1/2/2020 3:04:05 PM"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a time only",
+      "source": [
+        "? CStr(#3:04:05 PM#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "3:04:05 PM"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a Date whose time lies just below its second",
+      "source": [
+        "? CStr(#9/11/2026 2:30:00 PM#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "9/11/2026 2:30:00 PM"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a Date at midnight",
+      "source": [
+        "? CStr(#1/2/2020 12:00:00 AM#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1/2/2020"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of Empty",
+      "source": [
+        "Dim v As Variant",
+        "? CStr(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of Null",
+      "source": [
+        "? CStr(Null)"
+      ],
+      "results": [],
+      "error": {
+        "number": 94,
+        "description": "Invalid use of Null",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CStr of a Byte",
+      "source": [
+        "? CStr(CByte(5))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a negative Long",
+      "source": [
+        "Dim l As Long",
+        "l = -2147483647",
+        "? CStr(l)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "-2147483647"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a LongLong",
+      "source": [
+        "Dim l As LongLong",
+        "l = 9223372036854775807^",
+        "? CStr(l)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "9223372036854775807"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of an Error value",
+      "source": [
+        "? CStr(CVErr(5))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Error 5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of an integral Double",
+      "source": [
+        "Dim d As Double",
+        "d = 100",
+        "? CStr(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "100"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a Double with a negative exponent",
+      "source": [
+        "Dim d As Double",
+        "d = 1.5E-10",
+        "? CStr(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "0.00000000015"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CVar of an Integer",
+      "source": [
+        "? CVar(5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CVar of a String",
+      "source": [
+        "? CVar(\"5\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CVErr of a number",
+      "source": [
+        "? CVErr(2007)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Error",
+            "value": "-2146826281"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CVErr of an out-of-range number",
+      "source": [
+        "Dim v As Variant",
+        "v = 65536",
+        "? CVErr(v)"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CVErr of a negative number",
+      "source": [
+        "Dim v As Variant",
+        "v = -1",
+        "? CVErr(v)"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CVErr of a String",
+      "source": [
+        "? CVErr(\"5\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Error",
+            "value": "-2146828283"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDate of a number",
+      "source": [
+        "? CDate(43831)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-01 00:00:00",
+            "bits": "40E566E000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDate of zero",
+      "source": [
+        "? CDate(0)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "1899-12-30 00:00:00",
+            "bits": "0000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDate of a negative number with a fraction",
+      "source": [
+        "? CDate(-1.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "1899-12-29 12:00:00",
+            "bits": "BFF8000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDate of a fraction",
+      "source": [
+        "? CDate(0.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "1899-12-30 12:00:00",
+            "bits": "3FE0000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDate of an ISO String",
+      "source": [
+        "? CDate(\"2020-01-02\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 00:00:00",
+            "bits": "40E5670000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDate of a month-day-year String",
+      "source": [
+        "? CDate(\"1/2/2020\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 00:00:00",
+            "bits": "40E5670000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDate of a String with a month name",
+      "source": [
+        "? CDate(\"2 Jan 2020\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 00:00:00",
+            "bits": "40E5670000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDate of a time String",
+      "source": [
+        "? CDate(\"13:04:05\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "1899-12-30 13:04:05",
+            "bits": "3FE16C901E573AC9"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDate of a twelve-hour time String",
+      "source": [
+        "? CDate(\"1:04:05 PM\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "1899-12-30 13:04:05",
+            "bits": "3FE16C901E573AC9"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDate of a date and time String",
+      "source": [
+        "? CDate(\"2020-01-02 13:04:05\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 13:04:05",
+            "bits": "40E567116C901E57"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDate of a two-digit year",
+      "source": [
+        "? CDate(\"1/2/20\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 00:00:00",
+            "bits": "40E5670000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDate of a two-digit year in the past window",
+      "source": [
+        "? CDate(\"1/2/30\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2030-01-02 00:00:00",
+            "bits": "40E72FA000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDate of an invalid String",
+      "source": [
+        "? CDate(\"abc\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CDate of a numeric String",
+      "source": [
+        "? CDate(\"43831\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-01 00:00:00",
+            "bits": "40E566E000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDate of an empty String",
+      "source": [
+        "? CDate(\"\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CDate of Null",
+      "source": [
+        "? CDate(Null)"
+      ],
+      "results": [],
+      "error": {
+        "number": 94,
+        "description": "Invalid use of Null",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CDate of Empty",
+      "source": [
+        "Dim v As Variant",
+        "? CDate(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "1899-12-30 00:00:00",
+            "bits": "0000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDate of a day out of range",
+      "source": [
+        "? CDate(\"2/30/2020\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CDate of a Double out of range",
+      "source": [
+        "Dim d As Double",
+        "d = 3000000",
+        "? CDate(d)"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CDate of True",
+      "source": [
+        "? CDate(True)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "1899-12-29 00:00:00",
+            "bits": "BFF0000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CDate of a String with a period separator",
+      "source": [
+        "? CDate(\"1.2.2020\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "CDate of a day-month-year String that is not a valid month first",
+      "source": [
+        "? CDate(\"13/2/2020\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-02-13 00:00:00",
+            "bits": "40E56C4000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Val of a String with trailing letters",
+      "source": [
+        "? Val(\"12abc\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "12",
+            "bits": "4028000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Val of a String with embedded spaces",
+      "source": [
+        "? Val(\" 1 2 3 \")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "123",
+            "bits": "405EC00000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Val of a String with a tab and a newline",
+      "source": [
+        "? Val(\"1\" & vbTab & \"2\" & vbCr & \"3\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "123",
+            "bits": "405EC00000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Val of a hex String",
+      "source": [
+        "? Val(\"&HFF\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "255",
+            "bits": "406FE00000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Val of a hex String with a Long suffix",
+      "source": [
+        "? Val(\"&HFFFF&\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "65535",
+            "bits": "40EFFFE000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Val of a hex String that reads as a negative Integer",
+      "source": [
+        "? Val(\"&HFFFF\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "-1",
+            "bits": "BFF0000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Val of an octal String",
+      "source": [
+        "? Val(\"&O17\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "15",
+            "bits": "402E000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Val of an exponent",
+      "source": [
+        "? Val(\"1e3\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1000",
+            "bits": "408F400000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Val of a decimal",
+      "source": [
+        "? Val(\"1.5\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1.5",
+            "bits": "3FF8000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Val of a comma",
+      "source": [
+        "? Val(\"1,5\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1",
+            "bits": "3FF0000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Val of an empty String",
+      "source": [
+        "? Val(\"\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "0",
+            "bits": "0000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Val of a non-numeric String",
+      "source": [
+        "? Val(\"abc\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "0",
+            "bits": "0000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Val of a String with a leading plus",
+      "source": [
+        "? Val(\"+5\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "5",
+            "bits": "4014000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Val of a String with a leading minus and spaces",
+      "source": [
+        "? Val(\" - 5\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "-5",
+            "bits": "C014000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Val of a String with two dots",
+      "source": [
+        "? Val(\"1.2.3\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1.2",
+            "bits": "3FF3333333333333"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Val of a String with a type suffix",
+      "source": [
+        "? Val(\"12&\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "12",
+            "bits": "4028000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Val of a String with an exponent and no digits",
+      "source": [
+        "? Val(\"1e\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1",
+            "bits": "3FF0000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Val of a String with a D exponent",
+      "source": [
+        "? Val(\"1d3\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1000",
+            "bits": "408F400000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Val of a long number",
+      "source": [
+        "? Val(\"123456789012345678901234567890\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1.23456789012346E+29",
+            "bits": "45F8EE90FF6C373E"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Val of an ampersand alone",
+      "source": [
+        "? Val(\"&\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "0",
+            "bits": "0000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Val returns Double even for whole numbers",
+      "source": [
+        "? VarType(Val(\"5\"))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Val of Null",
+      "source": [
+        "? Val(Null)"
+      ],
+      "results": [],
+      "error": {
+        "number": 94,
+        "description": "Invalid use of Null",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Val of a number",
+      "source": [
+        "? Val(12)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "12",
+            "bits": "4028000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Str of a positive number has a leading space",
+      "source": [
+        "? Str(5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": " 5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Str of a negative number",
+      "source": [
+        "? Str(-5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "-5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Str of a fraction has no leading zero",
+      "source": [
+        "? Str(0.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": " .5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Str of a negative fraction",
+      "source": [
+        "? Str(-0.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "-.5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Str of a large Double",
+      "source": [
+        "Dim d As Double",
+        "d = 1E+20",
+        "? Str(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": " 1E+20"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Str of a Boolean",
+      "source": [
+        "? Str(True)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Str of a Date",
+      "source": [
+        "? Str(#1/2/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1/2/2020"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Str of a numeric String",
+      "source": [
+        "? Str(\"5\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": " 5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Str of a non-numeric String",
+      "source": [
+        "? Str(\"a\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Str of Null",
+      "source": [
+        "? Str(Null)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Str of Empty",
+      "source": [
+        "Dim v As Variant",
+        "? Str(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": " 0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Str of a Currency",
+      "source": [
+        "? Str(CCur(\"1.2345\"))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": " 1.2345"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Str of a Decimal",
+      "source": [
+        "? Str(CDec(\"1.500\"))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": " 1.5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Str of a Single",
+      "source": [
+        "Dim s As Single",
+        "s = 0.1",
+        "? Str(s)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": " .1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hex of an Integer",
+      "source": [
+        "? Hex(255)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "FF"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hex of a negative Integer is sixteen bits",
+      "source": [
+        "Dim i As Integer",
+        "i = -1",
+        "? Hex(i)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "FFFF"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hex of a negative Long is thirty-two bits",
+      "source": [
+        "Dim l As Long",
+        "l = -1",
+        "? Hex(l)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "FFFFFFFF"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hex of a negative Variant Integer",
+      "source": [
+        "Dim v As Variant",
+        "v = -1",
+        "? Hex(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "FFFF"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hex of a Double rounds first",
+      "source": [
+        "? Hex(255.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "100"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hex of a Double rounds half to even",
+      "source": [
+        "? Hex(254.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "FE"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hex of a String",
+      "source": [
+        "? Hex(\"255\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "FF"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hex of a hex String",
+      "source": [
+        "? Hex(\"&HFF\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "FF"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hex of a large Double",
+      "source": [
+        "Dim d As Double",
+        "d = 4294967295#",
+        "? Hex(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "FFFFFFFF"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hex of a Double beyond Long range",
+      "source": [
+        "Dim d As Double",
+        "d = 4294967296#",
+        "? Hex(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "100000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hex of a negative Double",
+      "source": [
+        "Dim d As Double",
+        "d = -1",
+        "? Hex(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "FFFFFFFFFFFFFFFF"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hex of Null",
+      "source": [
+        "? Hex(Null)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hex of Empty",
+      "source": [
+        "Dim v As Variant",
+        "? Hex(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hex of a Byte",
+      "source": [
+        "? Hex(CByte(15))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "F"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hex of a LongLong",
+      "source": [
+        "Dim l As LongLong",
+        "l = -1",
+        "? Hex(l)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "FFFFFFFFFFFFFFFF"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hex of a Currency",
+      "source": [
+        "? Hex(CCur(255))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "FF"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hex of a Boolean",
+      "source": [
+        "? Hex(True)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "FFFF"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hex of a Decimal",
+      "source": [
+        "? Hex(CDec(255))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "FF"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hex returns String",
+      "source": [
+        "? VarType(Hex(255))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Oct of an Integer",
+      "source": [
+        "? Oct(8)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "10"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Oct of a negative Integer",
+      "source": [
+        "Dim i As Integer",
+        "i = -1",
+        "? Oct(i)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "177777"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Oct of a negative Long",
+      "source": [
+        "Dim l As Long",
+        "l = -1",
+        "? Oct(l)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "37777777777"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Oct of a Double rounds first",
+      "source": [
+        "? Oct(8.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "10"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Oct of a String",
+      "source": [
+        "? Oct(\"8\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "10"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Int of a negative fraction",
+      "source": [
+        "? Int(-1.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "-2",
+            "bits": "C000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Fix of a negative fraction",
+      "source": [
+        "? Fix(-1.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "-1",
+            "bits": "BFF0000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Int of a positive fraction",
+      "source": [
+        "? Int(1.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1",
+            "bits": "3FF0000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Int of a Double returns Double",
+      "source": [
+        "? VarType(Int(1.5))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Int of an Integer returns Integer",
+      "source": [
+        "Dim i As Integer",
+        "i = 5",
+        "? Int(i)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Int of a Currency returns Currency",
+      "source": [
+        "? Int(CCur(1.5))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Currency",
+            "value": "1",
+            "bits": "0000000000002710"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Int of a negative Currency",
+      "source": [
+        "? Int(CCur(-1.5))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Currency",
+            "value": "-2",
+            "bits": "FFFFFFFFFFFFB1E0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Int of a Decimal",
+      "source": [
+        "? Int(CDec(\"-1.5\"))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Decimal",
+            "value": "-2",
+            "bytes": "0E000080000000000200000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Int of a String",
+      "source": [
+        "? Int(\"-1.5\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "-2",
+            "bits": "C000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Int of a Single",
+      "source": [
+        "Dim s As Single",
+        "s = -1.5",
+        "? Int(s)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Single",
+            "value": "-2",
+            "bits": "C0000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Int of a Date",
+      "source": [
+        "? Int(#1/2/2020 6:00:00 PM#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 00:00:00",
+            "bits": "40E5670000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Int of Null",
+      "source": [
+        "? Int(Null)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Int of Empty",
+      "source": [
+        "Dim v As Variant",
+        "? Int(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Fix of a String",
+      "source": [
+        "? Fix(\"-1.5\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "-1",
+            "bits": "BFF0000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Fix of a Boolean",
+      "source": [
+        "? Fix(True)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "-1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Fix of a Byte",
+      "source": [
+        "? Fix(CByte(5))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Byte",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of a Double into an Integer rounds",
+      "source": [
+        "Dim i As Integer",
+        "i = 2.5",
+        "? i"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of a Double into an Integer rounds up at odd",
+      "source": [
+        "Dim i As Integer",
+        "i = 3.5",
+        "? i"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of a Double into a Long",
+      "source": [
+        "Dim l As Long",
+        "l = -2.5",
+        "? l"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "-2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of a numeric String into an Integer",
+      "source": [
+        "Dim i As Integer",
+        "i = \"3\"",
+        "? i"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of a String into a Double",
+      "source": [
+        "Dim d As Double",
+        "d = \"1e3\"",
+        "? d"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "1000",
+            "bits": "408F400000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of a non-numeric String into a Long",
+      "source": [
+        "Dim l As Long, s As String",
+        "s = \"abc\"",
+        "l = s",
+        "? l"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Let coercion of a Boolean into an Integer",
+      "source": [
+        "Dim i As Integer",
+        "i = True",
+        "? i"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "-1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of a number into a Boolean",
+      "source": [
+        "Dim b As Boolean",
+        "b = 2",
+        "? b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of a String into a Boolean",
+      "source": [
+        "Dim b As Boolean",
+        "b = \"True\"",
+        "? b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of a numeric String into a Boolean",
+      "source": [
+        "Dim b As Boolean",
+        "b = \"0\"",
+        "? b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of a Double into a String",
+      "source": [
+        "Dim s As String",
+        "s = 1.5",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1.5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of a Boolean into a String",
+      "source": [
+        "Dim s As String",
+        "s = True",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of a Date into a String",
+      "source": [
+        "Dim s As String",
+        "s = #1/2/2020#",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1/2/2020"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of a Long into a Byte overflows",
+      "source": [
+        "Dim b As Byte, l As Long",
+        "l = 256",
+        "b = l",
+        "? b"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Let coercion of a Long into a Byte within range",
+      "source": [
+        "Dim b As Byte, l As Long",
+        "l = 255",
+        "b = l",
+        "? b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Byte",
+            "value": "255"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of a negative Double into a Byte",
+      "source": [
+        "Dim b As Byte, d As Double",
+        "d = -0.4",
+        "b = d",
+        "? b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Byte",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of a Double into a Currency rounds to four places",
+      "source": [
+        "Dim c As Currency",
+        "c = 1.00005",
+        "? c"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Currency",
+            "value": "1.0001",
+            "bits": "0000000000002711"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of a Double into a Single",
+      "source": [
+        "Dim s As Single",
+        "s = 0.1",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Single",
+            "value": ".1",
+            "bits": "3DCCCCCD"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of a Double into a Date",
+      "source": [
+        "Dim d As Date",
+        "d = 43831.5",
+        "? d"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-01 12:00:00",
+            "bits": "40E566F000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of a String into a Date",
+      "source": [
+        "Dim d As Date",
+        "d = \"2020-01-02\"",
+        "? d"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 00:00:00",
+            "bits": "40E5670000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of an Integer into a Variant keeps the type",
+      "source": [
+        "Dim v As Variant, i As Integer",
+        "i = 5",
+        "v = i",
+        "? v"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of Null into a String",
+      "source": [
+        "Dim s As String",
+        "s = Null",
+        "? s"
+      ],
+      "results": [],
+      "error": {
+        "number": 94,
+        "description": "Invalid use of Null",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Let coercion of Null into a Long",
+      "source": [
+        "Dim l As Long",
+        "l = Null",
+        "? l"
+      ],
+      "results": [],
+      "error": {
+        "number": 94,
+        "description": "Invalid use of Null",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Let coercion of Null into a Boolean",
+      "source": [
+        "Dim b As Boolean",
+        "b = Null",
+        "? b"
+      ],
+      "results": [],
+      "error": {
+        "number": 94,
+        "description": "Invalid use of Null",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Let coercion of Empty into a Long",
+      "source": [
+        "Dim l As Long, v As Variant",
+        "l = v",
+        "? l"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of Empty into a String",
+      "source": [
+        "Dim s As String, v As Variant",
+        "s = v",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of Empty into a Boolean",
+      "source": [
+        "Dim b As Boolean, v As Variant",
+        "b = v",
+        "? b"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of Empty into a Date",
+      "source": [
+        "Dim d As Date, v As Variant",
+        "d = v",
+        "? d"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "1899-12-30 00:00:00",
+            "bits": "0000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of an Error value into a Long",
+      "source": [
+        "Dim l As Long",
+        "l = CVErr(5)",
+        "? l"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Let coercion of an Error value into a Variant keeps it",
+      "source": [
+        "Dim v As Variant",
+        "v = CVErr(5)",
+        "? v"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Error",
+            "value": "-2146828283"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of a Decimal into a Long",
+      "source": [
+        "Dim l As Long",
+        "l = CDec(\"2.5\")",
+        "? l"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of a Currency into an Integer rounds",
+      "source": [
+        "Dim i As Integer",
+        "i = CCur(\"2.5\")",
+        "? i"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of a Single into a Double widens the Single value",
+      "source": [
+        "Dim s As Single, d As Double",
+        "s = 0.1",
+        "d = s",
+        "? d"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": ".100000001490116",
+            "bits": "3FB99999A0000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of a Long into a Single loses precision",
+      "source": [
+        "Dim l As Long, s As Single",
+        "l = 123456789",
+        "s = l",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Single",
+            "value": "1.234568E+08",
+            "bits": "4CEB79A3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of a String with spaces into a Long",
+      "source": [
+        "Dim l As Long",
+        "l = \" 42 \"",
+        "? l"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "42"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of a hex String into a Long",
+      "source": [
+        "Dim l As Long",
+        "l = \"&HFF\"",
+        "? l"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "255"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let coercion of an exponent String into an Integer",
+      "source": [
+        "Dim i As Integer",
+        "i = \"1E2\"",
+        "? i"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "100"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of one E minus fourteen",
+      "source": [
+        "Dim d As Double",
+        "d = 1E-14",
+        "? CStr(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "0.00000000000001"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of one E minus fifteen",
+      "source": [
+        "Dim d As Double",
+        "d = 1E-15",
+        "? CStr(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "0.000000000000001"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of one E minus sixteen",
+      "source": [
+        "Dim d As Double",
+        "d = 1E-16",
+        "? CStr(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1E-16"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of one E minus twenty",
+      "source": [
+        "Dim d As Double",
+        "d = 1E-20",
+        "? CStr(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1E-20"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of one and a half E minus fifteen",
+      "source": [
+        "Dim d As Double",
+        "d = 1.5E-15",
+        "? CStr(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1.5E-15"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of one and a half E minus sixteen",
+      "source": [
+        "Dim d As Double",
+        "d = 1.5E-16",
+        "? CStr(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1.5E-16"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a fifteen-digit fraction with leading zeros",
+      "source": [
+        "Dim d As Double",
+        "d = 0.000123456789012345",
+        "? CStr(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1.23456789012345E-04"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a sixteen-digit fraction with leading zeros",
+      "source": [
+        "Dim d As Double",
+        "d = 0.0001234567890123456",
+        "? CStr(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1.23456789012346E-04"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of one E fifteen",
+      "source": [
+        "Dim d As Double",
+        "d = 1E+15",
+        "? CStr(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1E+15"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of one E sixteen",
+      "source": [
+        "Dim d As Double",
+        "d = 1E+16",
+        "? CStr(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1E+16"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a number with fifteen integral digits and a fraction",
+      "source": [
+        "Dim d As Double",
+        "d = 123456789012345.6",
+        "? CStr(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "123456789012346"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a Single below the fixed range",
+      "source": [
+        "Dim s As Single",
+        "s = 0.00001",
+        "? CStr(s)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "0.00001"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a smaller Single",
+      "source": [
+        "Dim s As Single",
+        "s = 0.000001",
+        "? CStr(s)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "0.000001"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a tiny Single",
+      "source": [
+        "Dim s As Single",
+        "s = 1.5E-08",
+        "? CStr(s)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1.5E-08"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a Single with seven integral digits",
+      "source": [
+        "Dim s As Single",
+        "s = 1234567.5",
+        "? CStr(s)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1234568"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a Single with eight integral digits",
+      "source": [
+        "Dim s As Single",
+        "s = 12345678",
+        "? CStr(s)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1.234568E+07"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a Double with a negative exponent and many digits",
+      "source": [
+        "Dim d As Double",
+        "d = 1.23456789012345E-10",
+        "? CStr(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1.23456789012345E-10"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a Double with a negative exponent that needs sixteen digits",
+      "source": [
+        "Dim d As Double",
+        "d = 1.2345678901234567E-10",
+        "? CStr(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1.23456789012346E-10"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Str of one E minus sixteen",
+      "source": [
+        "Dim d As Double",
+        "d = 1E-16",
+        "? Str(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": " 1E-16"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of the smallest positive Double",
+      "source": [
+        "Dim d As Double",
+        "d = 4.94065645841247E-324",
+        "? CStr(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "4.94065645841247E-324"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of the largest Double",
+      "source": [
+        "Dim d As Double",
+        "d = 1.79769313486231E+308",
+        "? CStr(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1.79769313486231E+308"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a Currency with a large value",
+      "source": [
+        "? CStr(CCur(\"922337203685477.5807\"))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "922337203685477.5807"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a negative Currency",
+      "source": [
+        "? CStr(CCur(\"-0.5\"))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "-0.5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a Decimal with many digits",
+      "source": [
+        "? CStr(CDec(\"0.1234567890123456789012345678\"))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "0.1234567890123456789012345678"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a negative Decimal fraction",
+      "source": [
+        "? CStr(CDec(\"-0.5\"))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "-0.5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a Long",
+      "source": [
+        "? CStr(2147483647)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "2147483647"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CStr of a Long minimum",
+      "source": [
+        "Dim l As Long",
+        "l = -2147483648#",
+        "? CStr(l)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "-2147483648"
+          }
+        }
+      ]
+    }
+  ]
+}

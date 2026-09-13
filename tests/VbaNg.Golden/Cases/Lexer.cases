@@ -1,0 +1,77 @@
+' Lexer: what the VBE accepts that MS-VBAL section 3 does not describe, or describes
+' differently (docs/vba-quirks.md, the Lexer rows): a string literal left open at the end of
+' the line, a line continuation inside a comment, type suffixes against operators, the bare
+' octal prefix, whitespace after a continuation, the reversed comparison operators, and a
+' name followed by a colon at the start of a line.
+
+' A string literal left open is closed by the end of the line
+Dim s As String
+s = "open
+? s
+? Len(s)
+
+' A line continuation inside a comment continues the comment
+Dim n As Long
+n = 1
+' this comment continues _
+n = 2
+? n
+
+' A suffixed name declared with a suffix
+Dim x&
+x& = 5
+? x& + 1
+? TypeName(x)
+
+' A suffixed name before a parenthesis is an array
+Dim x&(5)
+x&(3) = 7
+? x&(3)
+? UBound(x)
+
+' A Single suffix before a separator
+Dim y!
+y! = 1.5
+? y!
+? TypeName(y)
+
+' The bare octal prefix in operand position
+? &17
+
+' The hexadecimal prefix after an operand is a literal
+Dim x As Long
+x = 1
+? x + &H10
+
+' Whitespace after the continuation character
+Dim n As Long
+n = 1 + _
+    2
+? n
+
+' The reversed less-or-equal operator
+? 1 =< 2
+? 3 =< 2
+
+' The reversed greater-or-equal operator
+? 2 => 1
+? 2 => 3
+
+' The reversed not-equal operator
+? 1 >< 2
+? 2 >< 2
+
+' A name followed by a colon at the start of a line is a label
+Dim x As Long
+Beep: x = 1
+? x
+
+' A statement after a label on the same line runs
+Dim x As Long
+Start: x = 3
+? x
+
+' A line number followed by a colon
+Dim x As Long
+10: x = 4
+? x

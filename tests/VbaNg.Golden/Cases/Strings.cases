@@ -1,0 +1,966 @@
+' Strings: the Strings module of the VBA standard library under Option Compare Binary. Format lives in Format.cases.
+
+' Len of a String
+? Len("hello")
+
+' Len of an empty String
+? Len("")
+
+' Len of a Long variable is its byte size
+Dim l As Long
+l = 5
+? Len(l)
+
+' Len of an Integer variable
+Dim i As Integer
+? Len(i)
+
+' Len of a Double variable
+Dim d As Double
+? Len(d)
+
+' Len of a Currency variable
+Dim c As Currency
+? Len(c)
+
+' Len of a Date variable
+Dim d As Date
+? Len(d)
+
+' Len of a Boolean variable
+Dim b As Boolean
+? Len(b)
+
+' Len of a Byte variable
+Dim b As Byte
+? Len(b)
+
+' Len of a Single variable
+Dim s As Single
+? Len(s)
+
+' Len of a LongLong variable
+Dim l As LongLong
+? Len(l)
+
+' Len of a Variant holding a number counts its text
+Dim v As Variant
+v = 12345
+? Len(v)
+
+' Len of a Variant holding a Double counts its text
+Dim v As Variant
+v = 1.5
+? Len(v)
+
+' Len of Null
+? Len(Null)
+
+' Len of Empty
+Dim v As Variant
+? Len(v)
+
+' Len of a fixed-length String
+Dim s As String * 5
+s = "ab"
+? Len(s)
+
+' A fixed-length String pads with spaces
+Dim s As String * 5
+s = "ab"
+? s
+
+' A fixed-length String truncates
+Dim s As String * 3
+s = "abcdef"
+? s
+
+' A fixed-length String starts as nulls
+Dim s As String * 3
+? s
+
+' LenB of a String counts bytes
+? LenB("hello")
+
+' LenB of a Long variable
+Dim l As Long
+? LenB(l)
+
+' LenB of a Variant holding a number
+Dim v As Variant
+v = 12345
+? LenB(v)
+
+' Left of a String
+? Left("hello", 2)
+
+' Left with a length beyond the String
+? Left("hello", 10)
+
+' Left with zero length
+? Left("hello", 0)
+
+' Left with a negative length
+? Left("hello", -1)
+
+' Left of Null
+? Left(Null, 1)
+
+' Left of a number
+? Left(12345, 2)
+
+' Left with a Double length rounds
+? Left("hello", 2.5)
+
+' Left with a String length
+? Left("hello", "2")
+
+' Left with a Null length
+? Left("hello", Null)
+
+' Left of Empty
+Dim v As Variant
+? Left(v, 1)
+
+' Right of a String
+? Right("hello", 2)
+
+' Right with a length beyond the String
+? Right("hello", 10)
+
+' Right of Null
+? Right(Null, 1)
+
+' Right with a negative length
+? Right("hello", -1)
+
+' Mid from a start
+? Mid("hello", 2)
+
+' Mid with a length
+? Mid("hello", 2, 2)
+
+' Mid past the end
+? Mid("hello", 10)
+
+' Mid with a zero start
+? Mid("hello", 0)
+
+' Mid with a negative length
+? Mid("hello", 1, -1)
+
+' Mid with a length beyond the end
+? Mid("hello", 4, 10)
+
+' Mid of Null
+? Mid(Null, 1)
+
+' Mid dollar of Null
+? Mid$(Null, 1)
+
+' Mid with zero length
+? Mid("hello", 2, 0)
+
+' Mid of a number
+? Mid(12345, 2, 2)
+
+' Mid with a Double start rounds
+? Mid("hello", 2.5)
+
+' Mid statement replaces characters
+Dim s As String
+s = "hello"
+Mid(s, 2, 2) = "EY"
+? s
+
+' Mid statement does not extend the String
+Dim s As String
+s = "hello"
+Mid(s, 4) = "LOWORLD"
+? s
+
+' Mid statement with a length longer than the replacement
+Dim s As String
+s = "hello"
+Mid(s, 1, 3) = "A"
+? s
+
+' Mid statement with a start past the end
+Dim s As String
+s = "hello"
+Mid(s, 6) = "X"
+? s
+
+' Mid statement with a start beyond the end
+Dim s As String
+s = "hello"
+Mid(s, 7) = "X"
+? s
+
+' Mid statement with a zero start
+Dim s As String
+s = "hello"
+Mid(s, 0) = "X"
+? s
+
+' InStr finds a substring
+? InStr("hello", "l")
+
+' InStr with a start position
+? InStr(3, "hello", "l")
+
+' InStr with a start past the last match
+? InStr(5, "hello", "l")
+
+' InStr with a start at the end plus one
+? InStr(6, "hello", "l")
+
+' InStr with a start beyond the String
+? InStr(7, "hello", "l")
+
+' InStr with a zero start
+? InStr(0, "hello", "l")
+
+' InStr with an empty search String
+? InStr("hello", "")
+
+' InStr in an empty String
+? InStr("", "a")
+
+' InStr of two empty Strings
+? InStr("", "")
+
+' InStr with an empty search and a start
+? InStr(3, "hello", "")
+
+' InStr with a start past the end and an empty search
+? InStr(9, "hello", "")
+
+' InStr is case sensitive under Option Compare Binary
+? InStr("hello", "L")
+
+' InStr with vbTextCompare
+? InStr(1, "hello", "L", vbTextCompare)
+
+' InStr with Null
+? InStr(Null, "a")
+
+' InStr with a Null search String
+? InStr("a", Null)
+
+' InStr with an Empty search String
+Dim v As Variant
+? InStr("hello", v)
+
+' InStr with numbers
+? InStr(12345, 34)
+
+' InStr with a substring that is not found
+? InStr("hello", "z")
+
+' InStr with a Double start rounds
+? InStr(2.5, "hello", "l")
+
+' InStr with an invalid compare mode
+? InStr(1, "hello", "l", 5)
+
+' InStr returns Long
+? VarType(InStr("a", "a"))
+
+' InStrRev finds the last occurrence
+? InStrRev("hello", "l")
+
+' InStrRev with a start
+? InStrRev("hello", "l", 3)
+
+' InStrRev with a start of minus one
+? InStrRev("hello", "l", -1)
+
+' InStrRev with a start of zero
+? InStrRev("hello", "l", 0)
+
+' InStrRev with an empty search String
+? InStrRev("hello", "")
+
+' InStrRev with an empty search String and a start
+? InStrRev("hello", "", 3)
+
+' InStrRev with a start beyond the String
+? InStrRev("hello", "l", 10)
+
+' InStrRev with text compare
+? InStrRev("hello", "L", -1, vbTextCompare)
+
+' InStrRev with Null
+? InStrRev(Null, "l")
+
+' InStrRev with a start of minus two
+? InStrRev("hello", "l", -2)
+
+' Replace all occurrences
+? Replace("hello", "l", "L")
+
+' Replace with a count
+? Replace("hello", "l", "L", 1, 1)
+
+' Replace with a start drops the prefix
+? Replace("hello", "l", "L", 3)
+
+' Replace with a start past the end
+? Replace("hello", "l", "L", 6)
+
+' Replace with a start beyond the end
+? Replace("hello", "l", "L", 7)
+
+' Replace with a zero start
+? Replace("hello", "l", "L", 0)
+
+' Replace with a zero count
+? Replace("hello", "l", "L", 1, 0)
+
+' Replace with an empty find String
+? Replace("hello", "", "L")
+
+' Replace with an empty replacement deletes
+? Replace("hello", "l", "")
+
+' Replace in an empty String
+? Replace("", "l", "L")
+
+' Replace with text compare
+? Replace("hello", "L", "x", 1, -1, vbTextCompare)
+
+' Replace with Null
+? Replace(Null, "l", "L")
+
+' Replace with a Null find String
+? Replace("hello", Null, "L")
+
+' Replace with a Null replacement
+? Replace("hello", "l", Null)
+
+' Replace with a negative count
+? Replace("hello", "l", "L", 1, -2)
+
+' Replace with a zero start and a count
+? Replace("hello", "l", "L", 0, 1)
+
+' Replace with overlapping matches
+? Replace("aaa", "aa", "b")
+
+' Replace with numbers
+? Replace(12321, 2, 9)
+
+' UCase of a String
+? UCase("Hello, World!")
+
+' UCase of a sharp s
+? UCase(ChrW(223))
+
+' UCase of an accented letter
+? UCase(ChrW(233))
+
+' UCase of a Greek letter
+? UCase(ChrW(945))
+
+' UCase of a dotless i
+? UCase(ChrW(305))
+
+' UCase of a ligature
+? UCase(ChrW(64257))
+
+' UCase of Null
+? UCase(Null)
+
+' UCase of a number
+? UCase(1.5)
+
+' UCase of Empty
+Dim v As Variant
+? UCase(v)
+
+' LCase of a String
+? LCase("Hello, World!")
+
+' LCase of a capital I with a dot
+? LCase(ChrW(304))
+
+' LCase of a Greek capital
+? LCase(ChrW(937))
+
+' LCase of Null
+? LCase(Null)
+
+' Trim removes leading and trailing spaces
+? Trim("  a b  ")
+
+' Trim does not remove tabs
+? Trim(vbTab & "a" & vbTab)
+
+' Trim does not remove non-breaking spaces
+? Trim(ChrW(160) & "a")
+
+' Trim does not remove newlines
+? Trim(vbCrLf & "a")
+
+' Trim of Null
+? Trim(Null)
+
+' Trim of a number
+? Trim(5)
+
+' Trim of Empty
+Dim v As Variant
+? Trim(v)
+
+' LTrim removes leading spaces
+? LTrim("  a  ")
+
+' RTrim removes trailing spaces
+? RTrim("  a  ")
+
+' Space builds spaces
+? Space(3)
+
+' Space of zero
+? Space(0)
+
+' Space of a negative
+? Space(-1)
+
+' Space of a Double rounds
+? Space(2.5)
+
+' Space of Null
+? Space(Null)
+
+' String repeats the first character
+? String(3, "ab")
+
+' String with a character code
+? String(3, 65)
+
+' String with a code above 255
+? String(2, 8364)
+
+' String with a code above 65535
+? String(2, 65601)
+
+' String with a negative code
+? String(2, -1)
+
+' String with zero count
+? String(0, "a")
+
+' String with a negative count
+? String(-1, "a")
+
+' String with an empty character
+? String(3, "")
+
+' String with Null
+? String(3, Null)
+
+' String with a Null count
+? String(Null, "a")
+
+' String with a numeric String character
+? String(2, "65")
+
+' StrReverse of a String
+? StrReverse("hello")
+
+' StrReverse of an empty String
+? StrReverse("")
+
+' StrReverse of Null
+? StrReverse(Null)
+
+' StrReverse of a number
+? StrReverse(123)
+
+' StrComp binary less
+? StrComp("a", "b")
+
+' StrComp binary equal
+? StrComp("a", "a")
+
+' StrComp binary greater
+? StrComp("b", "a")
+
+' StrComp case under binary compare
+? StrComp("a", "A")
+
+' StrComp case under text compare
+? StrComp("a", "A", vbTextCompare)
+
+' StrComp of different lengths
+? StrComp("a", "ab")
+
+' StrComp with Null
+? StrComp(Null, "a")
+
+' StrComp with an invalid compare mode
+? StrComp("a", "b", 5)
+
+' StrComp of an accented letter under text compare
+? StrComp(ChrW(233), "E", vbTextCompare)
+
+' StrComp of accented and plain letters under binary compare
+? StrComp(ChrW(233), "e")
+
+' StrComp of numbers compares their text
+? StrComp(10, 9)
+
+' StrComp returns Integer
+? VarType(StrComp("a", "b"))
+
+' StrComp of a sharp s and ss under text compare
+? StrComp(ChrW(223), "ss", vbTextCompare)
+
+' StrComp of a ligature under text compare
+? StrComp(ChrW(64257), "fi", vbTextCompare)
+
+' StrComp of a hyphen and a letter under text compare
+? StrComp("-", "a", vbTextCompare)
+
+' StrComp of a hyphenated word under text compare
+? StrComp("co-op", "coop", vbTextCompare)
+
+' StrComp of a hyphenated word under binary compare
+? StrComp("co-op", "coop")
+
+' Split on a comma
+? Split("a,b,c", ",")
+
+' Split on the default space
+? Split("a b  c")
+
+' Split of an empty String is an empty array
+? Split("")
+
+' Split with a limit
+? Split("a,b,c", ",", 2)
+
+' Split with a limit of zero
+? Split("a,b,c", ",", 0)
+
+' Split with a limit of minus one
+? Split("a,b,c", ",", -1)
+
+' Split with a limit of minus two
+? Split("a,b,c", ",", -2)
+
+' Split with a multi-character delimiter
+? Split("a::b::c", "::")
+
+' Split with an empty delimiter returns the whole String
+? Split("abc", "")
+
+' Split with a trailing delimiter
+? Split("a,b,", ",")
+
+' Split with text compare
+? Split("aXbxc", "x", -1, vbTextCompare)
+
+' Split of Null
+? Split(Null, ",")
+
+' Split with a Null delimiter
+? Split("a,b", Null)
+
+' Split is zero-based
+? LBound(Split("a,b", ","))
+
+' Split of a number
+? Split(12321, 3)
+
+' Split with a delimiter longer than the String
+? Split("a", "abc")
+
+' Join with a delimiter
+? Join(Array("a", "b", "c"), "-")
+
+' Join with the default delimiter
+? Join(Array("a", "b"))
+
+' Join with an empty delimiter
+? Join(Array("a", "b"), "")
+
+' Join of an empty array
+? Join(Split(""), "-")
+
+' Join of numbers
+? Join(Array(1, 2.5, True), ",")
+
+' Join with Null elements
+? Join(Array("a", Null), ",")
+
+' Join with Empty elements
+? Join(Array("a", Empty, "b"), ",")
+
+' Join of a String
+? Join("abc", ",")
+
+' Join of a Long array
+Dim a(1) As Long
+a(0) = 1: a(1) = 2
+? Join(a, ",")
+
+' Join with a Null delimiter
+? Join(Array("a", "b"), Null)
+
+' Filter keeps matches
+? Filter(Array("apple", "banana", "cherry"), "an")
+
+' Filter excludes matches
+? Filter(Array("apple", "banana", "cherry"), "an", False)
+
+' Filter with text compare
+? Filter(Array("Apple", "banana"), "a", True, vbTextCompare)
+
+' Filter with no matches
+? Filter(Array("apple"), "z")
+
+' Filter with an empty match String
+? Filter(Array("apple", ""), "")
+
+' Filter of an empty array
+? Filter(Split(""), "a")
+
+' Filter of a String array
+? Filter(Split("a b ab"), "a")
+
+' Filter with a number
+? Filter(Array(1, 12, 3), 1)
+
+' Chr of 65
+? Chr(65)
+
+' Chr of zero
+? Chr(0)
+
+' Chr of 255
+? Chr(255)
+
+' Chr of 256
+? Chr(256)
+
+' Chr of a negative
+? Chr(-1)
+
+' Chr of 128
+? Chr(128)
+
+' Chr of 129
+? Chr(129)
+
+' Chr of 153
+? Chr(153)
+
+' Chr of a Double rounds
+? Chr(65.5)
+
+' Chr of Null
+? Chr(Null)
+
+' Chr of a String
+? Chr("65")
+
+' ChrW of 8364
+? ChrW(8364)
+
+' ChrW of a negative one
+? ChrW(-1)
+
+' ChrW of minus 32768
+? ChrW(-32768)
+
+' ChrW of 65535
+? ChrW(65535)
+
+' ChrW of 65536
+? ChrW(65536)
+
+' ChrW of a surrogate
+? ChrW(55357)
+
+' ChrB of 65
+? ChrB(65)
+
+' ChrB of 256
+? ChrB(256)
+
+' Asc of a letter
+? Asc("A")
+
+' Asc of a multi-character String uses the first character
+? Asc("AB")
+
+' Asc of an empty String
+? Asc("")
+
+' Asc of a euro sign
+? Asc(ChrW(8364))
+
+' Asc of a character outside the code page
+? Asc(ChrW(937))
+
+' Asc of an accented letter
+? Asc(ChrW(233))
+
+' Asc of Null
+? Asc(Null)
+
+' Asc of a number
+? Asc(12)
+
+' Asc returns Integer
+? VarType(Asc("A"))
+
+' AscW of a letter
+? AscW("A")
+
+' AscW of a high character is negative
+? AscW(ChrW(65535))
+
+' AscW of a euro sign
+? AscW(ChrW(8364))
+
+' AscW of an empty String
+? AscW("")
+
+' AscB of a letter
+? AscB("A")
+
+' AscB of a wide character
+? AscB(ChrW(8364))
+
+' LeftB of a String
+? LeftB("hello", 2)
+
+' LeftB with an odd length
+? LeftB("hello", 3)
+
+' RightB of a String
+? RightB("hello", 4)
+
+' MidB of a String
+? MidB("hello", 3, 2)
+
+' InStrB of a String
+? InStrB("hello", "l")
+
+' StrConv to upper case
+? StrConv("hello", vbUpperCase)
+
+' StrConv to lower case
+? StrConv("HELLO", vbLowerCase)
+
+' StrConv to proper case
+? StrConv("hello wORLD o'neil", vbProperCase)
+
+' StrConv proper case with punctuation
+? StrConv("a-b c.d", vbProperCase)
+
+' StrConv proper case with a tab
+? StrConv("a" & vbTab & "b", vbProperCase)
+
+' StrConv to Unicode doubles the byte length
+? LenB(StrConv("ab", vbUnicode))
+
+' StrConv to Unicode content
+? StrConv("ab", vbUnicode)
+
+' StrConv from Unicode
+? StrConv(StrConv("ab", vbUnicode), vbFromUnicode)
+
+' StrConv from Unicode halves the length
+? Len(StrConv("ab", vbFromUnicode))
+
+' StrConv from Unicode content
+? StrConv("ab", vbFromUnicode)
+
+' StrConv with an invalid conversion
+? StrConv("ab", 1024)
+
+' StrConv of Null
+? StrConv(Null, vbUpperCase)
+
+' StrConv to wide
+? StrConv("ab", vbWide)
+
+' StrConv to narrow
+? StrConv(ChrW(65313), vbNarrow)
+
+' StrConv with combined flags
+? StrConv("hello world", vbUpperCase + vbWide)
+
+' StrConv of a Byte array from Unicode
+Dim b(3) As Byte
+b(0) = 97: b(1) = 0: b(2) = 98: b(3) = 0
+? StrConv(b, vbUnicode)
+
+' A Byte array assigned from a String
+Dim b() As Byte
+b = "ab"
+? b
+
+' A String assigned from a Byte array
+Dim b(3) As Byte
+b(0) = 97: b(1) = 0: b(2) = 98: b(3) = 0
+Dim s As String
+s = b
+? s
+
+' A String assigned from an odd Byte array
+Dim b(2) As Byte
+b(0) = 97: b(1) = 0: b(2) = 98
+Dim s As String
+s = b
+? LenB(s)
+
+' Len and LenB of a one-byte string
+? Len(ChrB(65))
+? LenB(ChrB(65))
+
+' Two bytes concatenated make one code unit
+Dim v As Variant
+v = ChrB(65) & ChrB(66)
+? LenB(v)
+? Len(v)
+? AscW(v)
+
+' A byte joined to a character leaves an odd byte
+Dim v As Variant
+v = ChrB(65) & "a"
+? LenB(v)
+? Len(v)
+? AscW(v)
+
+' Len and LenB of an odd LeftB
+? Len(LeftB("hello", 3))
+? LenB(LeftB("hello", 3))
+
+' RightB with an odd length
+Dim v As Variant
+v = RightB("hello", 3)
+? LenB(v)
+? AscW(v)
+
+' MidB from an odd byte position
+Dim v As Variant
+v = MidB("hello", 2, 3)
+? LenB(v)
+? AscW(v)
+
+' AscB of odd strings
+? AscB(LeftB("hello", 3))
+? AscB(ChrB(200))
+
+' InStrB with a start and with a one-byte needle
+? InStrB(3, "hello", "l")
+? InStrB("hello", ChrB(108))
+? InStrB("hello", ChrB(0))
+
+' A one-byte string against a one-character string
+? ChrB(65) = "A"
+? StrComp(LeftB("hello", 3), "h")
+? LeftB("hello", 3) = "h"
+
+' StrConv from Unicode keeps every byte
+? LenB(StrConv("abc", vbFromUnicode))
+? Len(StrConv("abc", vbFromUnicode))
+? StrConv(ChrB(65) & ChrB(66), vbUnicode)
+
+' A Byte array from an odd string
+Dim b() As Byte
+b = LeftB("hello", 3)
+? UBound(b)
+? b(2)
+
+' CStr of a Byte array is its bytes as a String
+Dim b() As Byte
+b = "ab"
+? CStr(b)
+
+' CStr of a Variant holding a Byte array
+Dim b() As Byte
+Dim v As Variant
+b = "ab"
+v = b
+? CStr(v)
+
+' CStr of an odd Byte array keeps every byte
+Dim b() As Byte
+b = LeftB("hello", 3)
+? LenB(CStr(b))
+
+' CStr of a Variant holding a Long array
+Dim a(1) As Long
+Dim v As Variant
+v = a
+? CStr(v)
+
+' Mid of a string built from bytes
+? AscW(Mid(ChrB(65) & ChrB(66), 1, 1))
+? InStr(ChrB(65) & ChrB(66), ChrW(16961))
+
+' UCase of an odd string
+Dim v As Variant
+v = UCase(LeftB("hello", 3))
+? LenB(v)
+? v
+
+' String concatenation with a Null character
+? "a" & vbNullChar & "b"
+
+' Length of a String with a Null character
+? Len("a" & vbNullChar & "b")
+
+' String comparison stops at nothing
+? ("a" & vbNullChar & "b") = ("a" & vbNullChar & "c")
+
+' A String literal with a doubled quote
+? "say ""hi"""
+
+' Empty String literal
+? ""
+
+' A String repeated by concatenation in a loop
+Dim s As String, i As Long
+For i = 1 To 3
+s = s & i
+Next
+? s
+
+' Mid statement with the dollar suffix
+Dim s As String
+s = "hello"
+Mid$(s, 2, 2) = "EY"
+? s
+
+' The library's module qualifies a function without the VBA prefix
+? Strings.Left("abc", 1)
+? Strings.Len("abcd")
+? Math.Abs(-2)
+? Conversion.CStr(1.5)
+
+' Named arguments to the library's functions
+? Replace("aXbXc", "X", "-", Count:=1)
+? Mid(String:="hello", Start:=2, Length:=3)
+? Left(String:="hello", Length:=2)
+? Right(Length:=2, String:="hello")
+? Split(Expression:="a,b", Delimiter:=",")(1)
+? Format(Expression:=1.5, Format:="0.00")
+? IIf(Expression:=True, TruePart:="t", FalsePart:="f")
+? Round(Number:=2.567, NumDigitsAfterDecimal:=1)
+? DateAdd(Interval:="d", Number:=1, Date:=#1/1/2000#)
+
+' Named arguments to the library's functions that take them (InStr and StrComp take none)
+? Replace("aXbXc", "x", "-", Compare:=vbTextCompare)
+? Split("aXb", "x", Compare:=vbTextCompare)(0)
+? InStrRev(StringCheck:="abcabc", StringMatch:="c")
+? Filter(SourceArray:=Split("a,b", ","), Match:="a")(0)
+? Join(SourceArray:=Split("a,b", ","), Delimiter:="+")
+? UCase(String:="abc")

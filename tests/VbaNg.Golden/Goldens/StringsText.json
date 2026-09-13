@@ -1,0 +1,449 @@
+{
+  "area": "StringsText",
+  "excel": "16.0.20326",
+  "culture": "en-US",
+  "options": [
+    "Option Compare Text"
+  ],
+  "cases": [
+    {
+      "name": "Equality ignores case",
+      "source": [
+        "Dim s As String, t As String",
+        "s = \"a\": t = \"A\"",
+        "? s = t"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "An accented letter compared with its base letter",
+      "source": [
+        "Dim s As String, t As String",
+        "s = ChrW(233): t = \"e\"",
+        "? s = t"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Less-than uses text order",
+      "source": [
+        "Dim s As String, t As String",
+        "s = \"a\": t = \"B\"",
+        "? s < t"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Digits sort before letters",
+      "source": [
+        "? \"1\" < \"a\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "An underscore compared with a letter",
+      "source": [
+        "? \"_\" < \"a\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A hyphen is ignored when ordering words",
+      "source": [
+        "? \"co-op\" < \"coop\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A sharp s compared with ss",
+      "source": [
+        "? ChrW(223) = \"ss\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Ligature compared with its letters",
+      "source": [
+        "? ChrW(64257) = \"fi\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Comparison of Strings of different lengths",
+      "source": [
+        "? \"a\" < \"ab\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "InStr ignores case",
+      "source": [
+        "? InStr(\"hello\", \"L\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "InStr with an explicit binary compare",
+      "source": [
+        "? InStr(1, \"hello\", \"L\", vbBinaryCompare)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Like ignores case",
+      "source": [
+        "? \"A\" Like \"a\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Like with a character range ignores case",
+      "source": [
+        "? \"b\" Like \"[A-C]\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Replace ignores case",
+      "source": [
+        "? Replace(\"hello\", \"L\", \"x\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "hexxo"
+          }
+        }
+      ]
+    },
+    {
+      "name": "StrComp default ignores case",
+      "source": [
+        "? StrComp(\"a\", \"A\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "StrComp with an explicit binary compare",
+      "source": [
+        "? StrComp(\"a\", \"A\", vbBinaryCompare)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "StrComp orders lower case before upper case? text order of the same letter",
+      "source": [
+        "? StrComp(\"a\", \"A\", vbTextCompare)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Split ignores case",
+      "source": [
+        "? Split(\"aXbxc\", \"x\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String()",
+            "bounds": "0 To 2",
+            "items": [
+              {
+                "type": "String",
+                "value": "a"
+              },
+              {
+                "type": "String",
+                "value": "b"
+              },
+              {
+                "type": "String",
+                "value": "c"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Filter ignores case",
+      "source": [
+        "? Filter(Array(\"Apple\", \"banana\"), \"A\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String()",
+            "bounds": "0 To 1",
+            "items": [
+              {
+                "type": "String",
+                "value": "Apple"
+              },
+              {
+                "type": "String",
+                "value": "banana"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Select Case uses text comparison",
+      "source": [
+        "Dim s As String",
+        "s = \"A\"",
+        "Select Case s",
+        "Case \"a\"",
+        "? \"lower\"",
+        "Case Else",
+        "? \"other\"",
+        "End Select"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "lower"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Select Case with a range under text comparison",
+      "source": [
+        "Dim s As String",
+        "s = \"B\"",
+        "Select Case s",
+        "Case \"a\" To \"c\"",
+        "? \"in range\"",
+        "Case Else",
+        "? \"out of range\"",
+        "End Select"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "in range"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Numbers compared with Strings are still numeric comparisons",
+      "source": [
+        "Dim s As String",
+        "s = \"9\"",
+        "? 10 < s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Variant Strings compare as text",
+      "source": [
+        "Dim v As Variant, w As Variant",
+        "v = \"a\": w = \"A\"",
+        "? v = w"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "InStrRev ignores case",
+      "source": [
+        "? InStrRev(\"hello\", \"L\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Binary comparison of the same symbols",
+      "source": [
+        "? StrComp(\"_\", \"a\", vbBinaryCompare)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "-1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Empty compared with a String",
+      "source": [
+        "Dim v As Variant",
+        "? v = \"\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    }
+  ]
+}

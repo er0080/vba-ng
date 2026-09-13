@@ -1,0 +1,18 @@
+<Project>
+
+  <!-- Central package versions (CLAUDE.md R7). Every dependency is listed here with its license. -->
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>false</CentralPackageTransitivePinningEnabled>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Excel-DNA: the XLL host. License: zlib (permissive). -->
+    <PackageVersion Include="ExcelDna.AddIn" Version="1.9.0" />
+    <!-- Roslyn: compiles generated C#. License: MIT. -->
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.9.0" />
+    <!-- Test stack, run through Microsoft.Testing.Platform (see global.json). License: MIT. -->
+    <PackageVersion Include="xunit.v3" Version="4.0.0" />
+  </ItemGroup>
+
+</Project>

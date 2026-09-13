@@ -1,0 +1,345 @@
+' Financial: the Financial module of the VBA standard library. Results are Doubles compared bit for bit.
+
+' Pmt of a loan
+? Pmt(0.05 / 12, 360, 200000)
+
+' Pmt with a future value and type
+? Pmt(0.05 / 12, 360, 200000, 1000, 1)
+
+' Pmt with a zero rate
+? Pmt(0, 12, 1200)
+
+' Pmt with a zero period count
+? Pmt(0.05, 0, 1000)
+
+' Pmt with a negative period count
+? Pmt(0.05, -12, 1000)
+
+' Pmt with a Null rate
+? Pmt(Null, 12, 1000)
+
+' Pmt returns Double
+? VarType(Pmt(0.05, 12, 1000))
+
+' Pmt with a String rate
+? Pmt("0.05", 12, 1000)
+
+' Pmt with a type other than zero or one
+? Pmt(0.05, 12, 1000, 0, 2)
+
+' PV of an annuity
+? PV(0.05 / 12, 360, -1000)
+
+' PV with a zero rate
+? PV(0, 12, -100)
+
+' PV with a future value and type
+? PV(0.05 / 12, 360, -1000, 5000, 1)
+
+' FV of a series
+? FV(0.05 / 12, 120, -100)
+
+' FV with type one
+? FV(0.05 / 12, 120, -100, 0, 1)
+
+' FV with a zero rate
+? FV(0, 120, -100)
+
+' NPer of a loan
+? NPer(0.05 / 12, -1000, 200000)
+
+' NPer with a zero rate
+? NPer(0, -100, 1200)
+
+' NPer that cannot be reached
+? NPer(0.05, -1, 200000)
+
+' NPer with a zero payment and rate
+? NPer(0, 0, 1200)
+
+' Rate of a loan
+? Rate(360, -1073.64, 200000)
+
+' Rate with a guess
+? Rate(360, -1073.64, 200000, 0, 0, 0.01)
+
+' Rate that does not converge
+? Rate(2, 1, 1)
+
+' Rate with a zero period count
+? Rate(0, -100, 1000)
+
+' IPmt of the first period
+? IPmt(0.05 / 12, 1, 360, 200000)
+
+' IPmt of the last period
+? IPmt(0.05 / 12, 360, 360, 200000)
+
+' IPmt with a period out of range
+? IPmt(0.05 / 12, 0, 360, 200000)
+
+' IPmt with a period beyond the count
+? IPmt(0.05 / 12, 361, 360, 200000)
+
+' IPmt with type one
+? IPmt(0.05 / 12, 1, 360, 200000, 0, 1)
+
+' PPmt of the first period
+? PPmt(0.05 / 12, 1, 360, 200000)
+
+' PPmt of the last period
+? PPmt(0.05 / 12, 360, 360, 200000)
+
+' DDB depreciation
+? DDB(10000, 1000, 5, 1)
+
+' DDB of the last period
+? DDB(10000, 1000, 5, 5)
+
+' DDB with a factor
+? DDB(10000, 1000, 5, 1, 1.5)
+
+' DDB with a period beyond the life
+? DDB(10000, 1000, 5, 6)
+
+' DDB with a fractional period
+? DDB(10000, 1000, 5, 1.5)
+
+' DDB with a zero life
+? DDB(10000, 1000, 0, 1)
+
+' DDB with a salvage above the cost
+? DDB(1000, 10000, 5, 1)
+
+' DDB with a negative cost
+? DDB(-10000, 1000, 5, 1)
+
+' SLN depreciation
+? SLN(10000, 1000, 5)
+
+' SLN with a zero life
+? SLN(10000, 1000, 0)
+
+' SLN with a negative life
+? SLN(10000, 1000, -5)
+
+' SYD depreciation
+? SYD(10000, 1000, 5, 1)
+
+' SYD of the last period
+? SYD(10000, 1000, 5, 5)
+
+' SYD with a period beyond the life
+? SYD(10000, 1000, 5, 6)
+
+' SYD with a zero period
+? SYD(10000, 1000, 5, 0)
+
+' NPV of cash flows
+Dim flows(3) As Double
+flows(0) = -1000: flows(1) = 300: flows(2) = 400: flows(3) = 500
+? NPV(0.1, flows)
+
+' NPV with a zero rate
+Dim flows(1) As Double
+flows(0) = -100: flows(1) = 110
+? NPV(0, flows)
+
+' NPV with an unallocated array
+Dim flows() As Double
+? NPV(0.1, flows)
+
+' NPV with a rate of minus one
+Dim flows(1) As Double
+flows(0) = -100: flows(1) = 110
+? NPV(-1, flows)
+
+' IRR of cash flows
+Dim flows(3) As Double
+flows(0) = -1000: flows(1) = 300: flows(2) = 400: flows(3) = 500
+? IRR(flows)
+
+' IRR with a guess
+Dim flows(3) As Double
+flows(0) = -1000: flows(1) = 300: flows(2) = 400: flows(3) = 500
+? IRR(flows, 0.2)
+
+' IRR with all positive flows
+Dim flows(1) As Double
+flows(0) = 100: flows(1) = 100
+? IRR(flows)
+
+' IRR with a single flow
+Dim flows(0) As Double
+flows(0) = -100
+? IRR(flows)
+
+' IRR with a base-one array
+Dim flows(1 To 3) As Double
+flows(1) = -1000: flows(2) = 600: flows(3) = 600
+? IRR(flows)
+
+' MIRR of cash flows
+Dim flows(3) As Double
+flows(0) = -1000: flows(1) = 300: flows(2) = 400: flows(3) = 500
+? MIRR(flows, 0.1, 0.12)
+
+' MIRR with no negative flows
+Dim flows(1) As Double
+flows(0) = 100: flows(1) = 100
+? MIRR(flows, 0.1, 0.12)
+
+' MIRR with a finance rate of minus one
+Dim flows(1) As Double
+flows(0) = -100: flows(1) = 110
+? MIRR(flows, -1, 0.12)
+
+' IPmt of the second period
+? IPmt(0.05 / 12, 2, 360, 200000)
+
+' IPmt of period one hundred
+? IPmt(0.05 / 12, 100, 360, 200000)
+
+' IPmt of period three hundred
+? IPmt(0.05 / 12, 300, 360, 200000)
+
+' IPmt of the next to last period
+? IPmt(0.05 / 12, 359, 360, 200000)
+
+' FV of the previous period times the rate, second period
+? FV(0.05 / 12, 1, Pmt(0.05 / 12, 360, 200000), 200000) * (0.05 / 12)
+
+' FV of the previous period times the rate, period one hundred
+? FV(0.05 / 12, 99, Pmt(0.05 / 12, 360, 200000), 200000) * (0.05 / 12)
+
+' FV of the previous period times the rate, period three hundred
+? FV(0.05 / 12, 299, Pmt(0.05 / 12, 360, 200000), 200000) * (0.05 / 12)
+
+' FV of the previous period times the rate, next to last period
+? FV(0.05 / 12, 358, Pmt(0.05 / 12, 360, 200000), 200000) * (0.05 / 12)
+
+' FV of the previous period times the rate, last period
+? FV(0.05 / 12, 359, Pmt(0.05 / 12, 360, 200000), 200000) * (0.05 / 12)
+
+' FV of the previous period, last period
+? FV(0.05 / 12, 359, Pmt(0.05 / 12, 360, 200000), 200000)
+
+' IPmt with a future value and type
+? IPmt(0.05 / 12, 12, 360, 200000, 1000, 1)
+
+' PV with a future value
+? PV(0.05 / 12, 360, -1000, 5000)
+
+' PV with type one
+? PV(0.05 / 12, 360, -1000, 0, 1)
+
+' Pmt with a future value
+? Pmt(0.05 / 12, 360, 200000, 1000)
+
+' Rate with type one
+? Rate(360, -1073.64, 200000, 0, 1)
+
+' Rate with a future value
+? Rate(360, -1073.64, 200000, 5000)
+
+' IRR of a longer series
+Dim flows(5) As Double
+flows(0) = -5000: flows(1) = 1200: flows(2) = 1300: flows(3) = 1400: flows(4) = 1500: flows(5) = 1600
+? IRR(flows)
+
+' NPV of a longer series
+Dim flows(5) As Double
+flows(0) = -5000: flows(1) = 1200: flows(2) = 1300: flows(3) = 1400: flows(4) = 1500: flows(5) = 1600
+? NPV(0.08, flows)
+
+' NPV of five flows at three percent
+Dim flows(4) As Double
+flows(0) = -5000: flows(1) = 1200: flows(2) = 1300: flows(3) = 1400: flows(4) = 1500
+? NPV(0.03, flows)
+
+' NPV of eight flows
+Dim flows(7) As Double
+flows(0) = -5000: flows(1) = 1200: flows(2) = 1300: flows(3) = 1400: flows(4) = 1500: flows(5) = 1600: flows(6) = 1700: flows(7) = 1800
+? NPV(0.08, flows)
+
+' IRR of flows a million times larger
+Dim flows(5) As Double
+flows(0) = -5000000000#: flows(1) = 1200000000: flows(2) = 1300000000: flows(3) = 1400000000: flows(4) = 1500000000: flows(5) = 1600000000
+? IRR(flows)
+
+' IRR of flows a thousand times smaller
+Dim flows(5) As Double
+flows(0) = -5: flows(1) = 1.2: flows(2) = 1.3: flows(3) = 1.4: flows(4) = 1.5: flows(5) = 1.6
+? IRR(flows, 0.05)
+
+' IRR of ten flows with a sign change
+Dim flows(9) As Double, k As Long
+For k = 0 To 9: flows(k) = Choose(k + 1, -7000, 900, -300, 1500, 1600, 1700, 400, 1900, 2000, 2100): Next
+? IRR(flows, 0.01)
+
+' Rate of a short loan
+? Rate(12, -100, 1000)
+
+' Rate of a short loan with a guess
+? Rate(12, -100, 1000, 0, 0, 0.02)
+
+' Rate with a balloon payment
+? Rate(60, -250, 5000, -500)
+
+' Rate with payments at the start
+? Rate(36, -100, 3000, 0, 1)
+
+' Rate that does not converge from its guess
+? Rate(12, -250, 1000, 0, 0, 0.03)
+
+' MIRR of ten flows
+Dim flows(9) As Double, k As Long
+For k = 0 To 9: flows(k) = Choose(k + 1, -7000, 900, -300, 1500, 1600, 1700, 400, 1900, 2000, 2100): Next
+? MIRR(flows, 0.1, 0.07)
+
+' DDB of the last period of a six-year life
+? DDB(10000, 1000, 6, 6)
+
+' DDB with a fractional life and factor
+? DDB(9876.5, 432.1, 8.5, 3, 2.5)
+
+' SYD with fractional amounts
+? SYD(9876.5, 432.1, 8.5, 1)
+
+' SLN with fractional amounts
+? SLN(9876.5, 432.1, 8.5)
+
+' FV with payments at the start, near the last period
+Dim q As Double
+q = Pmt(0.05 / 12, 360, 200000)
+? FV(0.05 / 12, 358, q, 200000, 1)
+
+' PV with payments at the start and a future value
+? PV(0.12, 7, -100, 1000, 1)
+
+' Pmt with payments at the start and a future value
+? Pmt(0.05 / 12, 24, 1000, 500, 1)
+
+' Pmt with a zero rate and a fractional principal
+? Pmt(0, 3, 1000.3, 0.7)
+
+' PV with a zero rate and fractional amounts
+? PV(0, 7, -1.3, 7.77)
+
+' FV with a zero rate and fractional amounts
+? FV(0, 7, -1.3, 7.77)
+
+' NPer with a zero rate and fractional amounts
+? NPer(0, -1.3, 1000.3, 0.7)
+
+' NPer at four percent
+? NPer(0.04, -1000, 20000)
+
+' NPer with a final payment
+? NPer(0.04, -1000, 20000, -500)
+
+' IPmt near the last period with payments at the start
+? IPmt(0.07 / 12, 358, 360, 150000, 0, 1)
+
+' PPmt of period two hundred
+? PPmt(0.05 / 12, 200, 360, 200000)

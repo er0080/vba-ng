@@ -1,0 +1,621 @@
+' Classes: project class modules (MS-VBAL 4.2, 5.2.4.1.3, 5.3.1.7): object lifetime and the
+' order of Class_Initialize and Class_Terminate, properties, default members, Me, late binding
+' to a project class, Implements, events through WithEvents and RaiseEvent, a predeclared
+' instance, and For Each over a class with NewEnum. The class modules are the Classes.*.cls
+' files next to this one. Every class logs its lifetime into Trace, which each case clears.
+
+Private Type THolder
+    Item As Counter
+End Type
+
+Public Trace As String
+
+Public Sub SetVariantByRef(ByRef target As Variant)
+    target = 99
+End Sub
+
+Public Sub SetLongByRef(ByRef target As Long)
+    target = 77
+End Sub
+
+Public Sub SetIntegerByRef(ByRef target As Integer)
+    target = 66
+End Sub
+
+Public Sub MakeLocal()
+    Dim c As Counter
+    Set c = New Counter
+    c.Tag = "L"
+End Sub
+
+Public Sub TwoLocals()
+    Dim a As Counter, b As Counter
+    Set a = New Counter
+    a.Tag = "a"
+    Set b = New Counter
+    b.Tag = "b"
+End Sub
+
+Public Sub UseIt(ByVal c As Counter)
+    c.Tag = "u"
+End Sub
+
+Public Function MakeCounter(ByVal tag As String) As Counter
+    Set MakeCounter = New Counter
+    MakeCounter.Tag = tag
+End Function
+
+Public Sub Clear(ByVal c As Counter)
+    Set c = Nothing
+End Sub
+
+Public Sub ClearRef(ByRef c As Counter)
+    Set c = Nothing
+End Sub
+
+Public Sub ReleaseSlot(ByRef s As Slot)
+    Set s = Nothing
+End Sub
+
+Public Sub HoldLocal()
+    Dim t As THolder
+    Set t.Item = New Counter
+    t.Item.Tag = "h"
+End Sub
+
+Public Function Describe2(Optional ByVal c As Counter = Nothing) As String
+    If c Is Nothing Then Describe2 = "none" Else Describe2 = "some " & c.Tag
+End Function
+
+Public Function ValueOf(ByVal v As Variant) As Long
+    ValueOf = v.Value
+End Function
+
+Public Function StaticCounter() As Long
+    Static c As Counter
+    If c Is Nothing Then Set c = New Counter
+    c.Bump
+    StaticCounter = c.Value
+End Function
+
+Public Function TypeNameOfObject(ByRef x As Object) As String
+    TypeNameOfObject = TypeName(x)
+End Function
+
+Public Function TypeNameOfStore(ByRef x As Store) As String
+    TypeNameOfStore = TypeName(x)
+End Function
+
+Public Function MakeStore() As Store
+    Dim s As New Store
+    s("k") = 7
+    Set MakeStore = s
+End Function
+
+Public Function MakeStoreAsObject() As Object
+    Set MakeStoreAsObject = MakeStore()
+End Function
+
+Public Property Get StoreProperty() As Store
+    Set StoreProperty = MakeStore()
+End Property
+
+' New runs Class_Initialize and Set Nothing runs Class_Terminate
+Trace = ""
+Dim c As Counter
+? c Is Nothing
+Set c = New Counter
+? Trace
+? c Is Nothing
+? TypeName(c)
+Set c = Nothing
+? Trace
+? c Is Nothing
+
+' Two references keep the object alive
+Trace = ""
+Dim c As Counter, d As Counter
+Set c = New Counter
+Set d = c
+? c Is d
+Set c = Nothing
+? Trace
+Set d = Nothing
+? Trace
+
+' A local terminates at End Sub
+Trace = ""
+MakeLocal
+? Trace
+
+' Locals terminate in a fixed order at End Sub
+Trace = ""
+TwoLocals
+? Trace
+
+' A temporary terminates when its statement ends
+Trace = ""
+UseIt New Counter
+? Trace
+Trace = ""
+Call UseIt(New Counter)
+? Trace
+
+' Reassigning creates the new object before releasing the old one
+Trace = ""
+Dim c As Counter
+Set c = New Counter
+c.Tag = "a"
+Set c = New Counter
+? Trace
+c.Tag = "b"
+Set c = Nothing
+? Trace
+
+' As New creates on first use and again after Nothing
+Trace = ""
+Dim c As New Counter
+? Trace
+c.Tag = "n"
+? Trace
+? c.Value
+Set c = Nothing
+? Trace
+? c Is Nothing
+? Trace
+? c.Value
+? Trace
+
+' Property Let and Get, a Sub with an Optional parameter, and parameterized properties
+Dim c As New Counter
+c.Value = 5
+? c.Value
+? c.Doubled(3)
+c.Doubled(2) = 14
+? c.Value
+c.Bump
+? c.Value
+c.Bump 10
+? c.Value
+Dim n As Long
+c.Drain n
+? n
+? c.Value
+
+' The default member stands for the object in Let-coercion, operators, and conversions
+Dim c As New Counter, n As Long, v As Variant
+c.Value = 7
+n = c
+? n
+? c + 1
+? "v=" & c
+? CStr(c)
+v = c
+? TypeName(v)
+? v
+? c = 7
+? c.Self.Value
+? c.Self.Self.Value
+
+' Let on an object variable assigns through its default member
+Dim c As New Counter
+c = 5
+? c.Value
+c = c + 1
+? c.Value
+
+' Me, Property Set, and a property returning an object
+Trace = ""
+Dim c As New Counter, d As Counter
+c.Tag = "p"
+Set c.Child = New Counter
+c.Child.Tag = "k"
+? Trace
+? c.Child.Tag
+Set d = c.Child
+? d Is c.Child
+? c.Self Is c
+Set c.Child = Nothing
+? Trace
+Set d = Nothing
+? Trace
+
+' TypeName, TypeOf, VarType, and IsObject on class instances
+Dim c As Counter, o As Object, v As Variant
+? TypeName(c)
+? VarType(c)
+Set c = New Counter
+? TypeName(c)
+? TypeOf c Is Counter
+? TypeOf c Is Object
+? VarType(c)
+? IsObject(c)
+Set o = c
+? TypeName(o)
+? TypeOf o Is Counter
+Set v = c
+? TypeName(v)
+? IsObject(v)
+? VarType(v)
+? TypeOf v Is Counter
+
+' Late-bound access to a project class through Object and Variant
+Dim o As Object, v As Variant
+Set o = New Counter
+o.Value = 3
+? o.Value
+o.Bump 2
+? o.Value
+? o.Doubled(2)
+o.Tag = "late"
+? o.Describe("x", 1)
+Set v = o
+v.Value = 9
+? v.Value
+? ValueOf(o)
+? CallByName(o, "Value", VbGet)
+CallByName o, "Value", VbLet, 4
+? o.Value
+? CallByName(o, "Doubled", VbGet, 3)
+
+' A member of Nothing raises 91
+Dim c As Counter
+c.Value = 1
+
+' A Collection releases an object on Remove and on Set Nothing
+Trace = ""
+Dim col As Collection, c As Counter
+Set col = New Collection
+Set c = New Counter
+c.Tag = "1"
+col.Add c
+Set c = New Counter
+c.Tag = "2"
+col.Add c
+Set c = Nothing
+? Trace
+col.Remove 1
+? Trace
+Set col = Nothing
+? Trace
+
+' Arrays of objects release on Set Nothing, Erase, and ReDim
+Trace = ""
+Dim a(1 To 2) As Counter, b() As Counter
+Set a(1) = New Counter
+a(1).Tag = "a1"
+Set a(2) = New Counter
+a(2).Tag = "a2"
+? a(2).Tag
+Set a(1) = Nothing
+? Trace
+Erase a
+? Trace
+ReDim b(0 To 0)
+Set b(0) = New Counter
+b(0).Tag = "b0"
+ReDim b(0 To 1)
+? Trace
+Set b(0) = New Counter
+b(0).Tag = "c0"
+ReDim Preserve b(0 To 2)
+? b(0).Tag
+Erase b
+? Trace
+
+' Objects in user-defined types
+Trace = ""
+Dim t As THolder
+Set t.Item = New Counter
+t.Item.Tag = "u"
+? t.Item.Tag
+Set t.Item = Nothing
+? Trace
+HoldLocal
+? Trace
+
+' A function result lives until its statement ends
+Trace = ""
+Dim c As Counter
+Set c = MakeCounter("r")
+? Trace
+Set c = Nothing
+? Trace
+Trace = ""
+MakeCounter "s"
+? Trace
+? MakeCounter("t").Value
+? Trace
+
+' Objects that reference each other never terminate
+Trace = ""
+Dim a As Node, b As Node
+Set a = New Node
+a.Tag = "a"
+Set b = New Node
+b.Tag = "b"
+Set a.Other = b
+Set b.Other = a
+Set a = Nothing
+Set b = Nothing
+? Trace
+
+' An error in Class_Initialize reaches the New statement
+Trace = ""
+Dim f As Failing
+On Error Resume Next
+Set f = New Failing
+? Err.Number
+? Err.Description
+? f Is Nothing
+? Trace
+
+' Implements: calls through the interface reach the implementing class
+Dim s As IShape, c As Disc
+Set c = New Disc
+c.Radius = 2
+Set s = c
+? s.Area
+? s.Kind
+? c.Area
+
+' Implements: TypeName, TypeOf, and Is see the implementing class
+Dim s As IShape, c As Disc
+Set c = New Disc
+Set s = c
+? TypeName(s)
+? TypeOf s Is Disc
+? TypeOf c Is IShape
+? s Is c
+
+' Implements: Set from the interface back to the class
+Dim s As IShape, c As Disc, back As Disc
+Set c = New Disc
+c.Radius = 2
+Set s = c
+Set back = s
+? back.Radius
+? back Is c
+
+' WithEvents handlers run on RaiseEvent, including a ByRef event parameter
+Trace = ""
+Dim c As Counter, w As Watcher
+Set c = New Counter
+Set w = New Watcher
+c.Value = 1
+? Trace
+Set w.Target = c
+c.Value = 2
+? Trace
+c.Bump
+? Trace
+? c.Nudge
+? c.Value
+Set w.Target = Nothing
+c.Value = 5
+? Trace
+
+' Two watchers on one source, and one of them released
+Trace = ""
+Dim c As Counter, w1 As Watcher, w2 As Watcher
+Set c = New Counter
+Set w1 = New Watcher
+Set w2 = New Watcher
+Set w1.Target = c
+Set w2.Target = c
+c.Value = 1
+? Trace
+Set w1 = Nothing
+c.Value = 2
+? Trace
+
+' A predeclared instance is reached by the class name; New makes another
+Trace = ""
+? Settings.Level
+Settings.Level = 3
+? Settings.Level
+Dim s As Settings
+Set s = New Settings
+? s.Level
+s.Level = 4
+? Settings.Level
+? Trace
+? Settings Is s
+? TypeName(Settings)
+
+' Set on the predeclared instance
+Trace = ""
+Settings.Level = 9
+Set Settings = Nothing
+? Trace
+? Settings.Level
+? Trace
+
+' For Each over a class with NewEnum, and its default Item
+Dim b As New Bag, v As Variant, s As String
+b.Add "x"
+b.Add "y"
+? b.Count
+? b(1)
+? b.Item(2)
+For Each v In b
+    s = s & v
+Next
+? s
+
+' With New keeps the object until End With
+Trace = ""
+With New Counter
+    .Tag = "w"
+    .Value = 3
+    ? .Value
+    ? Trace
+End With
+? Trace
+
+' ByVal and ByRef object parameters
+Trace = ""
+Dim c As Counter
+Set c = New Counter
+c.Tag = "v"
+Clear c
+? c Is Nothing
+? Trace
+ClearRef c
+? c Is Nothing
+? Trace
+
+' Let-assigning a Variant that holds an object releases the object
+Trace = ""
+Dim v As Variant
+Set v = New Counter
+? IsObject(v)
+v = 1
+? Trace
+? IsObject(v)
+? TypeName(v)
+
+' Comparing objects with = compares their default members
+Dim c As New Counter, d As New Counter
+c.Value = 2
+d.Value = 2
+? c = d
+d.Value = 3
+? c = d
+? c < d
+
+' An Optional object parameter defaults to Nothing
+? Describe2()
+? Describe2(MakeCounter("o"))
+
+' Self-assignment and a second Set Nothing
+Trace = ""
+Dim c As Counter
+Set c = New Counter
+c.Tag = "s"
+Set c = c
+? Trace
+Set c = Nothing
+Set c = Nothing
+? Trace
+
+' An object created in Class_Initialize goes with its owner
+Trace = ""
+Dim o As Outer
+Set o = New Outer
+? Trace
+? o.Inside.Tag
+Set o = Nothing
+? Trace
+
+' A Static local of a class type persists across calls
+Trace = ""
+? StaticCounter()
+? StaticCounter()
+? Trace
+
+' The ! operator passes the name to the default member
+Dim k As New Lookup
+? k!alpha
+? k("beta")
+? k.Item("gamma")
+
+' A class variable's default member takes an indexed assignment
+Dim s As New Store
+s("a") = 5
+? s("a")
+
+' A late-bound default member takes an indexed assignment
+Dim o As Object
+Set o = New Store
+o("b") = 6
+? o("b")
+
+' A late-bound Set reaches a property's Set accessor and a Let its Let accessor, through the default member or by name
+Dim o As Object
+Set o = New Slot
+Set o("a") = New Collection
+? o.LastAccessor
+o("b") = 5
+? o.LastAccessor
+Set o.Item("c") = New Collection
+? o.LastAccessor
+o.Item("d") = 6
+? o.LastAccessor
+
+' An object of any type reaches a ByRef parameter of another object type
+Dim s As New Store
+Dim o As Object
+Set o = s
+? TypeNameOfObject(s)
+? TypeNameOfStore(o)
+? TypeNameOfObject(o)
+? TypeNameOfObject(Nothing)
+? TypeNameOfStore(New Store)
+
+' Arguments after a parameterless function or property reach its result's default member
+? MakeStore()("k")
+? MakeStore("k")
+? MakeStoreAsObject("k")
+? StoreProperty("k")
+? StoreProperty.Item("k")
+
+' A property passed to a ByRef parameter is a temporary: the callee's change does not reach it
+Dim c As Counter
+Set c = New Counter
+c.Value = 5
+SetVariantByRef c.Value
+? c.Value
+SetLongByRef c.Value
+? c.Value
+SetVariantByRef c.Doubled(2)
+? c.Value
+
+' A public variable of a class passed to a ByRef parameter, of its own type and of another
+Dim s As New Settings
+s.Level = 5
+SetLongByRef s.Level
+? s.Level
+s.Level = 5
+SetIntegerByRef s.Level
+? s.Level
+
+' An object whose default member needs an argument is an object to VarType, and a Let of it fails
+Dim s As New Store, v As Variant
+? VarType(s)
+Set v = s
+? VarType(v)
+On Error Resume Next
+v = s
+? Err.Number
+? IsObject(v)
+
+
+' The Is functions on an object whose default member needs an argument
+Dim s As New Store, r As Variant
+On Error Resume Next
+r = "x": r = IsEmpty(s)
+? r & " " & Err.Number
+Err.Clear: r = "x": r = IsNull(s)
+? r & " " & Err.Number
+Err.Clear: r = "x": r = IsNumeric(s)
+? r & " " & Err.Number
+Err.Clear: r = "x": r = IsDate(s)
+? r & " " & Err.Number
+Err.Clear: r = "x": r = IsError(s)
+? r & " " & Err.Number
+Err.Clear: r = "x": r = IsArray(s)
+? r & " " & Err.Number
+
+' Me reaches a ByRef parameter as a temporary, which the callee's Set does not reach
+Dim s As New Slot
+? s.HandMe()
+? TypeName(s)
+
+' Class_Initialize may take and drop a reference to Me without ending the object
+Trace = ""
+Dim o As New Selfish
+? o.Ping
+? Trace
+Set o = Nothing
+? Trace

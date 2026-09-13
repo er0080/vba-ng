@@ -1,0 +1,19 @@
+{
+  // VS Code allows breakpoints only in languages that register a debugger. Compiled VBA is
+  // debugged through the C# debugger via #line-mapped PDBs (ARCHITECTURE.md D2), so breakpoints
+  // in .bas files need this until the vba-ng extension registers the language (ROADMAP M10).
+  "debug.allowBreakpointsEverywhere": true,
+
+  // Built-in Visual Basic grammar is close enough to VBA for highlighting until M7.
+  "files.associations": {
+    "*.bas": "vb",
+    "*.cls": "vb",
+    "*.frm": "vb"
+  },
+
+  // Repo files are LF; VBA fixtures keep the CRLF the VBE exports (CLAUDE.md R18).
+  "files.eol": "\n",
+  "[vb]": {
+    "files.eol": "\r\n"
+  }
+}

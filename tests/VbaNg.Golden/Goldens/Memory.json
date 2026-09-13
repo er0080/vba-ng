@@ -1,0 +1,2406 @@
+{
+  "area": "Memory",
+  "excel": "16.0.20326",
+  "culture": "en-US",
+  "options": [
+    "Option Explicit"
+  ],
+  "declarations": [
+    "Private Declare PtrSafe Sub MoveMemory Lib \"kernel32\" Alias \"RtlMoveMemory\" (ByRef destination As Any, ByRef source As Any, ByVal length As LongPtr)",
+    "Private Declare PtrSafe Function VarPtrArray Lib \"VBE7\" Alias \"VarPtr\" (ByRef items() As Any) As LongPtr",
+    "",
+    "Public Trace As String",
+    "",
+    "Private Type TPair",
+    "    A As Long",
+    "    B As Long",
+    "End Type",
+    "",
+    "Private Type TMixed",
+    "    B As Byte",
+    "    L As Long",
+    "    D As Double",
+    "    S As String",
+    "    I As Integer",
+    "    C As Currency",
+    "End Type",
+    "",
+    "Private Type TWithString",
+    "    Text As String",
+    "    N As Long",
+    "End Type",
+    "",
+    "Private Type TFixed",
+    "    F As String * 4",
+    "    N As Long",
+    "End Type",
+    "",
+    "Private Type TGuid",
+    "    D1 As Long",
+    "    D2 As Integer",
+    "    D3 As Integer",
+    "    D4(0 To 7) As Byte",
+    "End Type",
+    "",
+    "Private Type TAligned",
+    "    B As Byte",
+    "    L(1 To 2) As Long",
+    "End Type",
+    "",
+    "Private Type TStrings",
+    "    N As Integer",
+    "    S(0 To 1) As String",
+    "End Type",
+    "",
+    "Private Type TBool",
+    "    A As Byte",
+    "    B As Boolean",
+    "    C As Byte",
+    "End Type",
+    "",
+    "Private Type TDyn",
+    "    N As Long",
+    "    A() As Long",
+    "    M As Long",
+    "End Type",
+    "",
+    "Private Type TIn",
+    "    X As Long",
+    "    Y As Byte",
+    "End Type",
+    "",
+    "Private Type TOut",
+    "    B As Byte",
+    "    P(0 To 1) As TIn",
+    "    Z As Byte",
+    "End Type",
+    "",
+    "Private Type TNest",
+    "    B As Byte",
+    "    Inner As TIn",
+    "    Z As Byte",
+    "End Type",
+    "",
+    "Private Type TFS",
+    "    B As Byte",
+    "    S(0 To 1) As String * 3",
+    "    Z As Byte",
+    "End Type",
+    "",
+    "Private Type TFS1",
+    "    B As Byte",
+    "    S As String * 3",
+    "    Z As Byte",
+    "End Type",
+    "",
+    "Private Function ReadByte(ByVal address As LongPtr) As Byte",
+    "    Dim value As Byte",
+    "    MoveMemory value, ByVal address, 1",
+    "    ReadByte = value",
+    "End Function",
+    "",
+    "Private Function ReadInteger(ByVal address As LongPtr) As Integer",
+    "    Dim value As Integer",
+    "    MoveMemory value, ByVal address, 2",
+    "    ReadInteger = value",
+    "End Function",
+    "",
+    "Private Function ReadLong(ByVal address As LongPtr) As Long",
+    "    Dim value As Long",
+    "    MoveMemory value, ByVal address, 4",
+    "    ReadLong = value",
+    "End Function",
+    "",
+    "Private Function ReadLongPtr(ByVal address As LongPtr) As LongPtr",
+    "    Dim value As LongPtr",
+    "    MoveMemory value, ByVal address, 8",
+    "    ReadLongPtr = value",
+    "End Function",
+    "",
+    "Private Function ReadDouble(ByVal address As LongPtr) As Double",
+    "    Dim value As Double",
+    "    MoveMemory value, ByVal address, 8",
+    "    ReadDouble = value",
+    "End Function",
+    "",
+    "Private Function AddressOfByRef(ByRef n As Long) As LongPtr",
+    "    AddressOfByRef = VarPtr(n)",
+    "End Function",
+    "",
+    "Private Function AddressOfByVal(ByVal n As Long) As LongPtr",
+    "    AddressOfByVal = VarPtr(n)",
+    "End Function",
+    "",
+    "Private Function AddressOfVariant(ByRef v As Variant) As LongPtr",
+    "    AddressOfVariant = VarPtr(v)",
+    "End Function",
+    "",
+    "Private Function MissingType(Optional ByRef v As Variant) As Integer",
+    "    MissingType = ReadInteger(VarPtr(v))",
+    "End Function",
+    "",
+    "Private Function MissingCode(Optional ByRef v As Variant) As Long",
+    "    MissingCode = ReadLong(VarPtr(v) + 8)",
+    "End Function",
+    "",
+    "Private Function StaticAddress() As LongPtr",
+    "    Static s As Long",
+    "    StaticAddress = VarPtr(s)",
+    "End Function"
+  ],
+  "classes": [
+    {
+      "name": "Holder",
+      "source": [
+        "VERSION 1.0 CLASS",
+        "BEGIN",
+        "  MultiUse = -1  'True",
+        "END",
+        "Attribute VB_Name = \"Holder\"",
+        "Attribute VB_GlobalNameSpace = False",
+        "Attribute VB_Creatable = False",
+        "Attribute VB_PredeclaredId = False",
+        "Attribute VB_Exposed = False",
+        "Option Explicit",
+        "",
+        "' A class variable the Memory golden reaches through its address.",
+        "",
+        "Private m_value As Long",
+        "",
+        "Public Function Address() As LongPtr",
+        "    Address = VarPtr(m_value)",
+        "End Function",
+        "",
+        "Public Property Get Value() As Long",
+        "    Value = m_value",
+        "End Property"
+      ]
+    },
+    {
+      "name": "Tracker",
+      "source": [
+        "VERSION 1.0 CLASS",
+        "BEGIN",
+        "  MultiUse = -1  'True",
+        "END",
+        "Attribute VB_Name = \"Tracker\"",
+        "Attribute VB_GlobalNameSpace = False",
+        "Attribute VB_Creatable = False",
+        "Attribute VB_PredeclaredId = False",
+        "Attribute VB_Exposed = False",
+        "Option Explicit",
+        "",
+        "' Logs its lifetime to the recorder module's Trace, so the object round trip through a LongPtr",
+        "' in the Memory golden shows when Class_Terminate fires.",
+        "",
+        "Public Id As Long",
+        "",
+        "Private Sub Class_Initialize()",
+        "    Id = 7",
+        "    Trace = Trace & \"I\"",
+        "End Sub",
+        "",
+        "Private Sub Class_Terminate()",
+        "    Trace = Trace & \"T\"",
+        "End Sub"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "name": "Consecutive Byte elements are one byte apart",
+      "source": [
+        "Dim a(1) As Byte",
+        "? VarPtr(a(1)) - VarPtr(a(0))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Consecutive Integer elements",
+      "source": [
+        "Dim a(1) As Integer",
+        "? VarPtr(a(1)) - VarPtr(a(0))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Consecutive Long elements",
+      "source": [
+        "Dim a(1) As Long",
+        "? VarPtr(a(1)) - VarPtr(a(0))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Consecutive LongLong elements",
+      "source": [
+        "Dim a(1) As LongLong",
+        "? VarPtr(a(1)) - VarPtr(a(0))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Consecutive Single elements",
+      "source": [
+        "Dim a(1) As Single",
+        "? VarPtr(a(1)) - VarPtr(a(0))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Consecutive Double elements",
+      "source": [
+        "Dim a(1) As Double",
+        "? VarPtr(a(1)) - VarPtr(a(0))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Consecutive Currency elements",
+      "source": [
+        "Dim a(1) As Currency",
+        "? VarPtr(a(1)) - VarPtr(a(0))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Consecutive Date elements",
+      "source": [
+        "Dim a(1) As Date",
+        "? VarPtr(a(1)) - VarPtr(a(0))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Consecutive Boolean elements",
+      "source": [
+        "Dim a(1) As Boolean",
+        "? VarPtr(a(1)) - VarPtr(a(0))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Consecutive String elements are a pointer apart",
+      "source": [
+        "Dim a(1) As String",
+        "? VarPtr(a(1)) - VarPtr(a(0))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Consecutive Object elements are a pointer apart",
+      "source": [
+        "Dim a(1) As Object",
+        "? VarPtr(a(1)) - VarPtr(a(0))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Consecutive Variant elements are a VARIANT apart",
+      "source": [
+        "Dim a(1) As Variant",
+        "? VarPtr(a(1)) - VarPtr(a(0))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "24"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Consecutive elements of a type are LenB apart",
+      "source": [
+        "Dim a(1) As TMixed",
+        "? VarPtr(a(1)) - VarPtr(a(0))",
+        "? LenB(a(0))",
+        "? Len(a(0))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "40"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "40"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Integer",
+            "value": "31"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The members of a type sit at their natural alignment",
+      "source": [
+        "Dim t As TMixed",
+        "? VarPtr(t.B) = VarPtr(t)",
+        "? VarPtr(t.L) - VarPtr(t)",
+        "? VarPtr(t.D) - VarPtr(t)",
+        "? VarPtr(t.S) - VarPtr(t)",
+        "? VarPtr(t.I) - VarPtr(t)",
+        "? VarPtr(t.C) - VarPtr(t)",
+        "? LenB(t)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "LongLong",
+            "value": "4"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "LongLong",
+            "value": "8"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "LongLong",
+            "value": "16"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "LongLong",
+            "value": "24"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "LongLong",
+            "value": "32"
+          }
+        },
+        {
+          "index": 6,
+          "value": {
+            "type": "Integer",
+            "value": "40"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Two Longs in a type are adjacent",
+      "source": [
+        "Dim p As TPair",
+        "? VarPtr(p.B) - VarPtr(p.A)",
+        "? LenB(p)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "4"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A ByRef parameter is the caller's variable",
+      "source": [
+        "Dim n As Long",
+        "? AddressOfByRef(n) = VarPtr(n)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A ByVal parameter is a copy",
+      "source": [
+        "Dim n As Long",
+        "? AddressOfByVal(n) = VarPtr(n)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A Variant passed ByRef is the caller's variable",
+      "source": [
+        "Dim v As Variant",
+        "? AddressOfVariant(v) = VarPtr(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A Long passed to a ByRef Variant parameter arrives as a temporary",
+      "source": [
+        "Dim n As Long",
+        "? AddressOfVariant(n) = VarPtr(n)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A Static local keeps its address across calls",
+      "source": [
+        "? StaticAddress() = StaticAddress()"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "StrPtr of vbNullString and of an unassigned String",
+      "source": [
+        "Dim s As String",
+        "? StrPtr(vbNullString)",
+        "? StrPtr(s)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "0"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "LongLong",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "StrPtr of an empty string literal is a BSTR of length zero",
+      "source": [
+        "Dim s As String",
+        "s = \"\"",
+        "? StrPtr(s) <> 0",
+        "? ReadLong(StrPtr(s) - 4)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "StrPtr of a string is not the variable's address, and the variable holds it",
+      "source": [
+        "Dim s As String",
+        "s = \"abc\"",
+        "? StrPtr(s) <> 0",
+        "? StrPtr(s) = VarPtr(s)",
+        "? ReadLongPtr(VarPtr(s)) = StrPtr(s)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The BSTR length prefix is the byte count",
+      "source": [
+        "Dim s As String",
+        "s = \"abc\"",
+        "? ReadLong(StrPtr(s) - 4)",
+        "? LenB(s)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "6"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "6"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The BSTR holds UTF-16 code units and a terminator",
+      "source": [
+        "Dim s As String",
+        "s = \"abc\"",
+        "? ReadInteger(StrPtr(s))",
+        "? ReadInteger(StrPtr(s) + 2)",
+        "? ReadInteger(StrPtr(s) + 6)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "97"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "98"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A wide character is one code unit",
+      "source": [
+        "Dim s As String",
+        "s = ChrW(&H20AC)",
+        "? ReadLong(StrPtr(s) - 4)",
+        "? ReadInteger(StrPtr(s)) And &HFFFF&"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "8364"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Two strings swapped through their pointers",
+      "source": [
+        "Dim s1 As String",
+        "Dim s2 As String",
+        "Dim p1 As LongPtr",
+        "Dim p2 As LongPtr",
+        "s1 = \"first\"",
+        "s2 = \"second\"",
+        "p1 = StrPtr(s1)",
+        "p2 = StrPtr(s2)",
+        "MoveMemory ByVal VarPtr(s1), p2, 8",
+        "MoveMemory ByVal VarPtr(s2), p1, 8",
+        "? s1",
+        "? s2",
+        "? StrPtr(s1) = p2"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "second"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "first"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The vt of a Variant holding each scalar type",
+      "source": [
+        "Dim v As Variant",
+        "? ReadInteger(VarPtr(v))",
+        "v = 1",
+        "? ReadInteger(VarPtr(v))",
+        "v = 1&",
+        "? ReadInteger(VarPtr(v))",
+        "v = 1.5",
+        "? ReadInteger(VarPtr(v))",
+        "v = 1!",
+        "? ReadInteger(VarPtr(v))",
+        "v = \"s\"",
+        "? ReadInteger(VarPtr(v))",
+        "v = True",
+        "? ReadInteger(VarPtr(v))",
+        "v = CByte(1)",
+        "? ReadInteger(VarPtr(v))",
+        "v = CCur(1)",
+        "? ReadInteger(VarPtr(v))",
+        "v = #1/2/2003#",
+        "? ReadInteger(VarPtr(v))",
+        "v = CDec(1)",
+        "? ReadInteger(VarPtr(v))",
+        "v = CLngLng(1)",
+        "? ReadInteger(VarPtr(v))",
+        "v = Null",
+        "? ReadInteger(VarPtr(v))",
+        "v = Empty",
+        "? ReadInteger(VarPtr(v))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "2"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Integer",
+            "value": "3"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Integer",
+            "value": "5"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Integer",
+            "value": "4"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "Integer",
+            "value": "8"
+          }
+        },
+        {
+          "index": 6,
+          "value": {
+            "type": "Integer",
+            "value": "11"
+          }
+        },
+        {
+          "index": 7,
+          "value": {
+            "type": "Integer",
+            "value": "17"
+          }
+        },
+        {
+          "index": 8,
+          "value": {
+            "type": "Integer",
+            "value": "6"
+          }
+        },
+        {
+          "index": 9,
+          "value": {
+            "type": "Integer",
+            "value": "7"
+          }
+        },
+        {
+          "index": 10,
+          "value": {
+            "type": "Integer",
+            "value": "14"
+          }
+        },
+        {
+          "index": 11,
+          "value": {
+            "type": "Integer",
+            "value": "20"
+          }
+        },
+        {
+          "index": 12,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        },
+        {
+          "index": 13,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The vt of a Variant holding an error, an object, Nothing, and arrays",
+      "source": [
+        "Dim v As Variant",
+        "Dim la() As Long",
+        "v = CVErr(5)",
+        "? ReadInteger(VarPtr(v))",
+        "? ReadLong(VarPtr(v) + 8)",
+        "Set v = New Collection",
+        "? ReadInteger(VarPtr(v))",
+        "? ReadLongPtr(VarPtr(v) + 8) = ObjPtr(v)",
+        "Set v = Nothing",
+        "? ReadInteger(VarPtr(v))",
+        "? ReadLongPtr(VarPtr(v) + 8)",
+        "ReDim la(0)",
+        "v = la",
+        "? ReadInteger(VarPtr(v))",
+        "v = Array(1, 2)",
+        "? ReadInteger(VarPtr(v))",
+        "? VarType(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "10"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "-2146828283"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Integer",
+            "value": "9"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Integer",
+            "value": "9"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "LongLong",
+            "value": "0"
+          }
+        },
+        {
+          "index": 6,
+          "value": {
+            "type": "Integer",
+            "value": "8195"
+          }
+        },
+        {
+          "index": 7,
+          "value": {
+            "type": "Integer",
+            "value": "8204"
+          }
+        },
+        {
+          "index": 8,
+          "value": {
+            "type": "Long",
+            "value": "8204"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The vt and the payload of a missing argument",
+      "source": [
+        "? MissingType()",
+        "? MissingCode()"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "10"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "-2147352572"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A Variant's payload starts eight bytes in",
+      "source": [
+        "Dim v As Variant",
+        "v = 42&",
+        "? ReadLong(VarPtr(v) + 8)",
+        "v = 1.5",
+        "? ReadDouble(VarPtr(v) + 8)",
+        "v = True",
+        "? ReadInteger(VarPtr(v) + 8)",
+        "v = CByte(7)",
+        "? ReadByte(VarPtr(v) + 8)",
+        "v = \"abc\"",
+        "? ReadLongPtr(VarPtr(v) + 8) = StrPtr(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "42"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Double",
+            "value": "1.5",
+            "bits": "3FF8000000000000"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Integer",
+            "value": "-1"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Byte",
+            "value": "7"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A Decimal fills the Variant from its scale byte",
+      "source": [
+        "Dim v As Variant",
+        "v = CDec(\"1.5\")",
+        "? ReadByte(VarPtr(v) + 2)",
+        "? ReadByte(VarPtr(v) + 3)",
+        "? ReadLong(VarPtr(v) + 8)",
+        "v = CDec(-2)",
+        "? ReadByte(VarPtr(v) + 3)",
+        "? ReadLong(VarPtr(v) + 8)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Byte",
+            "value": "1"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Byte",
+            "value": "0"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "15"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Byte",
+            "value": "128"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ObjPtr is the same through every reference to the object",
+      "source": [
+        "Dim c As Collection",
+        "Dim d As Collection",
+        "Dim o As Object",
+        "Set c = New Collection",
+        "Set d = c",
+        "? ObjPtr(c) <> 0",
+        "? ObjPtr(c) = ObjPtr(d)",
+        "? ObjPtr(o)",
+        "? ReadLongPtr(VarPtr(c)) = ObjPtr(c)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "LongLong",
+            "value": "0"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "An object reached through its pointer without AddRef, and when it dies",
+      "source": [
+        "Dim t As Tracker",
+        "Dim u As Tracker",
+        "Dim address As LongPtr",
+        "Dim zero As LongPtr",
+        "Trace = \"\"",
+        "Set t = New Tracker",
+        "address = ObjPtr(t)",
+        "MoveMemory u, address, 8",
+        "? u.Id",
+        "? ObjPtr(u) = address",
+        "? Trace",
+        "MoveMemory u, zero, 8",
+        "? u Is Nothing",
+        "? Trace",
+        "Set t = Nothing",
+        "? Trace"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "7"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "I"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "String",
+            "value": "I"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "String",
+            "value": "IT"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The SAFEARRAY descriptor of a fixed one-dimensional array",
+      "source": [
+        "Dim a(2 To 5) As Long",
+        "Dim d As LongPtr",
+        "d = ReadLongPtr(VarPtrArray(a))",
+        "? ReadInteger(d)",
+        "? ReadInteger(d + 2)",
+        "? ReadLong(d + 4)",
+        "? ReadLong(d + 8)",
+        "? ReadLongPtr(d + 16) = VarPtr(a(2))",
+        "? ReadLong(d + 24)",
+        "? ReadLong(d + 28)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "146"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        },
+        {
+          "index": 6,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The SAFEARRAY descriptor of a dynamic array",
+      "source": [
+        "Dim b() As Long",
+        "Dim d As LongPtr",
+        "ReDim b(0 To 9)",
+        "d = ReadLongPtr(VarPtrArray(b))",
+        "? ReadInteger(d)",
+        "? ReadInteger(d + 2)",
+        "? ReadLong(d + 4)",
+        "? ReadLongPtr(d + 16) = VarPtr(b(0))",
+        "? ReadLong(d + 24)",
+        "? ReadLong(d + 28)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "128"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The SAFEARRAY descriptor of a Variant array and a String array",
+      "source": [
+        "Dim va(1) As Variant",
+        "Dim sa(1) As String",
+        "? ReadInteger(ReadLongPtr(VarPtrArray(va)) + 2)",
+        "? ReadLong(ReadLongPtr(VarPtrArray(va)) + 4)",
+        "? ReadInteger(ReadLongPtr(VarPtrArray(sa)) + 2)",
+        "? ReadLong(ReadLongPtr(VarPtrArray(sa)) + 4)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "2194"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "24"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Integer",
+            "value": "402"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Long",
+            "value": "8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The bounds of a two-dimensional array in the descriptor, last dimension first",
+      "source": [
+        "Dim m(1 To 3, 1 To 2) As Long",
+        "Dim d As LongPtr",
+        "d = ReadLongPtr(VarPtrArray(m))",
+        "? ReadInteger(d)",
+        "? ReadLong(d + 24)",
+        "? ReadLong(d + 28)",
+        "? ReadLong(d + 32)",
+        "? ReadLong(d + 36)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "2"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The elements of a two-dimensional array in memory, first index fastest",
+      "source": [
+        "Dim m(1 To 3, 1 To 2) As Long",
+        "? VarPtr(m(2, 1)) - VarPtr(m(1, 1))",
+        "? VarPtr(m(1, 2)) - VarPtr(m(1, 1))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "4"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "LongLong",
+            "value": "12"
+          }
+        }
+      ]
+    },
+    {
+      "name": "An unallocated dynamic array has no descriptor",
+      "source": [
+        "Dim b() As Long",
+        "? ReadLongPtr(VarPtrArray(b))",
+        "ReDim b(0)",
+        "? ReadLongPtr(VarPtrArray(b)) <> 0",
+        "Erase b",
+        "? ReadLongPtr(VarPtrArray(b))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "0"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "LongLong",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erase keeps a fixed array where it is",
+      "source": [
+        "Dim a(1) As Long",
+        "Dim address As LongPtr",
+        "a(0) = 5",
+        "address = VarPtr(a(0))",
+        "Erase a",
+        "? VarPtr(a(0)) = address",
+        "? a(0)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ReDim Preserve to the same size and to a larger one",
+      "source": [
+        "Dim b() As Long",
+        "Dim address As LongPtr",
+        "ReDim b(0 To 3)",
+        "b(0) = 9",
+        "address = VarPtr(b(0))",
+        "ReDim Preserve b(0 To 3)",
+        "? VarPtr(b(0)) = address",
+        "ReDim Preserve b(0 To 100000)",
+        "? b(0)",
+        "? UBound(b)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "9"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "100000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A fixed-length string member is inline in its type, padded with spaces",
+      "source": [
+        "Dim t As TFixed",
+        "? VarPtr(t.N) - VarPtr(t)",
+        "? LenB(t)",
+        "? ReadInteger(VarPtr(t))",
+        "t.F = \"ab\"",
+        "? ReadInteger(VarPtr(t))",
+        "? ReadInteger(VarPtr(t) + 2)",
+        "? ReadInteger(VarPtr(t) + 4)",
+        "? ReadInteger(VarPtr(t) + 6)",
+        "? VarPtr(t.F) = VarPtr(t)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "8"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "12"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Integer",
+            "value": "97"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Integer",
+            "value": "98"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "Integer",
+            "value": "32"
+          }
+        },
+        {
+          "index": 6,
+          "value": {
+            "type": "Integer",
+            "value": "32"
+          }
+        },
+        {
+          "index": 7,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarPtr and StrPtr of a fixed-length string local",
+      "source": [
+        "Dim f As String * 3",
+        "? StrPtr(f) = ReadLongPtr(VarPtr(f))",
+        "? ReadInteger(StrPtr(f))",
+        "f = \"ab\"",
+        "? StrPtr(f) = ReadLongPtr(VarPtr(f))",
+        "? ReadInteger(StrPtr(f))",
+        "? ReadInteger(StrPtr(f) + 2)",
+        "? ReadInteger(StrPtr(f) + 4)",
+        "? ReadLong(StrPtr(f) - 4)",
+        "? LenB(f)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Integer",
+            "value": "97"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Integer",
+            "value": "98"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "Integer",
+            "value": "32"
+          }
+        },
+        {
+          "index": 6,
+          "value": {
+            "type": "Long",
+            "value": "6"
+          }
+        },
+        {
+          "index": 7,
+          "value": {
+            "type": "Integer",
+            "value": "6"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A type with a String member passed to a Declare hands the callee a copy of the string",
+      "source": [
+        "Dim w As TWithString",
+        "Dim pointer As LongPtr",
+        "Dim original As LongPtr",
+        "w.Text = \"hi\"",
+        "w.N = 3",
+        "original = StrPtr(w.Text)",
+        "MoveMemory pointer, w, 8",
+        "? pointer = original",
+        "? pointer = StrPtr(w.Text)",
+        "? w.Text",
+        "? w.N"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "hi"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A String member of a type is the pointer in the type's block",
+      "source": [
+        "Dim w As TWithString",
+        "w.Text = \"abc\"",
+        "? ReadLongPtr(VarPtr(w)) = StrPtr(w.Text)",
+        "? VarPtr(w.N) - VarPtr(w)",
+        "? LenB(w)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "LongLong",
+            "value": "8"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Integer",
+            "value": "16"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A fixed-size array member lies inline in its record",
+      "source": [
+        "Dim g As TGuid",
+        "? LenB(g)",
+        "? VarPtr(g.D4(0)) - VarPtr(g)",
+        "? VarPtr(g.D4(7)) - VarPtr(g.D4(0))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "16"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "LongLong",
+            "value": "8"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "LongLong",
+            "value": "7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A fixed-size array member is aligned as its elements are",
+      "source": [
+        "Dim t As TAligned",
+        "? VarPtr(t.L(1)) - VarPtr(t)",
+        "? VarPtr(t.L(2)) - VarPtr(t.L(1))",
+        "? LenB(t)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "4"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "LongLong",
+            "value": "4"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Integer",
+            "value": "12"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A String array member holds its strings' pointers inline",
+      "source": [
+        "Dim s As TStrings, p As LongPtr",
+        "s.S(1) = \"x\"",
+        "? VarPtr(s.S(0)) - VarPtr(s)",
+        "MoveMemory p, ByVal VarPtr(s.S(1)), 8",
+        "? p = StrPtr(s.S(1))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "8"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A copy of a record copies the strings of its array member",
+      "source": [
+        "Dim a As TStrings, b As TStrings",
+        "a.S(1) = \"x\"",
+        "b = a",
+        "a.S(1) = \"y\"",
+        "? b.S(1) & a.S(1)",
+        "? StrPtr(a.S(1)) <> StrPtr(b.S(1))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "xy"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bytes written into a record reach its array member",
+      "source": [
+        "Dim g As TGuid, value As LongLong",
+        "value = &H807060504030201^",
+        "MoveMemory ByVal VarPtr(g) + 8, value, 8",
+        "? g.D4(0) & \",\" & g.D4(7)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1,8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarPtr of an expression is the address of a temporary holding its value",
+      "source": [
+        "Dim v As Long, w As Integer",
+        "MoveMemory v, ByVal VarPtr(54& + 3), 4",
+        "? v",
+        "MoveMemory w, ByVal VarPtr(&H4D42), 2",
+        "? w"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "57"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "19778"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarPtr of an element of a Variant's array is its place in the array",
+      "source": [
+        "Dim v As Variant",
+        "v = Array(1, 2, 3)",
+        "? VarPtr(v(1)) - VarPtr(v(0))",
+        "? VarPtr(v(2)) - VarPtr(v(0))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "LongLong",
+            "value": "24"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "LongLong",
+            "value": "48"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarPtr of a class variable is its address: a write through it changes the variable",
+      "source": [
+        "Dim h As New Holder",
+        "MoveMemory ByVal h.Address, 42&, 4",
+        "? h.Value"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "42"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarPtr of a class variable stays put, and each instance has its own",
+      "source": [
+        "Dim h As New Holder, g As New Holder",
+        "? h.Address = h.Address",
+        "? h.Address <> g.Address",
+        "? h.Address <> 0"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A Boolean member takes two bytes at two-byte alignment",
+      "source": [
+        "Dim t As TBool",
+        "? LenB(t)",
+        "? VarPtr(t.B) - VarPtr(t)",
+        "? VarPtr(t.C) - VarPtr(t)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "6"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "LongLong",
+            "value": "2"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "LongLong",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bytes written into a Boolean member are what it holds",
+      "source": [
+        "Dim t As TBool",
+        "t.C = 7",
+        "MoveMemory ByVal VarPtr(t.B), &HFFFF, 2",
+        "? t.B",
+        "? CInt(t.B)",
+        "MoveMemory ByVal VarPtr(t.B), 1, 2",
+        "? t.B",
+        "? CInt(t.B)",
+        "? t.C"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "-1"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Byte",
+            "value": "7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A dynamic array member is the pointer to its descriptor",
+      "source": [
+        "Dim t As TDyn",
+        "? LenB(t)",
+        "? VarPtrArray(t.A) - VarPtr(t)",
+        "? VarPtr(t.M) - VarPtr(t)",
+        "? ReadLongPtr(VarPtrArray(t.A)) = 0",
+        "ReDim t.A(2)",
+        "? ReadLongPtr(VarPtrArray(t.A)) <> 0",
+        "? ReadInteger(ReadLongPtr(VarPtrArray(t.A)))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "24"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "LongLong",
+            "value": "8"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "LongLong",
+            "value": "16"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A fixed-size array of records lies inline in its record",
+      "source": [
+        "Dim t As TOut",
+        "? LenB(t)",
+        "? VarPtr(t.P(0)) - VarPtr(t)",
+        "? VarPtr(t.P(1)) - VarPtr(t)",
+        "? VarPtr(t.P(1).Y) - VarPtr(t)",
+        "? VarPtr(t.Z) - VarPtr(t)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "24"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "LongLong",
+            "value": "4"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "LongLong",
+            "value": "12"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "LongLong",
+            "value": "16"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "LongLong",
+            "value": "20"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A fixed-size array of fixed-length strings lies inline in its record",
+      "source": [
+        "Dim t As TFS, i As Long, found As String",
+        "t.S(0) = \"abc\": t.S(1) = \"xyz\"",
+        "For i = 0 To LenB(t) - 1",
+        "    If ReadByte(VarPtr(t) + i) = Asc(\"x\") Then found = found & i & \" \"",
+        "Next",
+        "? found",
+        "? LenB(t)",
+        "? VarPtr(t.Z) - VarPtr(t)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "7 "
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "14"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "LongLong",
+            "value": "13"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A fixed-length string member after a Byte",
+      "source": [
+        "Dim t As TFS1, i As Long, found As String",
+        "t.S = \"xyz\"",
+        "For i = 0 To LenB(t) - 1",
+        "    If ReadByte(VarPtr(t) + i) = Asc(\"x\") Then found = found & i & \" \"",
+        "Next",
+        "? found",
+        "? LenB(t)",
+        "? VarPtr(t.Z) - VarPtr(t)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "1 "
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "8"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "LongLong",
+            "value": "7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erase on a fixed-size array of fixed-length strings in a record",
+      "source": [
+        "Dim t As TFS",
+        "t.S(0) = \"abc\": t.S(1) = \"xyz\"",
+        "? LBound(t.S) & UBound(t.S)",
+        "Erase t.S",
+        "? Len(t.S(0))",
+        "? AscW(t.S(0))",
+        "? AscW(Right(t.S(1), 1))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "01"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Len and LenB of a member that is itself a type measure that type",
+      "source": [
+        "Dim n As TNest",
+        "? LenB(n.Inner)",
+        "? Len(n.Inner)",
+        "? LenB(n)",
+        "? Len(n)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "8"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "5"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Integer",
+            "value": "16"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Integer",
+            "value": "7"
+          }
+        }
+      ]
+    }
+  ]
+}

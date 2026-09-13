@@ -1,0 +1,1109 @@
+' Operators: arithmetic, concatenation, comparison, and logical operators (MS-VBAL 5.6.9).
+' Operands live in variables so the VBA compiler cannot fold them and report the error at
+' compile time; the runtime behavior is what these goldens record.
+
+' Integer plus Integer stays Integer
+Dim a As Integer, b As Integer
+a = 1: b = 2
+? a + b
+
+' Integer overflow with typed operands
+Dim a As Integer, b As Integer
+a = 32767: b = 1
+? a + b
+
+' Integer overflow with Variant operands
+Dim a As Variant, b As Variant
+a = 32767: b = 1
+? a + b
+
+' Integer overflow with one Variant operand
+Dim a As Integer, b As Variant
+a = 32767: b = 1
+? a + b
+
+' Integer plus a literal
+Dim a As Integer
+a = 32767
+? a + 1
+
+' Byte plus Byte promotes to Integer
+Dim a As Byte, b As Byte
+a = 200: b = 100
+? a + b
+
+' Byte overflow when the sum is assigned back
+Dim a As Byte, b As Byte
+a = 200: b = 100
+a = a + b
+? a
+
+' Long overflow
+Dim a As Long, b As Long
+a = 2147483647: b = 1
+? a + b
+
+' Long overflow with Variant operands
+Dim a As Variant, b As Variant
+a = 2147483647: b = 1
+? a + b
+
+' LongLong plus LongLong
+Dim a As LongLong, b As LongLong
+a = 2147483647: b = 1
+? a + b
+
+' Long plus Integer
+Dim a As Long, b As Integer
+a = 1: b = 2
+? a + b
+
+' Integer plus Single
+Dim a As Integer, b As Single
+a = 1: b = 0.5
+? a + b
+
+' Long plus Single
+Dim a As Long, b As Single
+a = 1: b = 0.5
+? a + b
+
+' Single plus Double
+Dim a As Single, b As Double
+a = 0.1: b = 0.2
+? a + b
+
+' Single plus Single beyond the Single range
+Dim a As Single, b As Single
+a = 3E+38: b = 3E+38
+? a + b
+
+' Double plus Double beyond the Double range
+Dim a As Double, b As Double
+a = 1E+308: b = 1E+308
+? a + b
+
+' Currency plus Integer
+Dim a As Currency, b As Integer
+a = 1.5: b = 1
+? a + b
+
+' Currency plus Double
+Dim a As Currency, b As Double
+a = 1.5: b = 0.25
+? a + b
+
+' Currency plus Single
+Dim a As Currency, b As Single
+a = 1.5: b = 0.25
+? a + b
+
+' Currency overflow
+Dim a As Currency, b As Currency
+a = 900000000000000: b = 900000000000000
+? a + b
+
+' Date plus a number
+Dim d As Date
+d = #1/1/2020#
+? d + 1
+
+' Date plus a Date
+Dim d As Date, e As Date
+d = #1/1/2020#: e = #1/2/2020#
+? d + e
+
+' Date minus a Date
+Dim d As Date, e As Date
+d = #1/1/2020#: e = #1/2/2020#
+? e - d
+
+' Boolean plus Boolean
+Dim a As Boolean, b As Boolean
+a = True: b = True
+? a + b
+
+' Boolean plus Integer
+Dim a As Boolean, b As Integer
+a = True: b = 1
+? a + b
+
+' Empty plus Integer
+Dim v As Variant
+? v + 1
+
+' Empty plus Empty
+Dim v As Variant, w As Variant
+? v + w
+
+' Empty plus String
+Dim v As Variant
+? v + "a"
+
+' Null plus Integer
+? Null + 1
+
+' Null plus String
+? Null + "a"
+
+' String plus String concatenates
+Dim s As String, t As String
+s = "1": t = "2"
+? s + t
+
+' String plus a number adds
+Dim s As String
+s = "1"
+? s + 1
+
+' Non-numeric String plus a number
+Dim s As String
+s = "a"
+? s + 1
+
+' Variant String plus Variant number
+Dim v As Variant, w As Variant
+v = "1": w = 2
+? v + w
+
+' Variant String plus Variant String
+Dim v As Variant, w As Variant
+v = "1": w = "2"
+? v + w
+
+' String plus Empty
+Dim s As String, v As Variant
+s = "1"
+? s + v
+
+' Date plus a numeric String
+Dim d As Date, s As String
+d = #1/1/2020#: s = "1"
+? d + s
+
+' Decimal plus Integer
+? CDec(1.5) + 1
+
+' Decimal overflow
+Dim a As Variant, b As Variant
+a = CDec("79228162514264337593543950335"): b = CDec(1)
+? a + b
+
+' Integer minus Integer overflow
+Dim a As Integer, b As Integer
+a = -32768: b = 1
+? a - b
+
+' Unary minus on the Integer minimum
+Dim a As Integer
+a = -32768
+? -a
+
+' Unary minus on the Integer minimum in a Variant
+Dim a As Variant
+a = CInt(-32768)
+? -a
+
+' Unary minus on the Long minimum
+Dim a As Long
+a = -2147483648#
+? -a
+
+' Unary minus on Empty
+Dim v As Variant
+? -v
+
+' Unary minus on Null
+? -Null
+
+' Unary minus on a numeric String
+Dim s As String
+s = "5"
+? -s
+
+' Unary minus on a Boolean
+Dim b As Boolean
+b = True
+? -b
+
+' Unary minus on a Byte
+Dim b As Byte
+b = 5
+? -b
+
+' Unary minus on a Currency
+Dim c As Currency
+c = 1.5
+? -c
+
+' Integer times Integer overflow
+Dim a As Integer, b As Integer
+a = 200: b = 200
+? a * b
+
+' Integer times Integer overflow with Variants
+Dim a As Variant, b As Variant
+a = 200: b = 200
+? a * b
+
+' Long times Long overflow
+Dim a As Long, b As Long
+a = 100000: b = 100000
+? a * b
+
+' Long times Long overflow with Variants
+Dim a As Variant, b As Variant
+a = 100000: b = 100000
+? a * b
+
+' Currency times Currency
+Dim a As Currency, b As Currency
+a = 1.5: b = 2.5
+? a * b
+
+' Currency times Currency rounds to four places
+Dim a As Currency, b As Currency
+a = 0.0001: b = 0.5
+? a * b
+
+' Currency times Currency overflow
+Dim a As Currency, b As Currency
+a = 900000000000000: b = 1000
+? a * b
+
+' Byte times Byte
+Dim a As Byte, b As Byte
+a = 16: b = 16
+? a * b
+
+' Boolean times Boolean
+Dim a As Boolean, b As Boolean
+a = True: b = True
+? a * b
+
+' Integer divided by Integer is Double
+Dim a As Integer, b As Integer
+a = 1: b = 3
+? a / b
+
+' Exact Integer division is still Double
+Dim a As Integer, b As Integer
+a = 4: b = 2
+? a / b
+
+' Single divided by Single
+Dim a As Single, b As Single
+a = 1: b = 3
+? a / b
+
+' Single divided by Integer
+Dim a As Single, b As Integer
+a = 1: b = 3
+? a / b
+
+' Currency divided by Currency
+Dim a As Currency, b As Currency
+a = 1: b = 3
+? a / b
+
+' Currency divided by Integer
+Dim a As Currency, b As Integer
+a = 1: b = 3
+? a / b
+
+' Decimal divided by Integer
+? CDec(1) / 3
+
+' Division by zero with Integers
+Dim a As Integer, b As Integer
+a = 1: b = 0
+? a / b
+
+' Division by zero with Doubles
+Dim a As Double, b As Double
+a = 1: b = 0
+? a / b
+
+' Zero divided by zero
+Dim a As Double, b As Double
+? a / b
+
+' Division by Empty
+Dim v As Variant
+? 1 / v
+
+' Division by Null
+? 1 / Null
+
+' Empty divided by Empty
+Dim v As Variant, w As Variant
+? v / w
+
+' Boolean divided by Boolean
+Dim a As Boolean, b As Boolean
+a = True: b = True
+? a / b
+
+' Byte divided by Byte
+Dim a As Byte, b As Byte
+a = 1: b = 2
+? a / b
+
+' Integer division of Integers
+Dim a As Integer, b As Integer
+a = 7: b = 2
+? a \ b
+
+' Integer division truncates a negative quotient toward zero
+Dim a As Integer, b As Integer
+a = -7: b = 2
+? a \ b
+
+' Integer division rounds Double operands first
+Dim a As Double, b As Double
+a = 7.5: b = 2
+? a \ b
+
+' Integer division rounds half to even before dividing
+Dim a As Double, b As Double
+a = 6.5: b = 2
+? a \ b
+
+' Integer division of Doubles returns Long
+Dim a As Double, b As Double
+a = 100000: b = 3
+? a \ b
+
+' Integer division of a Double beyond Long overflows
+Dim a As Double, b As Double
+a = 1E+10: b = 3
+? a \ b
+
+' Integer division of LongLongs
+Dim a As LongLong, b As LongLong
+a = 10000000000^: b = 3
+? a \ b
+
+' Integer division by zero
+Dim a As Long, b As Long
+a = 1: b = 0
+? a \ b
+
+' Integer division with Currency operands
+Dim a As Currency, b As Currency
+a = 7.5: b = 2
+? a \ b
+
+' Integer division with Byte operands
+Dim a As Byte, b As Byte
+a = 7: b = 2
+? a \ b
+
+' Integer division with Boolean operands
+Dim a As Boolean, b As Boolean
+a = True: b = True
+? a \ b
+
+' Integer division with Empty
+Dim v As Variant
+? v \ 2
+
+' Integer division with Null
+? Null \ 2
+
+' Integer division of numeric Strings
+Dim s As String, t As String
+s = "7": t = "2"
+? s \ t
+
+' Mod keeps the sign of the dividend
+Dim a As Integer, b As Integer
+a = -7: b = 2
+? a Mod b
+
+' Mod with a negative divisor
+Dim a As Integer, b As Integer
+a = 7: b = -2
+? a Mod b
+
+' Mod rounds Double operands first
+Dim a As Double, b As Double
+a = 7.5: b = 2
+? a Mod b
+
+' Mod of Doubles returns Long
+Dim a As Double, b As Double
+a = 100000: b = 7
+? a Mod b
+
+' Mod by zero
+Dim a As Long, b As Long
+a = 1: b = 0
+? a Mod b
+
+' Mod with Byte operands
+Dim a As Byte, b As Byte
+a = 7: b = 3
+? a Mod b
+
+' Mod with Currency operands
+Dim a As Currency, b As Currency
+a = 7.5: b = 2
+? a Mod b
+
+' Mod with Null
+? 7 Mod Null
+
+' Mod with Empty
+Dim v As Variant
+? 7 Mod v
+
+' Mod of a Double beyond Long overflows
+Dim a As Double, b As Double
+a = 1E+10: b = 3
+? a Mod b
+
+' Exponent returns Double
+Dim a As Integer, b As Integer
+a = 2: b = 3
+? a ^ b
+
+' Exponent is left associative
+Dim a As Integer, b As Integer, c As Integer
+a = 2: b = 3: c = 2
+? a ^ b ^ c
+
+' Unary minus binds looser than exponent
+Dim a As Integer
+a = 2
+? -a ^ 2
+
+' Negative base with a fractional exponent
+Dim a As Double, b As Double
+a = -8: b = 1 / 3
+? a ^ b
+
+' Negative base with an integral exponent
+Dim a As Double, b As Double
+a = -2: b = 3
+? a ^ b
+
+' Zero to the zero
+Dim a As Double, b As Double
+? a ^ b
+
+' Zero to a negative power
+Dim a As Double, b As Double
+a = 0: b = -1
+? a ^ b
+
+' Exponent overflow
+Dim a As Double, b As Double
+a = 10: b = 400
+? a ^ b
+
+' Exponent with Currency operands
+Dim a As Currency, b As Currency
+a = 2: b = 3
+? a ^ b
+
+' Exponent with Null
+? 2 ^ Null
+
+' Exponent with Empty
+Dim v As Variant
+? 2 ^ v
+
+' Exponent with an Empty base
+Dim v As Variant
+? v ^ 2
+
+' Exponent with numeric Strings
+Dim s As String, t As String
+s = "2": t = "3"
+? s ^ t
+
+' Concatenating numbers
+Dim a As Integer, b As Double
+a = 1: b = 2.5
+? a & b
+
+' Concatenating Booleans
+Dim b As Boolean
+b = True
+? b & False
+
+' Concatenating Null and a String
+? Null & "a"
+
+' Concatenating Null and Null
+? Null & Null
+
+' Concatenating Empty and a String
+Dim v As Variant
+? v & "a"
+
+' Concatenating two Empties gives a String
+Dim v As Variant, w As Variant
+? v & w
+
+' Concatenating a Date
+Dim d As Date
+d = #1/2/2020 3:04:05 PM#
+? d & ""
+
+' Concatenating a negative number
+Dim a As Long
+a = -5
+? a & ""
+
+' Concatenating a Double with many digits
+Dim d As Double
+d = 1 / 3
+? d & ""
+
+' Concatenating a Currency
+Dim c As Currency
+c = 1.5
+? c & ""
+
+' Concatenating a Single
+Dim s As Single
+s = 0.1
+? s & ""
+
+' Concatenating a Decimal
+? CDec("1.10") & ""
+
+' Concatenating an Error value
+? CVErr(5) & ""
+
+' Concatenating a Byte
+? CByte(7) & ""
+
+' Concatenating a large Double uses an exponent
+Dim d As Double
+d = 1E+20
+? d & ""
+
+' Numeric comparison of Integers
+Dim a As Integer, b As Integer
+a = 1: b = 2
+? a < b
+
+' Comparison returns Boolean
+Dim a As Integer, b As Integer
+a = 1: b = 2
+? a = b
+
+' Strings compare by character code under Option Compare Binary
+Dim s As String, t As String
+s = "a": t = "B"
+? s < t
+
+' String comparison is not numeric
+Dim s As String, t As String
+s = "10": t = "9"
+? s < t
+
+' A number compared with a numeric String
+Dim s As String
+s = "9"
+? 10 < s
+
+' A number compared with a non-numeric String
+Dim s As String
+s = "a"
+? 10 < s
+
+' A Variant number compared with a Variant String
+Dim v As Variant, w As Variant
+v = 10: w = "9"
+? v < w
+
+' A Variant number compared with a Variant numeric String
+Dim v As Variant, w As Variant
+v = 10: w = "10"
+? v = w
+
+' A typed number compared with a Variant String
+Dim l As Long, w As Variant
+l = 10: w = "9"
+? l < w
+
+' Empty equals zero
+Dim v As Variant
+? v = 0
+
+' Empty equals the empty String
+Dim v As Variant
+? v = ""
+
+' Empty compared with a non-empty String
+Dim v As Variant
+? v < "a"
+
+' Null equals Null is Null
+? Null = Null
+
+' Null compared with a number
+? 1 = Null
+
+' Null in a less-than comparison
+? Null < 1
+
+' Boolean compared with minus one
+Dim b As Boolean
+b = True
+? b = -1
+
+' Boolean compared with one
+Dim b As Boolean
+b = True
+? b = 1
+
+' Boolean compared with a String
+Dim b As Boolean
+b = True
+? b = "True"
+
+' Date compared with a number
+Dim d As Date
+d = #1/1/2020#
+? d = 43831
+
+' Double equality after arithmetic
+Dim a As Double, b As Double
+a = 0.1 + 0.2: b = 0.3
+? a = b
+
+' Single compared with Double
+Dim a As Single, b As Double
+a = 0.1: b = 0.1
+? a = b
+
+' Currency compared with Double
+Dim a As Currency, b As Double
+a = 0.1: b = 0.1
+? a = b
+
+' Decimal compared with Double
+Dim a As Variant, b As Double
+a = CDec("0.1"): b = 0.1
+? a = b
+
+' Not equal
+Dim a As Integer, b As Integer
+a = 1: b = 2
+? a <> b
+
+' Greater or equal
+Dim a As Integer, b As Integer
+a = 2: b = 2
+? a >= b
+
+' Trailing spaces matter in String comparison
+Dim s As String, t As String
+s = "a": t = "a "
+? s = t
+
+' Empty String equals vbNullString
+Dim s As String
+? s = vbNullString
+
+' Case matters under Option Compare Binary
+Dim s As String, t As String
+s = "a": t = "A"
+? s = t
+
+' Lower case sorts after upper case under Option Compare Binary
+Dim s As String, t As String
+s = "a": t = "Z"
+? s > t
+
+' Is on two Nothings
+Dim o As Object, p As Object
+? o Is p
+
+' Is Nothing on an unset variable
+Dim o As Object
+? o Is Nothing
+
+' Is on the same object
+Dim c As Collection, o As Object
+Set c = New Collection
+Set o = c
+? o Is c
+
+' Is on different objects
+Dim c As Collection, d As Collection
+Set c = New Collection: Set d = New Collection
+? c Is d
+
+' Like with a wildcard
+Dim s As String
+s = "hello"
+? s Like "h*o"
+
+' Like with a single-character wildcard
+Dim s As String
+s = "hello"
+? s Like "h?llo"
+
+' Like with a digit wildcard
+Dim s As String
+s = "a1"
+? s Like "a#"
+
+' Like with a character list
+Dim s As String
+s = "b"
+? s Like "[a-c]"
+
+' Like with a negated character list
+Dim s As String
+s = "b"
+? s Like "[!a-c]"
+
+' Like is case sensitive under Option Compare Binary
+Dim s As String
+s = "A"
+? s Like "a"
+
+' Like with an escaped bracket
+Dim s As String
+s = "[x]"
+? s Like "[[]x]"
+
+' Like with an empty pattern
+Dim s As String
+s = ""
+? s Like ""
+
+' Like with a star against an empty String
+Dim s As String
+s = ""
+? s Like "*"
+
+' Like with Null
+? "a" Like Null
+
+' Like with Empty
+Dim v As Variant
+? v Like ""
+
+' Like with a range in the wrong order
+Dim s As String
+s = "b"
+? s Like "[c-a]"
+
+' Like with an unterminated character list
+Dim s As String
+s = "b"
+? s Like "[b"
+
+' Like with a number
+? 123 Like "1*"
+
+' Like with a character list containing a dash at the end
+Dim s As String
+s = "-"
+? s Like "[a-]"
+
+' Not on an Integer
+Dim a As Integer
+a = 1
+? Not a
+
+' Not on a Boolean
+Dim b As Boolean
+b = True
+? Not b
+
+' Not on a Long zero
+Dim a As Long
+? Not a
+
+' Not on a Double rounds first
+Dim d As Double
+d = 1.5
+? Not d
+
+' Not on Null
+? Not Null
+
+' Not on Empty
+Dim v As Variant
+? Not v
+
+' Not on a numeric String
+Dim s As String
+s = "1"
+? Not s
+
+' Not on a Byte
+Dim b As Byte
+b = 1
+? Not b
+
+' Not on a Double beyond Long range
+Dim d As Double
+d = 1E+10
+? Not d
+
+' Not on a Currency
+Dim c As Currency
+c = 1.5
+? Not c
+
+' Not on a LongLong
+Dim l As LongLong
+l = 1
+? Not l
+
+' And on Integers
+Dim a As Integer, b As Integer
+a = 6: b = 3
+? a And b
+
+' And on Booleans
+Dim a As Boolean, b As Boolean
+a = True: b = False
+? a And b
+
+' And with Null and False
+? Null And False
+
+' And with Null and True
+? Null And True
+
+' And with Null and zero
+? Null And 0
+
+' And with Null and a nonzero number
+? Null And 6
+
+' Or with Null and True
+? Null Or True
+
+' Or with Null and False
+? Null Or False
+
+' Or on Integers
+Dim a As Integer, b As Integer
+a = 6: b = 3
+? a Or b
+
+' Or on a Boolean and an Integer
+Dim a As Boolean, b As Integer
+a = True: b = 3
+? a Or b
+
+' Xor on Integers
+Dim a As Integer, b As Integer
+a = 6: b = 3
+? a Xor b
+
+' Xor on Booleans
+Dim a As Boolean, b As Boolean
+a = True: b = True
+? a Xor b
+
+' Xor with Null
+? Null Xor True
+
+' Eqv on Integers
+Dim a As Integer, b As Integer
+a = 6: b = 3
+? a Eqv b
+
+' Eqv on Booleans
+Dim a As Boolean, b As Boolean
+a = True: b = False
+? a Eqv b
+
+' Eqv with Null
+? Null Eqv True
+
+' Imp on Booleans
+Dim a As Boolean, b As Boolean
+a = True: b = False
+? a Imp b
+
+' Imp on Integers
+Dim a As Integer, b As Integer
+a = 6: b = 3
+? a Imp b
+
+' Imp with a Null antecedent
+? Null Imp True
+
+' Imp with a Null consequent
+? True Imp Null
+
+' Imp with False and Null
+? False Imp Null
+
+' And on a Long and an Integer
+Dim a As Long, b As Integer
+a = 65536: b = -1
+? a And b
+
+' And on Doubles rounds to Long
+Dim a As Double, b As Double
+a = 6.5: b = 3.5
+? a And b
+
+' And on Byte operands
+Dim a As Byte, b As Byte
+a = 6: b = 3
+? a And b
+
+' And on numeric Strings
+Dim s As String, t As String
+s = "6": t = "3"
+? s And t
+
+' And with Empty
+Dim v As Variant
+? v And 1
+
+' Or with Empty
+Dim v As Variant
+? v Or 1
+
+' And on LongLongs
+Dim a As LongLong, b As LongLong
+a = 4294967296^: b = -1
+? a And b
+
+' And on a Boolean and a Long
+Dim a As Boolean, b As Long
+a = True: b = 65536
+? a And b
+
+' Not is evaluated after the comparison
+Dim a As Integer, b As Integer
+a = 1: b = 1
+? Not a = b
+
+' And binds tighter than Or
+Dim a As Boolean, b As Boolean, c As Boolean
+a = True: b = False: c = True
+? a Or b And c
+
+' Comparison of an And result
+Dim a As Integer
+a = 2
+? (a And 1) = 0
+
+' Plus binds tighter than concatenation
+Dim a As Integer, b As Integer
+a = 1: b = 2
+? a & b + b
+
+' Mod binds tighter than plus
+Dim a As Integer
+a = 7
+? a + a Mod 3
+
+' Integer division binds tighter than Mod
+Dim a As Integer
+a = 7
+? a Mod a \ 2
+
+' Multiplication binds tighter than integer division
+Dim a As Integer
+a = 7
+? a \ 2 * 2
+
+' Concatenation binds tighter than comparison
+Dim a As Integer
+a = 1
+? a & a = "11"
+
+' Comparison binds tighter than Not
+Dim a As Integer
+a = 1
+? Not a < 2
+
+' Xor binds looser than Or
+Dim a As Boolean, b As Boolean, c As Boolean
+a = True: b = True: c = True
+? a Xor b Or c
+
+' Eqv binds looser than Xor
+Dim a As Boolean, b As Boolean, c As Boolean
+a = True: b = True: c = False
+? a Eqv b Xor c
+
+' Imp binds loosest
+Dim a As Boolean, b As Boolean, c As Boolean
+a = False: b = False: c = True
+? a Imp b Eqv c
+
+' Power of a Double base to a negative integral exponent
+? 1.05 ^ -12
+
+' Power of a Double base to twelve
+? 1.05 ^ 12
+
+' Power of a monthly rate factor to 360
+? (1 + 0.05 / 12) ^ 360
+
+' Power of a monthly rate factor to 359
+? (1 + 0.05 / 12) ^ 359
+
+' Power of 0.6 to four
+? 0.6 ^ 4
+
+' Power of 0.6 to five
+? 0.6 ^ 5
+
+' Power with a fractional exponent
+? 2 ^ 0.5
+
+' Power of ten to minus three
+? 10 ^ -3
+
+' Power close to e
+? 1.0000001 ^ 10000000
+
+' Power of a rate factor to a half
+? 1.12 ^ 0.5
+
+' A Double expression keeps its intermediate results in extended precision
+Dim x As Double, y As Double, z As Double
+x = 0.05: y = 3: z = 299.5
+? x / y * z
+
+' A Double intermediate result may pass the range of a Double
+Dim big As Double
+big = 1E+308
+? big * 10 / 10
+
+' A Variant operand rounds the intermediate result to a Double
+Dim v As Variant, y As Double, z As Double
+v = 0.05: y = 3: z = 299.5
+? v / y * z
+
+' A comparison of Double expressions compares their unrounded results
+Dim a As Double, b As Double, r As Double, z As Double
+a = 0.05: b = 12: z = 299.5
+r = a / b
+? a / b * z = r * z
+
+' A declared String against a Variant holding a number compares as text
+Dim v As Variant
+Dim s As String
+Const K As String = "OBJECT"
+v = 5
+s = "OBJECT"
+? v <> s
+? v < s
+? v <> K
+v = 10
+s = "9"
+? v < s
+? v < "9"
+? s > v

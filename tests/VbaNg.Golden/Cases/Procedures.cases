@@ -1,0 +1,825 @@
+' Procedures: calls, ByRef and ByVal, Optional and ParamArray, Static, user-defined types,
+' enums, properties, error propagation between procedures, and the control-flow statements
+' the code generator lowers (ARCHITECTURE.md section 5). The declaration blocks below are
+' emitted at module level; module variables come before procedures, as VBA requires.
+
+Public Type TPoint
+    X As Long
+    Y As Long
+End Type
+
+Public Type TShape
+    Name As String
+    Origin As TPoint
+    Points(1 To 3) As TPoint
+    Tags() As String
+End Type
+
+Public Enum Color
+    Red
+    Green = 5
+    Blue
+    Purple = -1
+End Enum
+
+Public Enum ECompass
+    North = 1
+    East = 2
+End Enum
+
+Public Enum EDial
+    North = 10
+    East = 20
+End Enum
+
+Public Type TRange
+    Items(Green To Blue) As Long
+End Type
+
+Public Const KLongLong = VbVarType.vbLongLong
+
+Private prop As Long
+
+Public Function ShiftAndSum(p As TPoint) As Long
+    p.X = p.X + 1
+    ShiftAndSum = p.X + p.Y
+End Function
+
+Public Function MakeNumbers() As Long()
+    Dim n(1 To 2) As Long
+    n(1) = 3: n(2) = 4
+    MakeNumbers = n
+End Function
+
+Public Function SumNumbers(n() As Long) As Long
+    SumNumbers = n(1) + n(2)
+End Function
+
+Public Function MakeNames() As String()
+    Dim n(1 To 2) As String
+    n(1) = "ab": n(2) = "cd"
+    MakeNames = n
+End Function
+
+Public Function Twice(ByVal n As Long) As Long
+    Twice = n * 2
+End Function
+
+Public Sub Bump(ByRef n As Long)
+    n = n + 1
+End Sub
+
+Public Sub BumpVariant(ByRef v As Variant)
+    v = v + 1
+End Sub
+
+Public Sub SetText(ByRef s As String)
+    s = "set"
+End Sub
+
+Public Function DefaultNothing(Optional ByVal v As Variant = Nothing) As String
+    DefaultNothing = TypeName(v) & " " & IsMissing(v) & " " & IsObject(v)
+End Function
+
+Public Function Stepped(n As Long) As Long
+    n = n + 1
+    Stepped = n
+End Function
+
+Public Function Exclaimed(s As String) As String
+    s = s & "!"
+    Exclaimed = s
+End Function
+
+Public Function Bumped(v As Variant) As Long
+    v = v + 10
+    Bumped = v * 2
+End Function
+
+Public Function Halved(v As Variant) As Variant()
+    Dim r() As Variant
+    ReDim r(0 To 0)
+    r(0) = UBound(v)
+    Halved = r
+End Function
+
+Public Function TwiceOver(ParamArray items() As Variant) As String
+    Dim item As Variant
+    For Each item In items
+        TwiceOver = TwiceOver & item
+    Next
+    For Each item In items
+        TwiceOver = TwiceOver & item
+    Next
+End Function
+
+Public Function Widths(ParamArray items() As Variant) As String
+    Dim item As Variant
+    For Each item In items
+        Widths = Widths & UBound(item)
+    Next
+    For Each item In items
+        Widths = Widths & UBound(item)
+    Next
+End Function
+
+Public Function Describe(Optional ByVal label As String = "none", Optional ByVal count As Long = 3) As String
+    Describe = label & ":" & count
+End Function
+
+Public Function MissingCount(Optional ByVal a As Variant, Optional ByVal b As Variant) As Long
+    MissingCount = 0
+    If IsMissing(a) Then MissingCount = MissingCount + 1
+    If IsMissing(b) Then MissingCount = MissingCount + 1
+End Function
+
+Public Function Total(ParamArray items() As Variant) As Long
+    Dim i As Long
+    Total = 0
+    For i = LBound(items) To UBound(items)
+        Total = Total + items(i)
+    Next i
+End Function
+
+Public Function ParamBounds(ParamArray items() As Variant) As String
+    ParamBounds = LBound(items) & "," & UBound(items)
+End Function
+
+Public Function ParamArrayTypeName(ParamArray items() As Variant) As String
+    ParamArrayTypeName = TypeName(items)
+End Function
+
+Public Function Counter() As Long
+    Static calls As Long
+    calls = calls + 1
+    Counter = calls
+End Function
+
+Public Static Function StaticProc() As Long
+    Dim n As Long
+    n = n + 10
+    StaticProc = n
+End Function
+
+Public Function Factorial(ByVal n As Long) As Long
+    If n <= 1 Then
+        Factorial = 1
+    Else
+        Factorial = n * Factorial(n - 1)
+    End If
+End Function
+
+Public Function EarlyExit() As String
+    EarlyExit = "first"
+    Exit Function
+    EarlyExit = "second"
+End Function
+
+Public Function MovePoint(ByRef p As TPoint) As Long
+    p.X = p.X + 100
+    MovePoint = p.X
+End Function
+
+Public Function PointSum(p As TPoint) As Long
+    PointSum = p.X + p.Y
+End Function
+
+Public Function MakePoint(ByVal x As Long, ByVal y As Long) As TPoint
+    MakePoint.X = x
+    MakePoint.Y = y
+End Function
+
+Public Function ColorName(ByVal c As Color) As String
+    Select Case c
+        Case Red: ColorName = "red"
+        Case Green: ColorName = "green"
+        Case Blue: ColorName = "blue"
+        Case Else: ColorName = "other"
+    End Select
+End Function
+
+Public Function Divide(ByVal a As Double, ByVal b As Double) As Double
+    Divide = a / b
+End Function
+
+Public Function ResumeNextDivide(ByVal a As Double, ByVal b As Double) As Double
+    On Error Resume Next
+    ResumeNextDivide = a / b
+End Function
+
+Public Function ErlInside() As Long
+10  Dim z As Long
+20  On Error Resume Next
+30  z = 1 / z
+40  ErlInside = Erl
+End Function
+
+Public Function RaiseCustom() As Long
+    Err.Raise 1001, "Helper", "custom failure"
+End Function
+
+Public Property Get Value() As Long
+    Value = prop
+End Property
+
+Public Property Let Value(ByVal v As Long)
+    prop = v * 10
+End Property
+
+Public Property Get Stored() As Long
+    Stored = prop
+End Property
+
+Public Property Let Stored(v As Long)
+    prop = v
+    v = -1
+End Property
+
+Public Property Get Item(ByVal i As Long) As String
+    Item = "item" & i
+End Property
+
+Public Function ArrayLength(a() As Long) As Long
+    ArrayLength = UBound(a) - LBound(a) + 1
+End Function
+
+Public Sub Grow(a() As Long)
+    ReDim Preserve a(LBound(a) To UBound(a) + 1)
+    a(UBound(a)) = 99
+End Sub
+
+Public Function MakeArray() As Long()
+    Dim r(1 To 2) As Long
+    r(1) = 7: r(2) = 8
+    MakeArray = r
+End Function
+
+Public Function FirstDefault(Optional ByVal n As Long = 5) As Long
+    FirstDefault = n
+End Function
+
+Public Function SubCalls() As Long
+    SubCalls = 0
+    GoSubTest SubCalls
+End Function
+
+Public Sub GoSubTest(ByRef n As Long)
+    GoSub Add
+    GoSub Add
+    Exit Sub
+Add:
+    n = n + 1
+    Return
+End Sub
+
+Public Function OnGoToPick(ByVal i As Long) As String
+    On i GoTo One, Two
+    OnGoToPick = "fell"
+    Exit Function
+One:
+    OnGoToPick = "one"
+    Exit Function
+Two:
+    OnGoToPick = "two"
+End Function
+
+Public Sub BumpFirst(ByRef v As Variant)
+    v(1) = v(1) + 1
+End Sub
+
+Public Sub GrowIt(ByRef v As Variant)
+    ReDim v(1 To 5)
+    v(5) = 99
+End Sub
+
+' ByVal function result
+? Twice(21)
+
+' ByRef changes the caller's variable
+Dim n As Long
+n = 1
+Bump n
+? n
+
+' ByRef with Call and parentheses
+Dim n As Long
+n = 1
+Call Bump(n)
+? n
+
+' Parentheses pass ByVal
+Dim n As Long
+n = 1
+Bump (n)
+? n
+
+' A call statement written with parentheses and no Call passes ByVal
+Dim n As Long
+n = 1
+Bump(n)
+? n
+
+' Passing a literal to a ByRef parameter
+Bump 5
+? 1
+
+' A Function called as a statement
+Twice 3
+? 2
+
+' ByRef typed variable to a Variant parameter is copied back
+Dim n As Long
+n = 1
+BumpVariant n
+? n
+
+' ByRef array element
+Dim a(1 To 2) As Long
+a(2) = 5
+Bump a(2)
+? a(2)
+
+' An element of the array a Variant holds reaches a ByRef parameter as storage; an item of a Collection is a call's result, which takes no change back
+Dim v As Variant
+v = Array(1, 2)
+BumpVariant v(1)
+? v(1)
+Dim c As Variant
+Set c = New Collection
+c.Add 5
+BumpVariant c(1)
+? c(1)
+Dim o As Object
+Set o = New Collection
+o.Add 7
+BumpVariant o(1)
+? o(1)
+
+' ByRef record field
+Dim p As TPoint
+p.X = 3
+Bump p.X
+? p.X
+
+' Optional defaults
+? Describe()
+? Describe("a")
+? Describe(, 7)
+? Describe(count:=9, label:="b")
+
+' IsMissing counts omitted Variants
+? MissingCount()
+? MissingCount(1)
+? MissingCount(, 2)
+? MissingCount(1, 2)
+
+' ParamArray sums
+? Total()
+? Total(1)
+? Total(1, 2, 3)
+
+' ParamArray bounds
+? ParamBounds()
+? ParamBounds(1, 2)
+
+' ParamArray type
+? ParamArrayTypeName(1)
+
+' Static local persists
+? Counter()
+? Counter()
+? Counter()
+
+' Static procedure keeps every local
+? StaticProc()
+? StaticProc()
+
+' Recursion
+? Factorial(5)
+
+' Exit Function keeps the value assigned so far
+? EarlyExit()
+
+' Record ByRef is modified in place
+Dim p As TPoint
+p.X = 1
+? MovePoint(p)
+? p.X
+
+' Record assignment copies
+Dim a As TPoint, b As TPoint
+a.X = 1
+b = a
+b.X = 2
+? a.X
+? b.X
+
+' Record returned from a function
+Dim p As TPoint
+p = MakePoint(4, 5)
+? p.X + p.Y
+? PointSum(p)
+
+' Nested record and array members
+Dim s As TShape
+s.Origin.X = 1
+s.Points(2).Y = 20
+s.Name = "sq"
+? s.Origin.X + s.Points(2).Y
+? s.Name
+? LBound(s.Points)
+? UBound(s.Points)
+
+' Nested record copy is deep
+Dim a As TShape, b As TShape
+a.Points(1).X = 7
+b = a
+b.Points(1).X = 8
+? a.Points(1).X
+
+' Dynamic array member of a record
+Dim s As TShape
+ReDim s.Tags(0 To 1)
+s.Tags(1) = "t"
+? UBound(s.Tags)
+? s.Tags(1)
+
+' With block on a record
+Dim p As TPoint
+With p
+    .X = 2
+    .Y = .X * 3
+End With
+? p.Y
+
+' Record array
+Dim pts(1 To 2) As TPoint
+pts(2).X = 9
+? pts(2).X
+? pts(1).X
+
+' Enum values
+? Red
+? Green
+? Blue
+? Purple
+
+' Enum qualified
+? Color.Green
+
+' Enum variable is a Long
+Dim c As Color
+c = Blue
+? TypeName(c)
+? c
+
+' Enum in Select Case
+? ColorName(Green)
+? ColorName(Blue)
+? ColorName(7)
+
+' Error in a callee reaches the caller's handler
+Dim r As Double
+On Error Resume Next
+r = Divide(1, 0)
+? Err.Number
+? Err.Source
+? r
+
+' Resume Next inside the callee hides the error from the caller
+Dim r As Double
+r = ResumeNextDivide(1, 0)
+? Err.Number
+? r
+
+' Erl inside a called procedure
+? ErlInside()
+
+' Err.Raise in a callee carries its source
+On Error Resume Next
+RaiseCustom
+? Err.Number
+? Err.Source
+? Err.Description
+
+' Property Let and Get in a standard module
+Value = 4
+? Value
+
+' A Property Let whose value parameter is ByRef takes the assigned value as a temporary
+Dim n As Long
+n = 8
+Stored = n
+? Stored
+? n
+Stored = 9
+? Stored
+
+' Property Get with an argument
+? Item(3)
+
+' Array parameter
+Dim a(1 To 4) As Long
+? ArrayLength(a)
+
+' Array parameter ReDim Preserve is visible to the caller
+Dim a() As Long
+ReDim a(0 To 1)
+Grow a
+? UBound(a)
+? a(2)
+
+' Function returning an array
+Dim r() As Long
+r = MakeArray()
+? r(1) + r(2)
+? LBound(r)
+
+' Function returning an array used directly
+? UBound(MakeArray())
+
+' Optional default of a typed parameter
+? FirstDefault()
+? FirstDefault(6)
+
+' GoSub and Return
+? SubCalls()
+
+' On GoTo
+? OnGoToPick(1)
+? OnGoToPick(2)
+? OnGoToPick(0)
+? OnGoToPick(3)
+
+' Typed arithmetic intermediate keeps its type
+Dim a As Integer
+a = 20000
+? (a + 10000) + 10000
+
+' Integer plus Integer overflows before widening
+Dim a As Integer
+a = 30000
+? a + a
+
+' Exit For inside a nested Do
+Dim i As Long, n As Long
+For i = 1 To 5
+    Do
+        n = n + 1
+        If i = 2 Then Exit For
+    Loop While False
+Next i
+? i
+? n
+
+' Exit Do inside a nested For
+Dim i As Long, n As Long
+Do
+    For i = 1 To 3
+        n = n + 1
+        If i = 2 Then Exit Do
+    Next i
+Loop
+? i
+? n
+
+' For with a Variant counter
+Dim v As Variant, n As Long
+For v = 1 To 3
+    n = n + v
+Next v
+? n
+? TypeName(v)
+
+' For with a negative step
+Dim i As Long, n As Long
+For i = 5 To 1 Step -2
+    n = n * 10 + i
+Next i
+? n
+? i
+
+' For with Step zero and Exit For
+Dim i As Long, n As Long
+For i = 1 To 3 Step 0
+    n = n + 1
+    If n = 4 Then Exit For
+Next i
+? n
+
+' For limit is evaluated once
+Dim i As Long, lim As Long, n As Long
+lim = 3
+For i = 1 To lim
+    lim = 10
+    n = n + 1
+Next i
+? n
+
+' Next with two variables
+Dim i As Long, j As Long, n As Long
+For i = 1 To 2
+    For j = 1 To 3
+        n = n + 1
+Next j, i
+? n
+
+' Do Until at the bottom runs once
+Dim n As Long
+Do
+    n = n + 1
+Loop Until True
+? n
+
+' While Wend
+Dim n As Long
+While n < 3
+    n = n + 1
+Wend
+? n
+
+' Resume Next after an error in an If condition
+Dim z As Long, r As String
+On Error Resume Next
+If 1 / z > 0 Then
+    r = "then"
+Else
+    r = "else"
+End If
+? r
+? Err.Number
+
+' Resume Next after an error in a Select Case expression
+Dim z As Long, r As String
+On Error Resume Next
+Select Case 1 / z
+    Case 0: r = "zero"
+    Case Else: r = "other"
+End Select
+? r
+
+' Resume retries the statement
+Dim tries As Long, z As Long, r As Double
+On Error GoTo Handler
+r = 1 / z
+? tries
+? r
+Exit Sub
+Handler:
+tries = tries + 1
+z = 4
+Resume
+
+' Resume label
+Dim r As String
+On Error GoTo Handler
+Err.Raise 5
+r = "skipped"
+Done:
+? r
+Exit Sub
+Handler:
+r = "handled"
+Resume Done
+
+' On Error GoTo -1 lets a handler catch a second error
+Dim r As String
+On Error GoTo Handler
+Err.Raise 5
+Exit Sub
+Handler:
+r = r & Err.Number
+On Error GoTo -1
+On Error GoTo Second
+Err.Raise 6
+Exit Sub
+Second:
+r = r & "," & Err.Number
+? r
+
+' Error inside a handler is fatal
+Dim r As String
+On Error GoTo Handler
+Err.Raise 5
+Exit Sub
+Handler:
+r = "in handler"
+Err.Raise 7
+
+' Const inside a procedure
+Const K As Long = 40
+? K + 2
+
+' Select Case with Is and ranges
+Dim r As String, n As Long
+For n = 1 To 4
+    Select Case n
+        Case Is < 2: r = r & "a"
+        Case 2 To 3: r = r & "b"
+        Case Else: r = r & "c"
+    End Select
+Next n
+? r
+
+' Collection members through a Variant
+Dim c As Variant
+Set c = New Collection
+c.Add "x", "k"
+? c.Count
+? c("k")
+? c.Item(1)
+
+' An object declared As New is created on use and after Set Nothing
+Dim c As New Collection
+c.Add 1
+? c.Count
+Set c = Nothing
+c.Add 2
+? c.Count
+
+' An array reaches a ByRef Variant parameter as itself
+Dim fixed(1 To 3) As Long
+fixed(1) = 7
+BumpFirst fixed
+? fixed(1)
+? UBound(fixed)
+
+' A ByRef Variant parameter can ReDim the caller's array
+Dim grown() As Long
+ReDim grown(1 To 2)
+GrowIt grown
+? UBound(grown)
+? grown(5)
+? TypeName(grown)
+
+' A constant from the VBA library's enum, qualified by the enum
+? KLongLong
+
+' Enum members as the bounds of an array in a user-defined type
+Dim r As TRange
+? LBound(r.Items)
+? UBound(r.Items)
+
+' Two enums of one module may share a member name; qualified uses are unambiguous
+? ECompass.North + EDial.East
+? EDial.North
+
+' A function result passed to a ByRef record parameter goes through a temporary
+? ShiftAndSum(MakePoint(1, 2))
+
+' A function result passed to a ByRef array parameter goes through a temporary
+? SumNumbers(MakeNumbers())
+
+' A function returning a String array
+Dim s() As String
+s = MakeNames()
+? s(1) & s(2)
+? Join(MakeNames(), "-")
+
+' A function result String array assigned to a Variant
+Dim v As Variant
+v = MakeNames()
+? v(2)
+
+' A condition whose call needs a temporary for a ByRef argument, in If, ElseIf, and Select Case
+Dim r As String
+If Stepped(1) = 5 Then
+    r = "a"
+ElseIf Exclaimed("hi") = "hi!" Then
+    r = "b"
+Else
+    r = "c"
+End If
+? r
+If Exclaimed("x") = "y" Then
+    r = "d"
+ElseIf Stepped(4) = 5 Then
+    r = "e"
+End If
+? r
+Select Case True
+Case Stepped(1) = 9: r = "x"
+Case Exclaimed("a") = "a!": r = "y"
+End Select
+? r
+
+' Nothing as the default of an Optional Variant parameter
+? DefaultNothing()
+? DefaultNothing(1)
+
+' A ByRef argument goes back when its call returns, before the statement stores the result: n = Bumped(n)
+Dim n As Long
+n = 1
+n = Bumped(n)
+? n
+
+' An array passed to a ByRef Variant goes back before the call's result is stored: a = Halved(a)
+Dim a() As Variant
+ReDim a(0 To 2)
+a = Halved(a)
+? UBound(a)
+? a(0)
+
+' A ParamArray walked twice with For Each gives its elements both times
+? TwiceOver(1, "a", 2)
+? Widths(Array(1, 2), Array(3))

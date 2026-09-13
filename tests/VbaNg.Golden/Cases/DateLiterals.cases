@@ -1,0 +1,37 @@
+' DateLiterals: the forms a date literal may take and the value each one denotes (MS-VBAL 3.3.3).
+
+' Date literal with month day year
+? #1/2/2020#
+
+' Date literal with time
+? #1/2/2020 3:04:05 PM#
+
+' Date literal with a twenty-four hour time
+? #1/2/2020 15:04:05#
+
+' Date literal with time only
+? #3:04:05 PM#
+
+' Date literal with a two-digit year
+? #1/2/20#
+
+' Date literal with a two-digit year in the past window
+? #1/2/30#
+
+' Date literal with a month name
+? #Jan 2 2020#
+
+' Date literal with hours and minutes only
+? #15:04#
+
+' Date literal in ISO order
+? #2020-01-02#
+
+' Date literal with dashes
+? #1-2-2020#
+
+' Date literal with midnight
+? #1/2/2020 12:00:00 AM#
+
+' Date literal with noon
+? #1/2/2020 12:00:00 PM#

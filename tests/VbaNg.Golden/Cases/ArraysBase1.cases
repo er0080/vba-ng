@@ -1,0 +1,51 @@
+' ArraysBase1: array bounds under Option Base 1.
+
+Option Base 1
+
+' Array under Option Base 1
+? Array(1, 2)
+
+' Split ignores Option Base
+? Split("a b")
+
+' Dim without a lower bound uses base 1
+Dim a(2) As Long
+? LBound(a)
+? UBound(a)
+
+' Explicit bounds override the base
+Dim a(0 To 1) As Long
+? LBound(a)
+
+' ReDim uses base 1
+Dim a() As Long
+ReDim a(3)
+? LBound(a)
+
+' ReDim in a Variant uses base 1
+Dim v As Variant
+ReDim v(3)
+? LBound(v)
+
+' Array with no elements under base 1
+? Array()
+
+' Empty Array bounds under base 1
+? LBound(Array())
+? UBound(Array())
+
+' Two-dimensional array under base 1
+Dim a(2, 2) As Long
+? LBound(a, 2)
+
+' Byte array from a String under base 1
+Dim b() As Byte
+b = "hi"
+? LBound(b)
+
+' Filter result under base 1
+? LBound(Filter(Array("a", "b"), "a"))
+
+' Index zero under base 1
+Dim a(2) As Long
+? a(0)

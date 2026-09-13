@@ -1,0 +1,2696 @@
+{
+  "area": "DateTime",
+  "excel": "16.0.20326",
+  "culture": "en-US",
+  "options": [],
+  "cases": [
+    {
+      "name": "DateSerial of a plain date",
+      "source": [
+        "? DateSerial(2020, 1, 2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 00:00:00",
+            "bits": "40E5670000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateSerial with a month overflow",
+      "source": [
+        "? DateSerial(2020, 13, 1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2021-01-01 00:00:00",
+            "bits": "40E594A000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateSerial with a zero month",
+      "source": [
+        "? DateSerial(2020, 0, 1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2019-12-01 00:00:00",
+            "bits": "40E5630000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateSerial with a negative month",
+      "source": [
+        "? DateSerial(2020, -1, 1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2019-11-01 00:00:00",
+            "bits": "40E55F4000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateSerial with a day overflow",
+      "source": [
+        "? DateSerial(2020, 2, 30)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-03-01 00:00:00",
+            "bits": "40E56E6000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateSerial with a zero day",
+      "source": [
+        "? DateSerial(2020, 3, 0)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-02-29 00:00:00",
+            "bits": "40E56E4000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateSerial with a negative day",
+      "source": [
+        "? DateSerial(2020, 3, -1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-02-28 00:00:00",
+            "bits": "40E56E2000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateSerial with a two-digit year in the future window",
+      "source": [
+        "? DateSerial(29, 1, 1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2029-01-01 00:00:00",
+            "bits": "40E701E000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateSerial with a two-digit year in the past window",
+      "source": [
+        "? DateSerial(30, 1, 1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2030-01-01 00:00:00",
+            "bits": "40E72F8000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateSerial with year zero",
+      "source": [
+        "? DateSerial(0, 1, 1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2000-01-01 00:00:00",
+            "bits": "40E1D5C000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateSerial with year 100",
+      "source": [
+        "? DateSerial(100, 1, 1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "0100-01-01 00:00:00",
+            "bits": "C124103400000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateSerial before 1900",
+      "source": [
+        "? DateSerial(1899, 12, 29)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "1899-12-29 00:00:00",
+            "bits": "BFF0000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateSerial with year 9999",
+      "source": [
+        "? DateSerial(9999, 12, 31)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "9999-12-31 00:00:00",
+            "bits": "4146924080000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateSerial with year 10000",
+      "source": [
+        "? DateSerial(10000, 1, 1)"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "DateSerial with a large day count",
+      "source": [
+        "? DateSerial(2020, 1, 366)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-12-31 00:00:00",
+            "bits": "40E5948000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateSerial with Double arguments rounds",
+      "source": [
+        "? DateSerial(2020.5, 1.5, 1.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-02-02 00:00:00",
+            "bits": "40E56AE000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateSerial with Null",
+      "source": [
+        "? DateSerial(Null, 1, 1)"
+      ],
+      "results": [],
+      "error": {
+        "number": 94,
+        "description": "Invalid use of Null",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "DateSerial with a String",
+      "source": [
+        "? DateSerial(\"2020\", \"1\", \"2\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 00:00:00",
+            "bits": "40E5670000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateSerial with year 32767 overflows",
+      "source": [
+        "Dim y As Long",
+        "y = 32768",
+        "? DateSerial(y, 1, 1)"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "TimeSerial of a time",
+      "source": [
+        "? TimeSerial(13, 4, 5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "1899-12-30 13:04:05",
+            "bits": "3FE16C901E573AC9"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TimeSerial with an hour overflow",
+      "source": [
+        "? TimeSerial(25, 0, 0)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "1899-12-31 01:00:00",
+            "bits": "3FF0AAAAAAAAAAAB"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TimeSerial with a negative minute",
+      "source": [
+        "? TimeSerial(1, -1, 0)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "1899-12-30 00:59:00",
+            "bits": "3FA4FA4FA4FA4FA5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TimeSerial with a negative hour",
+      "source": [
+        "? TimeSerial(-1, 0, 0)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "1899-12-30 01:00:00",
+            "bits": "BFA5555555555555"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TimeSerial with a second overflow",
+      "source": [
+        "? TimeSerial(0, 0, 3661)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "1899-12-30 01:01:01",
+            "bits": "3FA5B1DF623A67EB"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TimeSerial with all zeros",
+      "source": [
+        "? TimeSerial(0, 0, 0)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "1899-12-30 00:00:00",
+            "bits": "0000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TimeSerial with Double arguments",
+      "source": [
+        "? TimeSerial(1.5, 0, 0)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "1899-12-30 02:00:00",
+            "bits": "3FB5555555555555"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TimeSerial with Null",
+      "source": [
+        "? TimeSerial(Null, 0, 0)"
+      ],
+      "results": [],
+      "error": {
+        "number": 94,
+        "description": "Invalid use of Null",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "DateAdd months clamps to the month end",
+      "source": [
+        "? DateAdd(\"m\", 1, #1/31/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-02-29 00:00:00",
+            "bits": "40E56E4000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateAdd months into a leap day",
+      "source": [
+        "? DateAdd(\"m\", 1, #1/29/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-02-29 00:00:00",
+            "bits": "40E56E4000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateAdd a year from a leap day",
+      "source": [
+        "? DateAdd(\"yyyy\", 1, #2/29/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2021-02-28 00:00:00",
+            "bits": "40E59BE000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateAdd a negative year",
+      "source": [
+        "? DateAdd(\"yyyy\", -1, #2/29/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2019-02-28 00:00:00",
+            "bits": "40E5408000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateAdd quarters",
+      "source": [
+        "? DateAdd(\"q\", 1, #1/31/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-04-30 00:00:00",
+            "bits": "40E575E000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateAdd days",
+      "source": [
+        "? DateAdd(\"d\", 1, #12/31/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2021-01-01 00:00:00",
+            "bits": "40E594A000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateAdd weekdays adds days",
+      "source": [
+        "? DateAdd(\"w\", 1, #1/3/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-04 00:00:00",
+            "bits": "40E5674000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateAdd weeks",
+      "source": [
+        "? DateAdd(\"ww\", 1, #1/3/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-10 00:00:00",
+            "bits": "40E5680000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateAdd day of year",
+      "source": [
+        "? DateAdd(\"y\", 1, #1/3/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-04 00:00:00",
+            "bits": "40E5674000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateAdd hours",
+      "source": [
+        "? DateAdd(\"h\", 25, #1/1/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 01:00:00",
+            "bits": "40E5670155555555"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateAdd minutes",
+      "source": [
+        "? DateAdd(\"n\", 90, #1/1/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-01 01:30:00",
+            "bits": "40E566E200000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateAdd seconds",
+      "source": [
+        "? DateAdd(\"s\", 3661, #1/1/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-01 01:01:01",
+            "bits": "40E566E15B1DF624"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateAdd with a fractional number truncates",
+      "source": [
+        "? DateAdd(\"d\", 1.9, #1/1/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 00:00:00",
+            "bits": "40E5670000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateAdd with a negative fractional number",
+      "source": [
+        "? DateAdd(\"d\", -1.9, #1/1/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2019-12-31 00:00:00",
+            "bits": "40E566C000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateAdd with an invalid interval",
+      "source": [
+        "? DateAdd(\"x\", 1, #1/1/2020#)"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "DateAdd with an upper-case interval",
+      "source": [
+        "? DateAdd(\"M\", 1, #1/31/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-02-29 00:00:00",
+            "bits": "40E56E4000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateAdd with a String date",
+      "source": [
+        "? DateAdd(\"d\", 1, \"2020-01-01\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 00:00:00",
+            "bits": "40E5670000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateAdd beyond the maximum date",
+      "source": [
+        "? DateAdd(\"yyyy\", 1, #12/31/9999#)"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "DateAdd with Null",
+      "source": [
+        "? DateAdd(\"d\", 1, Null)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateAdd with a number date",
+      "source": [
+        "? DateAdd(\"d\", 1, 43831)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 00:00:00",
+            "bits": "40E5670000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateAdd keeps the time",
+      "source": [
+        "? DateAdd(\"d\", 1, #1/1/2020 3:04:05 PM#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 15:04:05",
+            "bits": "40E56714173AC902"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateAdd months with a negative date",
+      "source": [
+        "? DateAdd(\"m\", 1, #1/31/1899#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "1899-02-28 00:00:00",
+            "bits": "C073100000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateAdd with a Null number",
+      "source": [
+        "? DateAdd(\"d\", Null, #1/1/2020#)"
+      ],
+      "results": [],
+      "error": {
+        "number": 94,
+        "description": "Invalid use of Null",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "DateAdd with a large number of seconds",
+      "source": [
+        "? DateAdd(\"s\", 2147483647, #1/1/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2088-01-19 03:14:07",
+            "bits": "40F0C4E228277166"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateDiff in years counts boundaries",
+      "source": [
+        "? DateDiff(\"yyyy\", #12/31/2019#, #1/1/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateDiff in months counts boundaries",
+      "source": [
+        "? DateDiff(\"m\", #1/31/2020#, #2/1/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateDiff in days",
+      "source": [
+        "? DateDiff(\"d\", #1/1/2020#, #3/1/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "60"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateDiff in days ignores the time",
+      "source": [
+        "? DateDiff(\"d\", #1/1/2020 11:00:00 PM#, #1/2/2020 1:00:00 AM#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateDiff is negative when the dates are reversed",
+      "source": [
+        "? DateDiff(\"d\", #1/2/2020#, #1/1/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "-1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateDiff in weeks with w counts seven-day spans",
+      "source": [
+        "? DateDiff(\"w\", #1/1/2020#, #1/7/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateDiff in weeks with w over a full week",
+      "source": [
+        "? DateDiff(\"w\", #1/1/2020#, #1/8/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateDiff in calendar weeks with ww",
+      "source": [
+        "? DateDiff(\"ww\", #1/4/2020#, #1/5/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateDiff in calendar weeks with a Monday start",
+      "source": [
+        "? DateDiff(\"ww\", #1/4/2020#, #1/5/2020#, vbMonday)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateDiff in quarters",
+      "source": [
+        "? DateDiff(\"q\", #3/31/2020#, #4/1/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateDiff in hours",
+      "source": [
+        "? DateDiff(\"h\", #1/1/2020 11:59:59 PM#, #1/2/2020 12:00:00 AM#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateDiff in minutes",
+      "source": [
+        "? DateDiff(\"n\", #1/1/2020#, #1/1/2020 1:30:00 AM#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "90"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateDiff in seconds",
+      "source": [
+        "? DateDiff(\"s\", #1/1/2020#, #1/2/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "86400"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateDiff in day of year",
+      "source": [
+        "? DateDiff(\"y\", #1/1/2020#, #1/2/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateDiff with an invalid interval",
+      "source": [
+        "? DateDiff(\"x\", #1/1/2020#, #1/2/2020#)"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "DateDiff with String dates",
+      "source": [
+        "? DateDiff(\"d\", \"2020-01-01\", \"2020-01-03\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateDiff with Null",
+      "source": [
+        "? DateDiff(\"d\", Null, #1/2/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateDiff in weeks with the first four days rule",
+      "source": [
+        "? DateDiff(\"ww\", #12/29/2019#, #1/1/2020#, vbSunday, vbFirstFourDays)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateDiff in years over a large span",
+      "source": [
+        "? DateDiff(\"yyyy\", #1/1/1900#, #1/1/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "120"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateDiff returns Long",
+      "source": [
+        "? VarType(DateDiff(\"d\", #1/1/2020#, #1/2/2020#))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateDiff in seconds over a large span",
+      "source": [
+        "? DateDiff(\"s\", #1/1/1900#, #1/1/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "3786825600",
+            "bits": "41EC36CBF0000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateDiff in weeks with w and reversed dates",
+      "source": [
+        "? DateDiff(\"w\", #1/8/2020#, #1/1/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "-1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DatePart year",
+      "source": [
+        "? DatePart(\"yyyy\", #1/2/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "2020"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DatePart quarter",
+      "source": [
+        "? DatePart(\"q\", #5/2/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DatePart month",
+      "source": [
+        "? DatePart(\"m\", #1/2/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DatePart day of year",
+      "source": [
+        "? DatePart(\"y\", #2/1/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "32"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DatePart day",
+      "source": [
+        "? DatePart(\"d\", #1/2/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DatePart weekday",
+      "source": [
+        "? DatePart(\"w\", #1/2/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DatePart weekday with a Monday start",
+      "source": [
+        "? DatePart(\"w\", #1/2/2020#, vbMonday)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DatePart week",
+      "source": [
+        "? DatePart(\"ww\", #1/2/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DatePart week with the first full week rule",
+      "source": [
+        "? DatePart(\"ww\", #1/2/2020#, vbSunday, vbFirstFullWeek)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "52"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DatePart week with the first four days rule",
+      "source": [
+        "? DatePart(\"ww\", #1/1/2021#, vbSunday, vbFirstFourDays)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "53"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DatePart week at the end of a year with the first four days rule",
+      "source": [
+        "? DatePart(\"ww\", #12/31/2020#, vbMonday, vbFirstFourDays)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "53"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DatePart week of the last day of a year with the first full week rule",
+      "source": [
+        "? DatePart(\"ww\", #12/31/2020#, vbSunday, vbFirstFullWeek)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "52"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DatePart hour",
+      "source": [
+        "? DatePart(\"h\", #1/2/2020 3:04:05 PM#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "15"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DatePart minute",
+      "source": [
+        "? DatePart(\"n\", #1/2/2020 3:04:05 PM#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DatePart second",
+      "source": [
+        "? DatePart(\"s\", #1/2/2020 3:04:05 PM#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DatePart with an invalid interval",
+      "source": [
+        "? DatePart(\"x\", #1/2/2020#)"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "DatePart with Null",
+      "source": [
+        "? DatePart(\"d\", Null)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DatePart with an invalid first day of week",
+      "source": [
+        "? DatePart(\"w\", #1/2/2020#, 8)"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "DatePart with an invalid first week of year",
+      "source": [
+        "? DatePart(\"ww\", #1/2/2020#, vbSunday, 4)"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Year of a date",
+      "source": [
+        "? Year(#1/2/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "2020"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Year returns Integer",
+      "source": [
+        "? VarType(Year(#1/2/2020#))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Year of a String",
+      "source": [
+        "? Year(\"2020-01-02\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "2020"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Year of a number",
+      "source": [
+        "? Year(43831)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "2020"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Year of zero",
+      "source": [
+        "? Year(0)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1899"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Year of Null",
+      "source": [
+        "? Year(Null)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Year of Empty",
+      "source": [
+        "Dim v As Variant",
+        "? Year(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1899"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Year of an invalid String",
+      "source": [
+        "? Year(\"abc\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Year of a negative serial",
+      "source": [
+        "? Year(-100)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1899"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Year of a large serial",
+      "source": [
+        "? Year(2958465)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "9999"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Year of a serial past the maximum",
+      "source": [
+        "Dim d As Double",
+        "d = 2958466",
+        "? Year(d)"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Month of a date",
+      "source": [
+        "? Month(#1/2/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Day of a date",
+      "source": [
+        "? Day(#1/2/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Day of a fraction",
+      "source": [
+        "? Day(0.5)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "30"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hour of a time",
+      "source": [
+        "? Hour(#3:04:05 PM#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "15"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hour of a number",
+      "source": [
+        "? Hour(0.75)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "18"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hour of a negative number",
+      "source": [
+        "? Hour(-0.75)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "18"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Minute of a time",
+      "source": [
+        "? Minute(#3:04:05 PM#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Second of a time",
+      "source": [
+        "? Second(#3:04:05 PM#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Second of a fractional serial rounds",
+      "source": [
+        "? Second(0.9999999)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Second of a serial just below a whole second",
+      "source": [
+        "Dim d As Double",
+        "d = 0.5 - 0.000001",
+        "? Second(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Weekday of a Thursday",
+      "source": [
+        "? Weekday(#1/2/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Weekday with a Monday start",
+      "source": [
+        "? Weekday(#1/2/2020#, vbMonday)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Weekday with a Thursday start",
+      "source": [
+        "? Weekday(#1/2/2020#, vbThursday)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Weekday with the system start",
+      "source": [
+        "? Weekday(#1/2/2020#, vbUseSystemDayOfWeek)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Weekday with an invalid start",
+      "source": [
+        "? Weekday(#1/2/2020#, 8)"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Weekday of Null",
+      "source": [
+        "? Weekday(Null)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Null"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Weekday of a negative serial",
+      "source": [
+        "? Weekday(-1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "6"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateValue of a String",
+      "source": [
+        "? DateValue(\"2020-01-02\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 00:00:00",
+            "bits": "40E5670000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateValue drops the time",
+      "source": [
+        "? DateValue(\"2020-01-02 13:04:05\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 00:00:00",
+            "bits": "40E5670000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateValue of a month name String",
+      "source": [
+        "? DateValue(\"January 2, 2020\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 00:00:00",
+            "bits": "40E5670000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateValue of a String with a two-digit year",
+      "source": [
+        "? DateValue(\"1/2/20\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 00:00:00",
+            "bits": "40E5670000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateValue of a String without a year",
+      "source": [
+        "? DateValue(\"January 2\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2026-01-02 00:00:00",
+            "bits": "40E6790000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateValue of a number",
+      "source": [
+        "? DateValue(43831.5)"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "DateValue of an invalid String",
+      "source": [
+        "? DateValue(\"abc\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "DateValue of Null",
+      "source": [
+        "? DateValue(Null)"
+      ],
+      "results": [],
+      "error": {
+        "number": 94,
+        "description": "Invalid use of Null",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "DateValue of a Date",
+      "source": [
+        "? DateValue(#1/2/2020 3:04:05 PM#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 00:00:00",
+            "bits": "40E5670000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TimeValue of a String",
+      "source": [
+        "? TimeValue(\"13:04:05\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "1899-12-30 13:04:05",
+            "bits": "3FE16C901E573AC9"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TimeValue drops the date",
+      "source": [
+        "? TimeValue(\"2020-01-02 13:04:05\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "1899-12-30 13:04:05",
+            "bits": "3FE16C901E573AC9"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TimeValue of a twelve-hour String",
+      "source": [
+        "? TimeValue(\"1:04 PM\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "1899-12-30 13:04:00",
+            "bits": "3FE16C16C16C16C1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TimeValue of hours only",
+      "source": [
+        "? TimeValue(\"13\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "TimeValue of an invalid String",
+      "source": [
+        "? TimeValue(\"25:00:00\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "TimeValue of a number",
+      "source": [
+        "? TimeValue(43831.75)"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "TimeValue of Null",
+      "source": [
+        "? TimeValue(Null)"
+      ],
+      "results": [],
+      "error": {
+        "number": 94,
+        "description": "Invalid use of Null",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "TimeValue of twenty-four hundred",
+      "source": [
+        "? TimeValue(\"24:00:00\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "IsDate of a Date literal",
+      "source": [
+        "? IsDate(#1/2/2020#)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsDate of a date String",
+      "source": [
+        "? IsDate(\"2020-01-02\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsDate of a time String",
+      "source": [
+        "? IsDate(\"13:04\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsDate of a month name String",
+      "source": [
+        "? IsDate(\"Jan 2\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsDate of a number",
+      "source": [
+        "? IsDate(43831)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsDate of a numeric String",
+      "source": [
+        "? IsDate(\"43831\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsDate of an invalid date String",
+      "source": [
+        "? IsDate(\"2/30/2020\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsDate of an empty String",
+      "source": [
+        "? IsDate(\"\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsDate of Null",
+      "source": [
+        "? IsDate(Null)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsDate of Empty",
+      "source": [
+        "Dim v As Variant",
+        "? IsDate(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsDate of a Boolean",
+      "source": [
+        "? IsDate(True)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsDate of a String with a period separator",
+      "source": [
+        "? IsDate(\"1.2.2020\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsDate of a String with dashes and a two-digit year",
+      "source": [
+        "? IsDate(\"1-2-20\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsDate of a large number String",
+      "source": [
+        "? IsDate(\"3000000\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsDate of a Date variable",
+      "source": [
+        "Dim d As Date",
+        "? IsDate(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IsDate of a Double variable",
+      "source": [
+        "Dim d As Double",
+        "? IsDate(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date arithmetic adds days",
+      "source": [
+        "? #1/1/2020# + 1"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-02 00:00:00",
+            "bits": "40E5670000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date arithmetic with a fraction",
+      "source": [
+        "? #1/1/2020# + 0.5"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-01 12:00:00",
+            "bits": "40E566F000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date times a number is Double",
+      "source": [
+        "? #1/1/2020# * 2"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "87662",
+            "bits": "40F566E000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date minus a number is Date",
+      "source": [
+        "? #1/1/2020# - 1"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2019-12-31 00:00:00",
+            "bits": "40E566C000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date plus a Date is Date",
+      "source": [
+        "? #1/1/2020# + #1/1/1900#"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "2020-01-03 00:00:00",
+            "bits": "40E5672000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date divided by a number is Double",
+      "source": [
+        "? #1/1/2020# / 2"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "21915.5",
+            "bits": "40D566E000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date and Integer division",
+      "source": [
+        "? #1/1/2020# \\ 2"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "21915"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date negated",
+      "source": [
+        "? -#1/1/2020#"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "1779-12-28 00:00:00",
+            "bits": "C0E566E000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A negative serial with a time",
+      "source": [
+        "Dim d As Date",
+        "d = -1.5",
+        "? d"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "1899-12-29 12:00:00",
+            "bits": "BFF8000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A serial just below zero",
+      "source": [
+        "Dim d As Date",
+        "d = -0.5",
+        "? d"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "1899-12-30 12:00:00",
+            "bits": "BFE0000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A serial with a negative whole part and a fraction",
+      "source": [
+        "Dim d As Date",
+        "d = -2.25",
+        "? d"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "1899-12-28 06:00:00",
+            "bits": "C002000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Minute of a negative serial",
+      "source": [
+        "Dim d As Date",
+        "d = -1.75",
+        "? Minute(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Day of a negative serial",
+      "source": [
+        "Dim d As Date",
+        "d = -1.75",
+        "? Day(d)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "29"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Adding a day to a negative serial",
+      "source": [
+        "Dim d As Date",
+        "d = -1.75",
+        "? d + 1"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "1899-12-30 18:00:00",
+            "bits": "BFE8000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A Date one day before the epoch",
+      "source": [
+        "Dim d As Date",
+        "d = -1",
+        "? d"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Date",
+            "value": "1899-12-29 00:00:00",
+            "bits": "BFF0000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date comparison",
+      "source": [
+        "? #1/2/2020# > #1/1/2020#"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date and String comparison",
+      "source": [
+        "? #1/2/2020# = \"1/2/2020\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date and ISO String comparison",
+      "source": [
+        "? #1/2/2020# = \"2020-01-02\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date and numeric comparison",
+      "source": [
+        "? #1/2/2020# = 43832"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date and String less-than comparison",
+      "source": [
+        "? #1/2/2020# < \"2\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        }
+      ]
+    },
+    {
+      "name": "VarType of Now is Date",
+      "source": [
+        "? VarType(Now)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Timer returns Single",
+      "source": [
+        "? VarType(Timer)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Date returns a whole serial",
+      "source": [
+        "? Date = Int(Date)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Time is below one",
+      "source": [
+        "? Time < 1"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Now is a Date after 2020",
+      "source": [
+        "? Now > #1/1/2020#"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    }
+  ]
+}

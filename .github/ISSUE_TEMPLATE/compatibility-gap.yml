@@ -1,0 +1,47 @@
+name: Compatibility gap
+description: VBA and vba-ng disagree about what a piece of code means.
+labels: [compatibility]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Excel's VBA is the specification: where the two disagree, VBA is right and vba-ng is wrong,
+        even where VBA looks wrong. A gap needs the smallest code that shows it and both outputs.
+  - type: textarea
+    id: snippet
+    attributes:
+      label: The VBA
+      description: The smallest procedure that shows the difference, so it can become a golden case.
+      render: vb
+      placeholder: |
+        Sub Show()
+            Debug.Print CDec("-0.0")
+        End Sub
+    validations:
+      required: true
+  - type: textarea
+    id: vba-output
+    attributes:
+      label: What VBA prints
+      description: From the Immediate window in Excel, copied exactly, spacing included.
+      placeholder: "-0"
+    validations:
+      required: true
+  - type: textarea
+    id: vbang-output
+    attributes:
+      label: What vba-ng prints
+      description: From `vbang run Module.Show`, copied exactly.
+      placeholder: "0"
+    validations:
+      required: true
+  - type: input
+    id: excel
+    attributes:
+      label: Excel version and locale
+      description: >
+        Help > About, and the Windows display language. Number, date, and comparison behaviour all
+        follow the locale, so a gap that only appears in one is still a gap.
+      placeholder: Excel 16.0.20326 x64, en-US
+    validations:
+      required: true

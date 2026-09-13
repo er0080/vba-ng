@@ -1,0 +1,138 @@
+' Scope: names across modules (MS-VBAL 5.6.10 simple name expressions, 5.6.11 member access):
+' module-qualified names, a name resolved in the enclosing module before another module's
+' public member, a module name that a public function elsewhere also carries, Option Private
+' Module, Friend, and Static procedures. Helpers, Other, and Hidden are the companion standard
+' modules and Thing the companion class; the recorder module itself is GoldenScope.
+' The VBE rejects two forms the harness cannot record: the bare call Other() when a module is named
+' Other (the module name wins, MS-VBAL 5.6.10), and TypeName(q) of a user-defined type (a type
+' cannot be passed to a Variant parameter).
+
+Option Explicit
+
+Private Function Nearby() As String
+    Nearby = "GoldenScope.Nearby"
+End Function
+
+Private Sub Bump(ByRef n As Long)
+    n = n + 1
+End Sub
+
+' A public function of another module by its module-qualified name
+? Helpers.Twice(3)
+
+' A public function of another module by its bare name
+? Twice(4)
+
+' A public variable of another module, qualified and bare
+Helpers.Counter = 5
+? Counter
+Counter = Counter + 1
+? Helpers.Counter
+
+' A public constant of another module
+? Limit
+? Helpers.Limit
+
+' A Global variable of another module
+GlobalLimit = 7
+? Helpers.GlobalLimit
+
+' A public array of another module
+Helpers.Values(2) = 20
+? Values(2)
+? Helpers.Values(2)
+? UBound(Helpers.Values)
+
+' A property of a standard module
+Helpers.Setting = 4
+? Setting
+? Helpers.Setting
+
+' The same function name in two modules, qualified
+? Helpers.Both()
+? Other.Both()
+
+' A module resolves a shared name to its own member
+? Helpers.CallsBoth()
+
+' The enclosing module's private member wins over another module's public one
+? Nearby()
+? Helpers.Nearby()
+
+' A public function named like another module, qualified
+? Helpers.Other()
+
+' Public constants of the same name in two modules
+? Helpers.Tag
+? Other.Tag
+
+' A ByRef argument that is another module's variable
+Helpers.Counter = 1
+Bump Helpers.Counter
+? Helpers.Counter
+
+' A ByRef argument that is another module's array element
+Helpers.Values(1) = 1
+Bump Helpers.Values(1)
+? Helpers.Values(1)
+
+' A type declared in another module, bare and qualified
+Dim p As Point
+Dim q As Helpers.Point
+p.X = 1
+q.X = 2
+? p.X + q.X
+
+' An enum declared in another module
+Dim c As Colors
+c = Green
+? c
+? Colors.Red
+? TypeName(c)
+
+' An enum member qualified by its module
+? Helpers.Green
+
+' An enum member qualified by its module and enum
+? Helpers.Colors.Red
+
+' A public function of an Option Private Module module is reachable in its project
+? Hidden.Secret()
+? Secret()
+
+' A public variable of an Option Private Module module
+Hidden.HiddenCount = 3
+? HiddenCount
+
+' A Friend function of a class is reachable in its project
+Dim t As New Thing
+? t.Secret()
+
+' A Friend property and a Friend sub
+Dim t As New Thing
+t.Hit
+t.Hit
+? t.Hits
+
+' A Static procedure in another module keeps its locals across calls
+? Helpers.StaticCalls()
+? StaticCalls()
+? Helpers.StaticCalls()
+
+' A private variable of another module through its accessor
+? Helpers.Own()
+? Own()
+
+' The type of a module-qualified call's value
+? TypeName(Helpers.Twice(1))
+
+' A module-qualified call as a statement
+Helpers.Counter = 9
+Call Helpers.Reset
+? Helpers.Counter
+Helpers.Counter = 9
+Helpers.Reset
+? Counter
+
+' A module-qualified function in an expression
+? Helpers.Twice(Helpers.Twice(2)) + Other.Both() & ""

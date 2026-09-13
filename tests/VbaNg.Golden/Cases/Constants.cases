@@ -1,0 +1,389 @@
+' Constants: values and types of the built-in constants. A constant this
+' Excel does not define records as Empty, since the recorder module has no Option Explicit.
+
+' vbCrLf
+? vbCrLf
+
+' vbCr
+? vbCr
+
+' vbLf
+? vbLf
+
+' vbNewLine
+? vbNewLine
+
+' vbTab
+? vbTab
+
+' vbBack
+? vbBack
+
+' vbFormFeed
+? vbFormFeed
+
+' vbVerticalTab
+? vbVerticalTab
+
+' vbNullChar
+? vbNullChar
+
+' vbNullString equals the empty String
+? vbNullString = ""
+
+' Len of vbNullString
+? Len(vbNullString)
+
+' VarType of vbNullString
+? VarType(vbNullString)
+
+' vbObjectError
+? vbObjectError
+
+' vbEmpty
+? vbEmpty
+
+' vbNull
+? vbNull
+
+' vbInteger
+? vbInteger
+
+' vbLong
+? vbLong
+
+' vbSingle
+? vbSingle
+
+' vbDouble
+? vbDouble
+
+' vbCurrency
+? vbCurrency
+
+' vbDate
+? vbDate
+
+' vbString
+? vbString
+
+' vbObject
+? vbObject
+
+' vbError
+? vbError
+
+' vbBoolean
+? vbBoolean
+
+' vbVariant
+? vbVariant
+
+' vbDataObject
+? vbDataObject
+
+' vbDecimal
+? vbDecimal
+
+' vbByte
+? vbByte
+
+' vbLongLong
+? vbLongLong
+
+' vbUserDefinedType
+? vbUserDefinedType
+
+' vbArray
+? vbArray
+
+' vbTrue
+? vbTrue
+
+' vbFalse
+? vbFalse
+
+' vbUseDefault
+? vbUseDefault
+
+' vbBinaryCompare
+? vbBinaryCompare
+
+' vbTextCompare
+? vbTextCompare
+
+' vbDatabaseCompare
+? vbDatabaseCompare
+
+' vbSunday
+? vbSunday
+
+' vbMonday
+? vbMonday
+
+' vbSaturday
+? vbSaturday
+
+' vbUseSystemDayOfWeek
+? vbUseSystemDayOfWeek
+
+' vbUseSystem
+? vbUseSystem
+
+' vbFirstJan1
+? vbFirstJan1
+
+' vbFirstFourDays
+? vbFirstFourDays
+
+' vbFirstFullWeek
+? vbFirstFullWeek
+
+' vbGeneralDate
+? vbGeneralDate
+
+' vbLongDate
+? vbLongDate
+
+' vbShortDate
+? vbShortDate
+
+' vbLongTime
+? vbLongTime
+
+' vbShortTime
+? vbShortTime
+
+' vbUpperCase
+? vbUpperCase
+
+' vbLowerCase
+? vbLowerCase
+
+' vbProperCase
+? vbProperCase
+
+' vbWide
+? vbWide
+
+' vbNarrow
+? vbNarrow
+
+' vbKatakana
+? vbKatakana
+
+' vbHiragana
+? vbHiragana
+
+' vbUnicode
+? vbUnicode
+
+' vbFromUnicode
+? vbFromUnicode
+
+' vbBlack
+? vbBlack
+
+' vbRed
+? vbRed
+
+' vbGreen
+? vbGreen
+
+' vbYellow
+? vbYellow
+
+' vbBlue
+? vbBlue
+
+' vbMagenta
+? vbMagenta
+
+' vbCyan
+? vbCyan
+
+' vbWhite
+? vbWhite
+
+' vbOKOnly
+? vbOKOnly
+
+' vbOKCancel
+? vbOKCancel
+
+' vbAbortRetryIgnore
+? vbAbortRetryIgnore
+
+' vbYesNoCancel
+? vbYesNoCancel
+
+' vbYesNo
+? vbYesNo
+
+' vbRetryCancel
+? vbRetryCancel
+
+' vbCritical
+? vbCritical
+
+' vbQuestion
+? vbQuestion
+
+' vbExclamation
+? vbExclamation
+
+' vbInformation
+? vbInformation
+
+' vbDefaultButton1
+? vbDefaultButton1
+
+' vbDefaultButton2
+? vbDefaultButton2
+
+' vbDefaultButton3
+? vbDefaultButton3
+
+' vbDefaultButton4
+? vbDefaultButton4
+
+' vbApplicationModal
+? vbApplicationModal
+
+' vbSystemModal
+? vbSystemModal
+
+' vbMsgBoxHelpButton
+? vbMsgBoxHelpButton
+
+' vbMsgBoxSetForeground
+? vbMsgBoxSetForeground
+
+' vbMsgBoxRight
+? vbMsgBoxRight
+
+' vbMsgBoxRtlReading
+? vbMsgBoxRtlReading
+
+' vbOK
+? vbOK
+
+' vbCancel
+? vbCancel
+
+' vbAbort
+? vbAbort
+
+' vbRetry
+? vbRetry
+
+' vbIgnore
+? vbIgnore
+
+' vbYes
+? vbYes
+
+' vbNo
+? vbNo
+
+' vbNormal
+? vbNormal
+
+' vbReadOnly
+? vbReadOnly
+
+' vbHidden
+? vbHidden
+
+' vbSystem
+? vbSystem
+
+' vbVolume
+? vbVolume
+
+' vbDirectory
+? vbDirectory
+
+' vbArchive
+? vbArchive
+
+' vbAlias
+? vbAlias
+
+' vbHide
+? vbHide
+
+' vbNormalFocus
+? vbNormalFocus
+
+' vbMinimizedFocus
+? vbMinimizedFocus
+
+' vbMaximizedFocus
+? vbMaximizedFocus
+
+' vbNormalNoFocus
+? vbNormalNoFocus
+
+' vbMinimizedNoFocus
+? vbMinimizedNoFocus
+
+' vbKeyLButton
+? vbKeyLButton
+
+' vbKeyReturn
+? vbKeyReturn
+
+' vbKeyEscape
+? vbKeyEscape
+
+' vbKeySpace
+? vbKeySpace
+
+' vbKey0
+? vbKey0
+
+' vbKeyA
+? vbKeyA
+
+' vbKeyNumpad0
+? vbKeyNumpad0
+
+' vbKeyF1
+? vbKeyF1
+
+' vbGet
+? vbGet
+
+' vbLet
+? vbLet
+
+' vbSet
+? vbSet
+
+' vbMethod
+? vbMethod
+
+' vbCalGreg
+? vbCalGreg
+
+' vbCalHijri
+? vbCalHijri
+
+' vbIMEModeNoControl
+? vbIMEModeNoControl
+
+' vbLinguisticCasing
+? vbLinguisticCasing
+
+' vbSimplifiedChinese
+? vbSimplifiedChinese
+
+' vbTraditionalChinese
+? vbTraditionalChinese
+
+' vbHangul
+? vbHangul
+
+' vbSubOutOfRange? undefined name records Empty
+? vbNotAConstant

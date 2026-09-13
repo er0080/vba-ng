@@ -1,0 +1,101 @@
+# Tag, push, release. The tag is the only input: v1.2.3-beta1 builds 1.2.3-beta1.
+#
+#   git tag -a v1.2.3-beta1 -m "what this release is"
+#   git push origin v1.2.3-beta1
+#
+# Nothing is deployed. A release here is the artifacts attached to a tag, which is what a user
+# installs by hand until vbang install lands.
+name: release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: windows-latest
+    permissions:
+      # Only this job writes, and only to create the release.
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install the pinned SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      # v1.2.3 -> 1.2.3. A version with a prerelease suffix marks the release as a prerelease.
+      - name: Read the version out of the tag
+        id: version
+        shell: pwsh
+        run: |
+          $version = $env:GITHUB_REF_NAME -replace '^v', ''
+          if ($version -notmatch '^\d+\.\d+\.\d+(-[A-Za-z0-9.]+)?$') {
+              throw "Tag '$env:GITHUB_REF_NAME' is not a version this workflow can build."
+          }
+          "version=$version" | Out-File $env:GITHUB_OUTPUT -Append
+          $prerelease = if ($version -like '*-*') { 'true' } else { 'false' }
+          "prerelease=$prerelease" | Out-File $env:GITHUB_OUTPUT -Append
+          Write-Host "Building $version (prerelease: $prerelease)"
+
+      - name: Restore
+        run: dotnet restore --locked-mode
+
+      # -p:Version overrides what Directory.Build.props declares, so the tag decides and no file
+      # has to be edited to cut a release.
+      - name: Build
+        run: dotnet build --no-restore -c Release -p:Version=${{ steps.version.outputs.version }}
+
+      - name: The build carries the version the tag asked for
+        run: powershell -ExecutionPolicy Bypass -File tools/Test-VersionSingleSource.ps1 -Expected ${{ steps.version.outputs.version }}
+
+      # The same gate as every push, against the bits being shipped.
+      - name: Test
+        run: dotnet test --no-build -c Release
+
+      - name: Publish the CLI and collect the add-in
+        shell: pwsh
+        run: |
+          $staging = 'artifacts/vbang'
+          dotnet publish src/VbaNg.Cli --no-build -c Release -p:Version=${{ steps.version.outputs.version }} -o $staging
+          # The .xll is what Excel loads; Excel-DNA packs it next to the add-in's build output.
+          $xll = Get-ChildItem src/VbaNg.AddIn/bin/Release -Recurse -Filter '*-AddIn64*.xll' |
+              Sort-Object LastWriteTimeUtc -Descending |
+              Select-Object -First 1
+          if (-not $xll) { throw 'No packed .xll under src/VbaNg.AddIn/bin/Release.' }
+          Copy-Item $xll.FullName (Join-Path $staging $xll.Name)
+          Copy-Item README.md, docs/user-manual.md -Destination $staging
+          if (Test-Path LICENSE) { Copy-Item LICENSE -Destination $staging }
+
+      - name: Zip it, with checksums
+        shell: pwsh
+        run: |
+          $version = '${{ steps.version.outputs.version }}'
+          $zip = "artifacts/vbang-$version-win-x64.zip"
+          Compress-Archive -Path 'artifacts/vbang/*' -DestinationPath $zip
+          (Get-FileHash $zip -Algorithm SHA256).Hash + "  " + (Split-Path $zip -Leaf) |
+              Out-File 'artifacts/SHA256SUMS' -Encoding ascii
+          Get-Content 'artifacts/SHA256SUMS'
+
+      # gh is preinstalled on the runner, so the release needs no third-party action.
+      - name: Create the release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $flags = @('--generate-notes', '--title', $env:GITHUB_REF_NAME)
+          if ('${{ steps.version.outputs.prerelease }}' -eq 'true') { $flags += '--prerelease' }
+          gh release create $env:GITHUB_REF_NAME $flags (Resolve-Path 'artifacts/*.zip') (Resolve-Path 'artifacts/SHA256SUMS')
+
+      - name: Keep the artifacts on the run as well
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vbang-${{ steps.version.outputs.version }}
+          path: artifacts/*
+          if-no-files-found: error

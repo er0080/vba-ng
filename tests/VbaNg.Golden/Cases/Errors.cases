@@ -1,0 +1,713 @@
+' Errors: error numbers and messages, the Err object, Erl, Resume, and Resume Next (CLAUDE.md R5).
+' A case that ends in an error records Err as the recorder's handler saw it.
+
+' Err.Raise with a known number fills in the description
+Err.Raise 6
+
+' Err.Raise with a custom source and description
+Err.Raise 5, "MySource", "My description"
+
+' Err.Raise with an unknown number
+Err.Raise 1000
+
+' Err.Raise with vbObjectError
+Err.Raise vbObjectError + 513
+
+' Err.Raise with vbObjectError and a description
+Err.Raise vbObjectError + 513, , "Custom object error"
+
+' Err.Raise with zero
+Err.Raise 0
+
+' Err.Raise beyond 65535
+Dim n As Long
+n = 65536
+Err.Raise n
+
+' Err.Raise with a negative number
+Dim n As Long
+n = -1
+Err.Raise n
+
+' Err.Raise with an empty description
+Err.Raise 6, , ""
+
+' Err.Raise with a Null description
+Err.Raise 6, , Null
+
+' Err.Raise with a numeric description
+Err.Raise 6, , 42
+
+' Err.Raise with a String number
+Err.Raise "6"
+
+' Err.Raise with a Null number
+Err.Raise Null
+
+' Err.Raise with a description containing line breaks
+Err.Raise 5, "Src", "Line 1" & vbCrLf & "Line 2"
+
+' Err.Raise with a help file and context
+Err.Raise 5, "Src", "Desc", "help.chm", 12
+
+' Err properties after Resume Next
+On Error Resume Next
+Err.Raise 6
+? Err.Number
+? Err.Description
+? Err.Source
+? Err.HelpFile
+? Err.HelpContext
+
+' Err.Clear resets the properties
+On Error Resume Next
+Err.Raise 6
+Err.Clear
+? Err.Number
+? Err.Description
+? Err.Source
+
+' Err.Number is zero at the start
+? Err.Number
+
+' Err.Description is empty at the start
+? Err.Description
+
+' Err.Source at the start
+? Err.Source
+
+' Err.HelpFile at the start
+? Err.HelpFile
+
+' Err.HelpContext at the start
+? Err.HelpContext
+
+' Err.LastDllError at the start
+? Err.LastDllError
+
+' Err.Number is Long
+? VarType(Err.Number)
+
+' Err.Description is String
+? VarType(Err.Description)
+
+' Error function inside a handler
+On Error Resume Next
+Err.Raise 13
+? Error
+
+' Error function with an argument inside a handler
+On Error Resume Next
+Err.Raise 13
+? Error(6)
+
+' Error dollar of a number
+? Error$(11)
+
+' Division by zero error
+Dim z As Long
+On Error Resume Next
+Dim x As Double
+x = 1 / z
+? Err.Number
+? Err.Description
+
+' Type mismatch error
+On Error Resume Next
+Dim x As Long
+x = "abc"
+? Err.Number
+? Err.Description
+
+' Overflow error
+On Error Resume Next
+Dim x As Integer
+Dim v As Variant
+v = 40000
+x = v
+? Err.Number
+? Err.Description
+
+' Subscript out of range error
+On Error Resume Next
+Dim a(1) As Long
+Dim x As Long
+x = a(5)
+? Err.Number
+? Err.Description
+
+' Object variable not set error
+On Error Resume Next
+Dim c As Collection
+Dim x As Long
+x = c.Count
+? Err.Number
+? Err.Description
+
+' Invalid use of Null error
+On Error Resume Next
+Dim s As String
+s = Null
+? Err.Number
+? Err.Description
+
+' Invalid procedure call error
+On Error Resume Next
+Dim s As String
+s = Left("a", -1)
+? Err.Number
+? Err.Description
+
+' Resume Next continues after the failing statement
+On Error Resume Next
+Dim x As Long
+x = 1
+x = "abc"
+x = x + 1
+? x
+
+' Err.Number is cleared by a new On Error statement
+On Error Resume Next
+Err.Raise 6
+On Error Resume Next
+? Err.Number
+
+' Err.Number survives a procedure call
+On Error Resume Next
+Err.Raise 6
+Dim s As String
+s = Left("abc", 1)
+? Err.Number
+
+' Error inside the case without a handler statement
+Dim z As Long
+? 1 / z
+
+' Error after a value was recorded
+? 1
+Dim z As Long
+? 1 / z
+
+' Error number in a handler with line numbers
+On Error GoTo Handler
+10 Dim z As Long
+20 Dim x As Double
+30 x = 1 / z
+40 Exit Sub
+Handler:
+? Erl
+? Err.Number
+Exit Sub
+
+' Erl without line numbers
+On Error GoTo Handler
+Dim z As Long
+Dim x As Double
+x = 1 / z
+Exit Sub
+Handler:
+? Erl
+Exit Sub
+
+' Erl with a line number before the failing line
+On Error GoTo Handler
+10 Dim z As Long
+Dim x As Double
+x = 1 / z
+Exit Sub
+Handler:
+? Erl
+Exit Sub
+
+' Erl with line numbers on executable lines only
+On Error GoTo Handler
+Dim z As Long
+Dim x As Double
+30 x = 1 / z
+40 Exit Sub
+Handler:
+? Erl
+Exit Sub
+
+' Erl with a line number only after the failing line
+On Error GoTo Handler
+Dim z As Long
+Dim x As Double
+x = 1 / z
+50 Exit Sub
+Handler:
+? Erl
+Exit Sub
+
+' Resume retries the failing statement
+Dim tries As Long
+On Error GoTo Handler
+Dim z As Long
+Dim x As Double
+x = 1 / z
+? tries
+Exit Sub
+Handler:
+tries = tries + 1
+z = 2
+Resume
+
+' Resume with a label
+On Error GoTo Handler
+Dim z As Long
+Dim x As Double
+x = 1 / z
+? "skipped"
+Done:
+? "done"
+Exit Sub
+Handler:
+Resume Done
+
+' Error inside a handler goes to the caller
+On Error GoTo Handler
+Dim z As Long
+Dim x As Double
+x = 1 / z
+Exit Sub
+Handler:
+x = CLng("abc")
+? "not reached"
+
+' Err.Raise inside a handler replaces the error
+On Error GoTo Handler
+Err.Raise 6
+Exit Sub
+Handler:
+Err.Raise 5, , "from the handler"
+
+' On Error GoTo minus one clears the current error
+On Error Resume Next
+Err.Raise 6
+On Error GoTo -1
+? Err.Number
+
+' Err.Raise with vbObjectError and Err.Number
+On Error Resume Next
+Err.Raise vbObjectError + 1
+? Err.Number
+
+' Err.Description of a raised error with a description of spaces
+On Error Resume Next
+Err.Raise 6, , "   "
+? Err.Description
+
+' Error messages 1 to 100
+Dim n As Long
+For n = 1 To 100
+? Error$(n)
+Next
+
+' Error messages 300 to 500
+Dim n As Long
+For n = 300 To 500
+? Error$(n)
+Next
+
+' Error messages 700 to 800
+Dim n As Long
+For n = 700 To 800
+? Error$(n)
+Next
+
+' Error messages 1000 to 1010
+Dim n As Long
+For n = 1000 To 1010
+? Error$(n)
+Next
+
+' Error messages 31000 to 31040
+Dim n As Long
+For n = 31000 To 31040
+? Error$(n)
+Next
+
+' Error messages 32750 to 32800
+Dim n As Long
+For n = 32750 To 32800
+? Error$(n)
+Next
+
+' Error messages 35600 to 35610
+Dim n As Long
+For n = 35600 To 35610
+? Error$(n)
+Next
+
+' Erl with a numbered Dim before an unnumbered Dim and a numbered failing line
+On Error GoTo Handler
+10 Dim z As Long
+Dim x As Double
+20 x = 1 / z
+Exit Sub
+Handler:
+? Erl
+Exit Sub
+
+' Erl with a numbered assignment, a numbered Dim, and a numbered failing line
+On Error GoTo Handler
+Dim z As Long
+Dim x As Double
+10 z = 0
+20 Dim y As Long
+30 x = 1 / z
+Exit Sub
+Handler:
+? Erl
+Exit Sub
+
+' Erl with two numbered Dims, a numbered assignment, and a numbered failing line
+On Error GoTo Handler
+10 Dim z As Long
+20 Dim y As Long
+30 y = 1
+40 Dim x As Double
+50 x = 1 / z
+Exit Sub
+Handler:
+? Erl
+? y
+Exit Sub
+
+' Erl with numbered lines on every executable statement and no Dim in between
+On Error GoTo Handler
+Dim z As Long
+Dim x As Double
+10 z = 0
+20 x = 1 / z
+Exit Sub
+Handler:
+? Erl
+Exit Sub
+
+' Erl with two Dims on one numbered line
+On Error GoTo Handler
+10 Dim z As Long: Dim x As Double
+20 x = 1 / z
+Exit Sub
+Handler:
+? Erl
+Exit Sub
+
+' Erl with a numbered Const before the failing line
+On Error GoTo Handler
+10 Const c As Long = 0
+Dim x As Double
+20 x = 1 / c
+Exit Sub
+Handler:
+? Erl
+Exit Sub
+
+' Erl under Resume Next with numbered Dims
+On Error Resume Next
+10 Dim z As Long
+20 Dim x As Double
+30 x = 1 / z
+? Erl
+? Err.Number
+
+' Erl after a numbered If block
+On Error GoTo Handler
+Dim z As Long
+Dim x As Double
+10 If z = 0 Then
+20 x = 1
+30 End If
+40 x = 1 / z
+Exit Sub
+Handler:
+? Erl
+Exit Sub
+
+' A Double division by zero under Resume Next leaves its result behind
+Dim x As Double
+On Error Resume Next
+x = 1 / 0
+? x
+? Err.Number
+
+' A Double division by zero under Resume Next overwrites the old value
+Dim x As Double
+x = 5
+On Error Resume Next
+x = 1 / 0
+? x
+
+' A Variant takes the result of a Double division by zero under Resume Next
+Dim v As Variant
+On Error Resume Next
+v = 1 / 0
+? TypeName(v)
+? v
+
+' An expression around a Double division by zero under Resume Next
+Dim y As Double
+y = 2
+On Error Resume Next
+y = (1 / 0) + y
+? y
+
+' A Long divided by a Long zero under Resume Next
+Dim z As Long
+Dim x As Double
+On Error Resume Next
+x = 1 / z
+? x
+
+' A Double overflow under Resume Next
+Dim d As Double
+d = 1E+308
+On Error Resume Next
+d = d * 10
+? d
+? Err.Number
+
+' Integer division by zero under Resume Next leaves the old value
+Dim n As Long
+n = 5
+On Error Resume Next
+n = 1 \ 0
+? n
+? Err.Number
+
+' Mod by zero under Resume Next leaves the old value
+Dim n As Long
+n = 5
+On Error Resume Next
+n = 1 Mod 0
+? n
+
+' A Double division by zero printed directly
+? 1 / 0
+
+' Erl with two numbered Dims, a numbered failing line, and an unnumbered Exit Sub
+On Error GoTo Handler
+10 Dim z As Long
+20 Dim x As Double
+30 x = 1 / z
+Exit Sub
+Handler:
+? Erl
+Exit Sub
+
+' Erl with one numbered Dim, a numbered failing line, and a numbered Exit Sub
+On Error GoTo Handler
+10 Dim z As Long
+Dim x As Double
+20 x = 1 / z
+30 Exit Sub
+Handler:
+? Erl
+Exit Sub
+
+' Erl with two numbered Dims, a numbered assignment between, and a numbered Exit Sub
+On Error GoTo Handler
+10 Dim z As Long
+20 Dim x As Double
+25 z = 0
+30 x = 1 / z
+40 Exit Sub
+Handler:
+? Erl
+Exit Sub
+
+' Erl with three numbered Dims, a numbered failing line, and a numbered Exit Sub
+On Error GoTo Handler
+10 Dim z As Long
+20 Dim x As Double
+25 Dim w As Long
+30 x = 1 / z
+40 Exit Sub
+Handler:
+? Erl
+Exit Sub
+
+' Erl with two numbered Dims, a numbered failing line, and a numbered Dim after it
+On Error GoTo Handler
+10 Dim z As Long
+20 Dim x As Double
+30 x = 1 / z
+40 Dim w As Long
+Exit Sub
+Handler:
+? Erl
+Exit Sub
+
+' Erl read after Err.Number in the handler of the original shape
+On Error GoTo Handler
+10 Dim z As Long
+20 Dim x As Double
+30 x = 1 / z
+40 Exit Sub
+Handler:
+? Err.Number
+? Erl
+Exit Sub
+
+' Erl with two numbered Dims and the failing line numbered 35
+On Error GoTo Handler
+10 Dim z As Long
+20 Dim x As Double
+35 x = 1 / z
+40 Exit Sub
+Handler:
+? Erl
+Exit Sub
+
+' Erl with an unnumbered assignment between numbered Dims and a numbered failing line, numbered Exit
+On Error GoTo Handler
+10 Dim z As Long
+20 Dim x As Double
+z = 0
+30 x = 1 / z
+40 Exit Sub
+Handler:
+? Erl
+Exit Sub
+
+' Erl with an unnumbered Dim first, then a numbered Dim, failing line, and Exit
+On Error GoTo Handler
+Dim z As Long
+10 Dim x As Double
+20 x = 1 / z
+30 Exit Sub
+Handler:
+? Erl
+Exit Sub
+
+' Erl with an unnumbered statement between the failing line and the numbered Exit
+On Error GoTo Handler
+10 Dim z As Long
+20 Dim x As Double
+30 x = 1 / z
+z = 1
+40 Exit Sub
+Handler:
+? Erl
+Exit Sub
+
+' Erl with a numbered Dim and assignment on one line before the failing line
+On Error GoTo Handler
+10 Dim z As Long: z = 0
+20 Dim x As Double
+30 x = 1 / z
+40 Exit Sub
+Handler:
+? Erl
+Exit Sub
+
+' Erl with a numbered assignment between two numbered Dims before the failing line
+On Error GoTo Handler
+10 Dim z As Long
+20 z = 0
+30 Dim x As Double
+40 x = 1 / z
+50 Exit Sub
+Handler:
+? Erl
+Exit Sub
+
+' Erl with numbered Dims, an unnumbered failing line, and a numbered Exit
+On Error GoTo Handler
+10 Dim z As Long
+20 Dim x As Double
+x = 1 / z
+40 Exit Sub
+Handler:
+? Erl
+Exit Sub
+
+' Erl under Resume Next with numbered Dims and a numbered line after the failing one
+On Error Resume Next
+10 Dim z As Long
+20 Dim x As Double
+30 x = 1 / z
+40 z = 1
+? Erl
+
+' Erl with numbered Dims, a numbered failing line, and two numbered lines after it
+On Error GoTo Handler
+10 Dim z As Long
+20 Dim x As Double
+30 x = 1 / z
+40 z = 1
+50 Exit Sub
+Handler:
+? Erl
+Exit Sub
+
+' Erl at an unnumbered statement reached again after a numbered line ran
+On Error GoTo Handler
+Dim n As Long
+Dim x As Double
+Dim z As Long
+Top:
+n = n + 1
+x = 1 / (2 - n)
+10 z = 0
+If n < 2 Then GoTo Top
+Exit Sub
+Handler:
+? Erl
+? n
+Exit Sub
+
+' Erl when the For limit fails
+On Error GoTo Handler
+Dim z As Long
+Dim i As Long
+5 z = 0
+10 For i = 1 To 1 / z
+20 Next
+Exit Sub
+Handler:
+? Erl
+Exit Sub
+
+' Erl with numbered Dims, a numbered failing line, and a numbered line only in the handler
+On Error GoTo Handler
+10 Dim z As Long
+20 Dim x As Double
+30 x = 1 / z
+Exit Sub
+Handler:
+? Erl
+40 Exit Sub
+
+' Erl with a numbered On Error, numbered Dims, a numbered failing line, and a numbered Exit
+10 On Error GoTo Handler
+20 Dim z As Long
+30 Dim x As Double
+40 x = 1 / z
+50 Exit Sub
+Handler:
+? Erl
+Exit Sub
+
+' Erl with a numbered Dim, a numbered ReDim, a numbered failing line, and a numbered Exit
+On Error GoTo Handler
+10 Dim a() As Long
+20 ReDim a(1)
+30 a(0) = 1 / a(1)
+40 Exit Sub
+Handler:
+? Erl
+Exit Sub
+
+' Erl with a numbered failing line inside a numbered If block after numbered Dims
+On Error GoTo Handler
+10 Dim z As Long
+20 Dim x As Double
+30 If z = 0 Then
+40 x = 1 / z
+50 End If
+60 Exit Sub
+Handler:
+? Erl
+Exit Sub

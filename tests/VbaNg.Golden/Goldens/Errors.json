@@ -1,0 +1,5672 @@
+{
+  "area": "Errors",
+  "excel": "16.0.20326",
+  "culture": "en-US",
+  "options": [],
+  "cases": [
+    {
+      "name": "Err.Raise with a known number fills in the description",
+      "source": [
+        "Err.Raise 6"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Err.Raise with a custom source and description",
+      "source": [
+        "Err.Raise 5, \"MySource\", \"My description\""
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "My description",
+        "source": "MySource"
+      }
+    },
+    {
+      "name": "Err.Raise with an unknown number",
+      "source": [
+        "Err.Raise 1000"
+      ],
+      "results": [],
+      "error": {
+        "number": 1000,
+        "description": "Application-defined or object-defined error",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Err.Raise with vbObjectError",
+      "source": [
+        "Err.Raise vbObjectError + 513"
+      ],
+      "results": [],
+      "error": {
+        "number": -2147220991,
+        "description": "Automation error\nAn event was unable to invoke any of the subscribers ",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Err.Raise with vbObjectError and a description",
+      "source": [
+        "Err.Raise vbObjectError + 513, , \"Custom object error\""
+      ],
+      "results": [],
+      "error": {
+        "number": -2147220991,
+        "description": "Custom object error",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Err.Raise with zero",
+      "source": [
+        "Err.Raise 0"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Err.Raise beyond 65535",
+      "source": [
+        "Dim n As Long",
+        "n = 65536",
+        "Err.Raise n"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Err.Raise with a negative number",
+      "source": [
+        "Dim n As Long",
+        "n = -1",
+        "Err.Raise n"
+      ],
+      "results": [],
+      "error": {
+        "number": -1,
+        "description": "Automation error",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Err.Raise with an empty description",
+      "source": [
+        "Err.Raise 6, , \"\""
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Err.Raise with a Null description",
+      "source": [
+        "Err.Raise 6, , Null"
+      ],
+      "results": [],
+      "error": {
+        "number": 94,
+        "description": "Invalid use of Null",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Err.Raise with a numeric description",
+      "source": [
+        "Err.Raise 6, , 42"
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "42",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Err.Raise with a String number",
+      "source": [
+        "Err.Raise \"6\""
+      ],
+      "results": [],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Err.Raise with a Null number",
+      "source": [
+        "Err.Raise Null"
+      ],
+      "results": [],
+      "error": {
+        "number": 94,
+        "description": "Invalid use of Null",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Err.Raise with a description containing line breaks",
+      "source": [
+        "Err.Raise 5, \"Src\", \"Line 1\" & vbCrLf & \"Line 2\""
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Line 1\r\nLine 2",
+        "source": "Src"
+      }
+    },
+    {
+      "name": "Err.Raise with a help file and context",
+      "source": [
+        "Err.Raise 5, \"Src\", \"Desc\", \"help.chm\", 12"
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "Desc",
+        "source": "Src"
+      }
+    },
+    {
+      "name": "Err properties after Resume Next",
+      "source": [
+        "On Error Resume Next",
+        "Err.Raise 6",
+        "? Err.Number",
+        "? Err.Description",
+        "? Err.Source",
+        "? Err.HelpFile",
+        "? Err.HelpContext"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "6"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "Overflow"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "VBAProject"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "String",
+            "value": "C:\\Program Files\\Common Files\\Microsoft Shared\\VBA\\VBA7.1\\1033\\VbLR6.chm"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Long",
+            "value": "1000006"
+          }
+        }
+      ],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Err.Clear resets the properties",
+      "source": [
+        "On Error Resume Next",
+        "Err.Raise 6",
+        "Err.Clear",
+        "? Err.Number",
+        "? Err.Description",
+        "? Err.Source"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": ""
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "Err.Number is zero at the start",
+      "source": [
+        "? Err.Number"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Err.Description is empty at the start",
+      "source": [
+        "? Err.Description"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "Err.Source at the start",
+      "source": [
+        "? Err.Source"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "Err.HelpFile at the start",
+      "source": [
+        "? Err.HelpFile"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "Err.HelpContext at the start",
+      "source": [
+        "? Err.HelpContext"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Err.LastDllError at the start",
+      "source": [
+        "? Err.LastDllError"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Err.Number is Long",
+      "source": [
+        "? VarType(Err.Number)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Err.Description is String",
+      "source": [
+        "? VarType(Err.Description)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error function inside a handler",
+      "source": [
+        "On Error Resume Next",
+        "Err.Raise 13",
+        "? Error"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Type mismatch"
+          }
+        }
+      ],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Error function with an argument inside a handler",
+      "source": [
+        "On Error Resume Next",
+        "Err.Raise 13",
+        "? Error(6)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Overflow"
+          }
+        }
+      ],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Error dollar of a number",
+      "source": [
+        "? Error$(11)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Division by zero"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Division by zero error",
+      "source": [
+        "Dim z As Long",
+        "On Error Resume Next",
+        "Dim x As Double",
+        "x = 1 / z",
+        "? Err.Number",
+        "? Err.Description"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "11"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "Division by zero"
+          }
+        }
+      ],
+      "error": {
+        "number": 11,
+        "description": "Division by zero",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Type mismatch error",
+      "source": [
+        "On Error Resume Next",
+        "Dim x As Long",
+        "x = \"abc\"",
+        "? Err.Number",
+        "? Err.Description"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "13"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "Type mismatch"
+          }
+        }
+      ],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Overflow error",
+      "source": [
+        "On Error Resume Next",
+        "Dim x As Integer",
+        "Dim v As Variant",
+        "v = 40000",
+        "x = v",
+        "? Err.Number",
+        "? Err.Description"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "6"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "Overflow"
+          }
+        }
+      ],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Subscript out of range error",
+      "source": [
+        "On Error Resume Next",
+        "Dim a(1) As Long",
+        "Dim x As Long",
+        "x = a(5)",
+        "? Err.Number",
+        "? Err.Description"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "9"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "Subscript out of range"
+          }
+        }
+      ],
+      "error": {
+        "number": 9,
+        "description": "Subscript out of range",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Object variable not set error",
+      "source": [
+        "On Error Resume Next",
+        "Dim c As Collection",
+        "Dim x As Long",
+        "x = c.Count",
+        "? Err.Number",
+        "? Err.Description"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "91"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "Object variable or With block variable not set"
+          }
+        }
+      ],
+      "error": {
+        "number": 91,
+        "description": "Object variable or With block variable not set",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Invalid use of Null error",
+      "source": [
+        "On Error Resume Next",
+        "Dim s As String",
+        "s = Null",
+        "? Err.Number",
+        "? Err.Description"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "94"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "Invalid use of Null"
+          }
+        }
+      ],
+      "error": {
+        "number": 94,
+        "description": "Invalid use of Null",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Invalid procedure call error",
+      "source": [
+        "On Error Resume Next",
+        "Dim s As String",
+        "s = Left(\"a\", -1)",
+        "? Err.Number",
+        "? Err.Description"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "Invalid procedure call or argument"
+          }
+        }
+      ],
+      "error": {
+        "number": 5,
+        "description": "Invalid procedure call or argument",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Resume Next continues after the failing statement",
+      "source": [
+        "On Error Resume Next",
+        "Dim x As Long",
+        "x = 1",
+        "x = \"abc\"",
+        "x = x + 1",
+        "? x"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Err.Number is cleared by a new On Error statement",
+      "source": [
+        "On Error Resume Next",
+        "Err.Raise 6",
+        "On Error Resume Next",
+        "? Err.Number"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Err.Number survives a procedure call",
+      "source": [
+        "On Error Resume Next",
+        "Err.Raise 6",
+        "Dim s As String",
+        "s = Left(\"abc\", 1)",
+        "? Err.Number"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "6"
+          }
+        }
+      ],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Error inside the case without a handler statement",
+      "source": [
+        "Dim z As Long",
+        "? 1 / z"
+      ],
+      "results": [],
+      "error": {
+        "number": 11,
+        "description": "Division by zero",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Error after a value was recorded",
+      "source": [
+        "? 1",
+        "Dim z As Long",
+        "? 1 / z"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        }
+      ],
+      "error": {
+        "number": 11,
+        "description": "Division by zero",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Error number in a handler with line numbers",
+      "source": [
+        "On Error GoTo Handler",
+        "10 Dim z As Long",
+        "20 Dim x As Double",
+        "30 x = 1 / z",
+        "40 Exit Sub",
+        "Handler:",
+        "? Erl",
+        "? Err.Number",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "11"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl without line numbers",
+      "source": [
+        "On Error GoTo Handler",
+        "Dim z As Long",
+        "Dim x As Double",
+        "x = 1 / z",
+        "Exit Sub",
+        "Handler:",
+        "? Erl",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl with a line number before the failing line",
+      "source": [
+        "On Error GoTo Handler",
+        "10 Dim z As Long",
+        "Dim x As Double",
+        "x = 1 / z",
+        "Exit Sub",
+        "Handler:",
+        "? Erl",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl with line numbers on executable lines only",
+      "source": [
+        "On Error GoTo Handler",
+        "Dim z As Long",
+        "Dim x As Double",
+        "30 x = 1 / z",
+        "40 Exit Sub",
+        "Handler:",
+        "? Erl",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "30"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl with a line number only after the failing line",
+      "source": [
+        "On Error GoTo Handler",
+        "Dim z As Long",
+        "Dim x As Double",
+        "x = 1 / z",
+        "50 Exit Sub",
+        "Handler:",
+        "? Erl",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Resume retries the failing statement",
+      "source": [
+        "Dim tries As Long",
+        "On Error GoTo Handler",
+        "Dim z As Long",
+        "Dim x As Double",
+        "x = 1 / z",
+        "? tries",
+        "Exit Sub",
+        "Handler:",
+        "tries = tries + 1",
+        "z = 2",
+        "Resume"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Resume with a label",
+      "source": [
+        "On Error GoTo Handler",
+        "Dim z As Long",
+        "Dim x As Double",
+        "x = 1 / z",
+        "? \"skipped\"",
+        "Done:",
+        "? \"done\"",
+        "Exit Sub",
+        "Handler:",
+        "Resume Done"
+      ],
+      "results": [
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "done"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error inside a handler goes to the caller",
+      "source": [
+        "On Error GoTo Handler",
+        "Dim z As Long",
+        "Dim x As Double",
+        "x = 1 / z",
+        "Exit Sub",
+        "Handler:",
+        "x = CLng(\"abc\")",
+        "? \"not reached\""
+      ],
+      "results": [],
+      "error": {
+        "number": 13,
+        "description": "Type mismatch",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Err.Raise inside a handler replaces the error",
+      "source": [
+        "On Error GoTo Handler",
+        "Err.Raise 6",
+        "Exit Sub",
+        "Handler:",
+        "Err.Raise 5, , \"from the handler\""
+      ],
+      "results": [],
+      "error": {
+        "number": 5,
+        "description": "from the handler",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "On Error GoTo minus one clears the current error",
+      "source": [
+        "On Error Resume Next",
+        "Err.Raise 6",
+        "On Error GoTo -1",
+        "? Err.Number"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Err.Raise with vbObjectError and Err.Number",
+      "source": [
+        "On Error Resume Next",
+        "Err.Raise vbObjectError + 1",
+        "? Err.Number"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "-2147221503"
+          }
+        }
+      ],
+      "error": {
+        "number": -2147221503,
+        "description": "Automation error\nInvalid advise flags ",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Err.Description of a raised error with a description of spaces",
+      "source": [
+        "On Error Resume Next",
+        "Err.Raise 6, , \"   \"",
+        "? Err.Description"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "   "
+          }
+        }
+      ],
+      "error": {
+        "number": 6,
+        "description": "   ",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Error messages 1 to 100",
+      "source": [
+        "Dim n As Long",
+        "For n = 1 To 100",
+        "? Error$(n)",
+        "Next"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Return without GoSub"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Invalid procedure call or argument"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Overflow"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Out of memory"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Subscript out of range"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "This array is fixed or temporarily locked"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Division by zero"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Type mismatch"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Out of string space"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Expression too complex"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Can't perform requested operation"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "User interrupt occurred"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Resume without error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Out of stack space"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Sub or Function not defined"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Too many DLL application clients"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Error in loading DLL"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Bad DLL calling convention"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Internal error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Bad file name or number"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "File not found"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Bad file mode"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "File already open"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Device I/O error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "File already exists"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Bad record length"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Disk full"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Input past end of file"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Bad record number"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Too many files"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Device unavailable"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Permission denied"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Disk not ready"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Can't rename with different drive"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Path/File access error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Path not found"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Object variable or With block variable not set"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "For loop not initialized"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Invalid pattern string"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Invalid use of Null"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Unable to sink events of object because the object is already firing events to the maximum number of event receivers that it supports"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Can not call friend function on object which is not an instance of defining class"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "A property or method call cannot include a reference to a private object, either as an argument or as a return value"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error messages 300 to 500",
+      "source": [
+        "Dim n As Long",
+        "For n = 300 To 500",
+        "? Error$(n)",
+        "Next"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Invalid file format"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Can't create necessary temporary file"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Invalid format in resource file"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Invalid property value"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Invalid property array index"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Set not supported at runtime"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Set not supported (read-only property)"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Need property array index"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Set not permitted"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Get not supported at runtime"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Get not supported (write-only property)"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Property not found"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Property or method not found"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Object required"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "ActiveX component can't create object"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Class does not support Automation or does not support expected interface"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "File name or class name not found during Automation operation"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Object doesn't support this property or method"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Automation error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Connection to type library or object library for remote process has been lost. Press OK for dialog to remove reference."
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Automation object does not have a default value"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Object doesn't support this action"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Object doesn't support named arguments"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Object doesn't support current locale setting"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Named argument not found"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Argument not optional"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Wrong number of arguments or invalid property assignment"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Property let procedure not defined and property get procedure did not return an object"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Invalid ordinal"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Specified DLL function not found"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Code resource not found"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Code resource lock error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "This key is already associated with an element of this collection"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Variable uses an Automation type not supported in Visual Basic"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Object or class does not support the set of events"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Invalid clipboard format"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Method or data member not found"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "The remote server machine does not exist or is unavailable"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Class not registered on local machine"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Invalid picture"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Printer error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error messages 700 to 800",
+      "source": [
+        "Dim n As Long",
+        "For n = 700 To 800",
+        "? Error$(n)",
+        "Next"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Can't save file to TEMP"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Search text not found"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Replacements too long"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error messages 1000 to 1010",
+      "source": [
+        "Dim n As Long",
+        "For n = 1000 To 1010",
+        "? Error$(n)",
+        "Next"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error messages 31000 to 31040",
+      "source": [
+        "Dim n As Long",
+        "For n = 31000 To 31040",
+        "? Error$(n)",
+        "Next"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error messages 32750 to 32800",
+      "source": [
+        "Dim n As Long",
+        "For n = 32750 To 32800",
+        "? Error$(n)",
+        "Next"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error messages 35600 to 35610",
+      "source": [
+        "Dim n As Long",
+        "For n = 35600 To 35610",
+        "? Error$(n)",
+        "Next"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        },
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Application-defined or object-defined error"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl with a numbered Dim before an unnumbered Dim and a numbered failing line",
+      "source": [
+        "On Error GoTo Handler",
+        "10 Dim z As Long",
+        "Dim x As Double",
+        "20 x = 1 / z",
+        "Exit Sub",
+        "Handler:",
+        "? Erl",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "20"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl with a numbered assignment, a numbered Dim, and a numbered failing line",
+      "source": [
+        "On Error GoTo Handler",
+        "Dim z As Long",
+        "Dim x As Double",
+        "10 z = 0",
+        "20 Dim y As Long",
+        "30 x = 1 / z",
+        "Exit Sub",
+        "Handler:",
+        "? Erl",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "30"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl with two numbered Dims, a numbered assignment, and a numbered failing line",
+      "source": [
+        "On Error GoTo Handler",
+        "10 Dim z As Long",
+        "20 Dim y As Long",
+        "30 y = 1",
+        "40 Dim x As Double",
+        "50 x = 1 / z",
+        "Exit Sub",
+        "Handler:",
+        "? Erl",
+        "? y",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "50"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl with numbered lines on every executable statement and no Dim in between",
+      "source": [
+        "On Error GoTo Handler",
+        "Dim z As Long",
+        "Dim x As Double",
+        "10 z = 0",
+        "20 x = 1 / z",
+        "Exit Sub",
+        "Handler:",
+        "? Erl",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "20"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl with two Dims on one numbered line",
+      "source": [
+        "On Error GoTo Handler",
+        "10 Dim z As Long: Dim x As Double",
+        "20 x = 1 / z",
+        "Exit Sub",
+        "Handler:",
+        "? Erl",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "20"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl with a numbered Const before the failing line",
+      "source": [
+        "On Error GoTo Handler",
+        "10 Const c As Long = 0",
+        "Dim x As Double",
+        "20 x = 1 / c",
+        "Exit Sub",
+        "Handler:",
+        "? Erl",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "20"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl under Resume Next with numbered Dims",
+      "source": [
+        "On Error Resume Next",
+        "10 Dim z As Long",
+        "20 Dim x As Double",
+        "30 x = 1 / z",
+        "? Erl",
+        "? Err.Number"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "30"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "11"
+          }
+        }
+      ],
+      "error": {
+        "number": 11,
+        "description": "Division by zero",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Erl after a numbered If block",
+      "source": [
+        "On Error GoTo Handler",
+        "Dim z As Long",
+        "Dim x As Double",
+        "10 If z = 0 Then",
+        "20 x = 1",
+        "30 End If",
+        "40 x = 1 / z",
+        "Exit Sub",
+        "Handler:",
+        "? Erl",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "40"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A Double division by zero under Resume Next leaves its result behind",
+      "source": [
+        "Dim x As Double",
+        "On Error Resume Next",
+        "x = 1 / 0",
+        "? x",
+        "? Err.Number"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "inf",
+            "bits": "7FF0000000000000"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "11"
+          }
+        }
+      ],
+      "error": {
+        "number": 11,
+        "description": "Division by zero",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "A Double division by zero under Resume Next overwrites the old value",
+      "source": [
+        "Dim x As Double",
+        "x = 5",
+        "On Error Resume Next",
+        "x = 1 / 0",
+        "? x"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "inf",
+            "bits": "7FF0000000000000"
+          }
+        }
+      ],
+      "error": {
+        "number": 11,
+        "description": "Division by zero",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "A Variant takes the result of a Double division by zero under Resume Next",
+      "source": [
+        "Dim v As Variant",
+        "On Error Resume Next",
+        "v = 1 / 0",
+        "? TypeName(v)",
+        "? v"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Empty"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Empty"
+          }
+        }
+      ],
+      "error": {
+        "number": 11,
+        "description": "Division by zero",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "An expression around a Double division by zero under Resume Next",
+      "source": [
+        "Dim y As Double",
+        "y = 2",
+        "On Error Resume Next",
+        "y = (1 / 0) + y",
+        "? y"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "inf",
+            "bits": "7FF0000000000000"
+          }
+        }
+      ],
+      "error": {
+        "number": 11,
+        "description": "Division by zero",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "A Long divided by a Long zero under Resume Next",
+      "source": [
+        "Dim z As Long",
+        "Dim x As Double",
+        "On Error Resume Next",
+        "x = 1 / z",
+        "? x"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "inf",
+            "bits": "7FF0000000000000"
+          }
+        }
+      ],
+      "error": {
+        "number": 11,
+        "description": "Division by zero",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "A Double overflow under Resume Next",
+      "source": [
+        "Dim d As Double",
+        "d = 1E+308",
+        "On Error Resume Next",
+        "d = d * 10",
+        "? d",
+        "? Err.Number"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "inf",
+            "bits": "7FF0000000000000"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "6"
+          }
+        }
+      ],
+      "error": {
+        "number": 6,
+        "description": "Overflow",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Integer division by zero under Resume Next leaves the old value",
+      "source": [
+        "Dim n As Long",
+        "n = 5",
+        "On Error Resume Next",
+        "n = 1 \\ 0",
+        "? n",
+        "? Err.Number"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "11"
+          }
+        }
+      ],
+      "error": {
+        "number": 11,
+        "description": "Division by zero",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Mod by zero under Resume Next leaves the old value",
+      "source": [
+        "Dim n As Long",
+        "n = 5",
+        "On Error Resume Next",
+        "n = 1 Mod 0",
+        "? n"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        }
+      ],
+      "error": {
+        "number": 11,
+        "description": "Division by zero",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "A Double division by zero printed directly",
+      "source": [
+        "? 1 / 0"
+      ],
+      "results": [],
+      "error": {
+        "number": 11,
+        "description": "Division by zero",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Erl with two numbered Dims, a numbered failing line, and an unnumbered Exit Sub",
+      "source": [
+        "On Error GoTo Handler",
+        "10 Dim z As Long",
+        "20 Dim x As Double",
+        "30 x = 1 / z",
+        "Exit Sub",
+        "Handler:",
+        "? Erl",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "30"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl with one numbered Dim, a numbered failing line, and a numbered Exit Sub",
+      "source": [
+        "On Error GoTo Handler",
+        "10 Dim z As Long",
+        "Dim x As Double",
+        "20 x = 1 / z",
+        "30 Exit Sub",
+        "Handler:",
+        "? Erl",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl with two numbered Dims, a numbered assignment between, and a numbered Exit Sub",
+      "source": [
+        "On Error GoTo Handler",
+        "10 Dim z As Long",
+        "20 Dim x As Double",
+        "25 z = 0",
+        "30 x = 1 / z",
+        "40 Exit Sub",
+        "Handler:",
+        "? Erl",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "30"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl with three numbered Dims, a numbered failing line, and a numbered Exit Sub",
+      "source": [
+        "On Error GoTo Handler",
+        "10 Dim z As Long",
+        "20 Dim x As Double",
+        "25 Dim w As Long",
+        "30 x = 1 / z",
+        "40 Exit Sub",
+        "Handler:",
+        "? Erl",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl with two numbered Dims, a numbered failing line, and a numbered Dim after it",
+      "source": [
+        "On Error GoTo Handler",
+        "10 Dim z As Long",
+        "20 Dim x As Double",
+        "30 x = 1 / z",
+        "40 Dim w As Long",
+        "Exit Sub",
+        "Handler:",
+        "? Erl",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl read after Err.Number in the handler of the original shape",
+      "source": [
+        "On Error GoTo Handler",
+        "10 Dim z As Long",
+        "20 Dim x As Double",
+        "30 x = 1 / z",
+        "40 Exit Sub",
+        "Handler:",
+        "? Err.Number",
+        "? Erl",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "11"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl with two numbered Dims and the failing line numbered 35",
+      "source": [
+        "On Error GoTo Handler",
+        "10 Dim z As Long",
+        "20 Dim x As Double",
+        "35 x = 1 / z",
+        "40 Exit Sub",
+        "Handler:",
+        "? Erl",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl with an unnumbered assignment between numbered Dims and a numbered failing line, numbered Exit",
+      "source": [
+        "On Error GoTo Handler",
+        "10 Dim z As Long",
+        "20 Dim x As Double",
+        "z = 0",
+        "30 x = 1 / z",
+        "40 Exit Sub",
+        "Handler:",
+        "? Erl",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "30"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl with an unnumbered Dim first, then a numbered Dim, failing line, and Exit",
+      "source": [
+        "On Error GoTo Handler",
+        "Dim z As Long",
+        "10 Dim x As Double",
+        "20 x = 1 / z",
+        "30 Exit Sub",
+        "Handler:",
+        "? Erl",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl with an unnumbered statement between the failing line and the numbered Exit",
+      "source": [
+        "On Error GoTo Handler",
+        "10 Dim z As Long",
+        "20 Dim x As Double",
+        "30 x = 1 / z",
+        "z = 1",
+        "40 Exit Sub",
+        "Handler:",
+        "? Erl",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl with a numbered Dim and assignment on one line before the failing line",
+      "source": [
+        "On Error GoTo Handler",
+        "10 Dim z As Long: z = 0",
+        "20 Dim x As Double",
+        "30 x = 1 / z",
+        "40 Exit Sub",
+        "Handler:",
+        "? Erl",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "30"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl with a numbered assignment between two numbered Dims before the failing line",
+      "source": [
+        "On Error GoTo Handler",
+        "10 Dim z As Long",
+        "20 z = 0",
+        "30 Dim x As Double",
+        "40 x = 1 / z",
+        "50 Exit Sub",
+        "Handler:",
+        "? Erl",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "40"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl with numbered Dims, an unnumbered failing line, and a numbered Exit",
+      "source": [
+        "On Error GoTo Handler",
+        "10 Dim z As Long",
+        "20 Dim x As Double",
+        "x = 1 / z",
+        "40 Exit Sub",
+        "Handler:",
+        "? Erl",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl under Resume Next with numbered Dims and a numbered line after the failing one",
+      "source": [
+        "On Error Resume Next",
+        "10 Dim z As Long",
+        "20 Dim x As Double",
+        "30 x = 1 / z",
+        "40 z = 1",
+        "? Erl"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        }
+      ],
+      "error": {
+        "number": 11,
+        "description": "Division by zero",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Erl with numbered Dims, a numbered failing line, and two numbered lines after it",
+      "source": [
+        "On Error GoTo Handler",
+        "10 Dim z As Long",
+        "20 Dim x As Double",
+        "30 x = 1 / z",
+        "40 z = 1",
+        "50 Exit Sub",
+        "Handler:",
+        "? Erl",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl at an unnumbered statement reached again after a numbered line ran",
+      "source": [
+        "On Error GoTo Handler",
+        "Dim n As Long",
+        "Dim x As Double",
+        "Dim z As Long",
+        "Top:",
+        "n = n + 1",
+        "x = 1 / (2 - n)",
+        "10 z = 0",
+        "If n < 2 Then GoTo Top",
+        "Exit Sub",
+        "Handler:",
+        "? Erl",
+        "? n",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl when the For limit fails",
+      "source": [
+        "On Error GoTo Handler",
+        "Dim z As Long",
+        "Dim i As Long",
+        "5 z = 0",
+        "10 For i = 1 To 1 / z",
+        "20 Next",
+        "Exit Sub",
+        "Handler:",
+        "? Erl",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl with numbered Dims, a numbered failing line, and a numbered line only in the handler",
+      "source": [
+        "On Error GoTo Handler",
+        "10 Dim z As Long",
+        "20 Dim x As Double",
+        "30 x = 1 / z",
+        "Exit Sub",
+        "Handler:",
+        "? Erl",
+        "40 Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl with a numbered On Error, numbered Dims, a numbered failing line, and a numbered Exit",
+      "source": [
+        "10 On Error GoTo Handler",
+        "20 Dim z As Long",
+        "30 Dim x As Double",
+        "40 x = 1 / z",
+        "50 Exit Sub",
+        "Handler:",
+        "? Erl",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "40"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl with a numbered Dim, a numbered ReDim, a numbered failing line, and a numbered Exit",
+      "source": [
+        "On Error GoTo Handler",
+        "10 Dim a() As Long",
+        "20 ReDim a(1)",
+        "30 a(0) = 1 / a(1)",
+        "40 Exit Sub",
+        "Handler:",
+        "? Erl",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "30"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erl with a numbered failing line inside a numbered If block after numbered Dims",
+      "source": [
+        "On Error GoTo Handler",
+        "10 Dim z As Long",
+        "20 Dim x As Double",
+        "30 If z = 0 Then",
+        "40 x = 1 / z",
+        "50 End If",
+        "60 Exit Sub",
+        "Handler:",
+        "? Erl",
+        "Exit Sub"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "40"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+# Dependabot proposes; it never merges. A package update still needs the justification a new
+# dependency needs, and it arrives as a packages.lock.json diff.
+version: 2
+updates:
+  - package-ecosystem: nuget
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "build"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "build"

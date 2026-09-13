@@ -1,0 +1,1267 @@
+{
+  "area": "Types",
+  "excel": "16.0.20326",
+  "culture": "en-US",
+  "options": [],
+  "declarations": [
+    "Public Type TInner",
+    "    A As Long",
+    "    B As Long",
+    "End Type",
+    "",
+    "Public Type TOuter",
+    "    Name As String",
+    "    Inner As TInner",
+    "    Fixed(1 To 3) As Long",
+    "    Dynamic() As Long",
+    "    Inners(1 To 2) As TInner",
+    "    V As Variant",
+    "    Obj As Collection",
+    "End Type",
+    "",
+    "Public Type TPair",
+    "    X As Long",
+    "    Y As Long",
+    "End Type",
+    "",
+    "Public Type TTriple",
+    "    P As Long",
+    "    Q As Long",
+    "    R As Long",
+    "End Type",
+    "",
+    "Public Type TMixed",
+    "    B As Byte",
+    "    I As Integer",
+    "    L As Long",
+    "    D As Double",
+    "    C As Currency",
+    "    S As String",
+    "    F As String * 4",
+    "End Type",
+    "",
+    "Public Type TBytes",
+    "    Data(1 To 8) As Byte",
+    "End Type",
+    "",
+    "Public Type TText",
+    "    Text As String * 8",
+    "End Type",
+    "",
+    "Public Type TWide",
+    "    Text As String * 4",
+    "    Tail As Long",
+    "End Type",
+    "",
+    "Public Type TCodes",
+    "    B As Byte",
+    "    S(0 To 1) As String * 3",
+    "    Z As Byte",
+    "End Type",
+    "",
+    "Private gOuter As TOuter",
+    "",
+    "Private Function MakeInner(ByVal a As Long, ByVal b As Long) As TInner",
+    "    MakeInner.A = a",
+    "    MakeInner.B = b",
+    "End Function",
+    "",
+    "Private Function MakeNamed(ByVal text As String) As TOuter",
+    "    MakeNamed.Name = text",
+    "End Function",
+    "",
+    "Private Sub RenameThroughWith()",
+    "    With gOuter",
+    "        .Name = .Name & \"!\"",
+    "    End With",
+    "End Sub",
+    "",
+    "Private Sub Shift(ByRef p As TPair)",
+    "    p.X = p.X + 100",
+    "End Sub",
+    "",
+    "Private Sub Shift2(ByRef i As TInner)",
+    "    i.A = i.A + 100",
+    "End Sub"
+  ],
+  "cases": [
+    {
+      "name": "Assigning a type copies its fixed array",
+      "source": [
+        "Dim t1 As TOuter, t2 As TOuter",
+        "t1.Fixed(1) = 5",
+        "t2 = t1",
+        "t2.Fixed(1) = 99",
+        "? t1.Fixed(1)",
+        "? t2.Fixed(1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "99"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Assigning a type copies its dynamic array",
+      "source": [
+        "Dim t1 As TOuter, t2 As TOuter",
+        "ReDim t1.Dynamic(1 To 2)",
+        "t1.Dynamic(1) = 5",
+        "t2 = t1",
+        "t2.Dynamic(1) = 6",
+        "? t1.Dynamic(1)",
+        "? UBound(t2.Dynamic)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Assigning a type with an unallocated dynamic array",
+      "source": [
+        "Dim t1 As TOuter, t2 As TOuter, n As Long",
+        "t2 = t1",
+        "On Error Resume Next",
+        "n = UBound(t2.Dynamic)",
+        "? Err.Number"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "9"
+          }
+        }
+      ],
+      "error": {
+        "number": 9,
+        "description": "Subscript out of range",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Assigning a type copies the nested type and the array of types",
+      "source": [
+        "Dim t1 As TOuter, t2 As TOuter",
+        "t1.Inner.A = 1",
+        "t1.Inners(2).B = 2",
+        "t2 = t1",
+        "t2.Inner.A = 10",
+        "t2.Inners(2).B = 20",
+        "? t1.Inner.A",
+        "? t1.Inners(2).B"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Assigning a type copies its String",
+      "source": [
+        "Dim t1 As TOuter, t2 As TOuter",
+        "t1.Name = \"one\"",
+        "t2 = t1",
+        "t2.Name = \"two\"",
+        "? t1.Name"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "one"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Assigning a type copies a Variant array member",
+      "source": [
+        "Dim t1 As TOuter, t2 As TOuter",
+        "t1.V = Array(1, 2)",
+        "t2 = t1",
+        "t2.V(0) = 9",
+        "? t1.V(0)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Assigning a type shares an object member",
+      "source": [
+        "Dim t1 As TOuter, t2 As TOuter",
+        "Set t1.Obj = New Collection",
+        "t2 = t1",
+        "t2.Obj.Add 1",
+        "? t1.Obj.Count",
+        "? t1.Obj Is t2.Obj"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A type from a function",
+      "source": [
+        "Dim t As TInner",
+        "t = MakeInner(3, 4)",
+        "? t.A + t.B"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A function result used as a whole value only",
+      "source": [
+        "Dim t As TInner, u As TInner",
+        "t = MakeInner(1, 2)",
+        "u = t",
+        "u.A = 5",
+        "? t.A"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Nested With",
+      "source": [
+        "Dim t As TOuter",
+        "With t",
+        "    .Name = \"x\"",
+        "    With .Inner",
+        "        .A = 1",
+        "        .B = 2",
+        "    End With",
+        "    .Fixed(2) = 7",
+        "    With .Inners(2)",
+        "        .A = 3",
+        "    End With",
+        "End With",
+        "? t.Name & t.Inner.A & t.Inner.B & t.Fixed(2) & t.Inners(2).A"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "x1273"
+          }
+        }
+      ]
+    },
+    {
+      "name": "With on an element of an array of types",
+      "source": [
+        "Dim a(1 To 2) As TInner",
+        "With a(2)",
+        "    .A = 5",
+        "    .B = .A * 2",
+        "End With",
+        "? a(2).B"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        }
+      ]
+    },
+    {
+      "name": "With over a nested member reached twice",
+      "source": [
+        "Dim t As TOuter",
+        "With t.Inner",
+        "    .A = 1",
+        "End With",
+        "With t",
+        "    .Inner.B = .Inner.A + 1",
+        "End With",
+        "? t.Inner.B"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erase on a fixed array of types resets the elements",
+      "source": [
+        "Dim a(1 To 2) As TOuter",
+        "a(1).Name = \"x\"",
+        "a(1).Inner.A = 4",
+        "a(2).Fixed(3) = 9",
+        "Erase a",
+        "? a(1).Name = \"\"",
+        "? a(1).Inner.A",
+        "? a(2).Fixed(3)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erase on a type's fixed array member",
+      "source": [
+        "Dim t As TOuter",
+        "t.Fixed(1) = 1: t.Fixed(2) = 2",
+        "Erase t.Fixed",
+        "? t.Fixed(1) + t.Fixed(2)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erase on a type's dynamic array member deallocates it",
+      "source": [
+        "Dim t As TOuter, n As Long",
+        "ReDim t.Dynamic(1 To 3)",
+        "Erase t.Dynamic",
+        "On Error Resume Next",
+        "n = UBound(t.Dynamic)",
+        "? Err.Number"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "9"
+          }
+        }
+      ],
+      "error": {
+        "number": 9,
+        "description": "Subscript out of range",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Erase on a dynamic array of types deallocates it",
+      "source": [
+        "Dim a() As TInner, n As Long",
+        "ReDim a(1 To 2)",
+        "a(1).A = 1",
+        "Erase a",
+        "On Error Resume Next",
+        "n = UBound(a)",
+        "? Err.Number"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "9"
+          }
+        }
+      ],
+      "error": {
+        "number": 9,
+        "description": "Subscript out of range",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "ReDim Preserve on a type's dynamic array member",
+      "source": [
+        "Dim t As TOuter",
+        "ReDim t.Dynamic(1 To 2)",
+        "t.Dynamic(2) = 5",
+        "ReDim Preserve t.Dynamic(1 To 4)",
+        "? t.Dynamic(2)",
+        "? UBound(t.Dynamic)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Assigning a fixed array of types to a dynamic array copies it",
+      "source": [
+        "Dim a(1 To 2) As TInner, b() As TInner",
+        "a(1).A = 1",
+        "b = a",
+        "b(1).A = 2",
+        "? a(1).A",
+        "? b(1).A",
+        "? LBound(b)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Assigning a dynamic array of types copies it",
+      "source": [
+        "Dim a() As TInner, b() As TInner",
+        "ReDim a(0 To 1)",
+        "a(1).B = 7",
+        "b = a",
+        "a(1).B = 8",
+        "? b(1).B"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "An element of an array of types passed ByRef",
+      "source": [
+        "Dim a(1 To 2) As TPair",
+        "a(2).X = 1",
+        "Shift a(2)",
+        "? a(2).X"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "101"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A type member passed ByRef",
+      "source": [
+        "Dim t As TOuter",
+        "t.Inner.A = 1",
+        "Shift2 t.Inner",
+        "? t.Inner.A"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "101"
+          }
+        }
+      ]
+    },
+    {
+      "name": "LSet from a smaller type into a larger one",
+      "source": [
+        "Dim p As TPair, t As TTriple",
+        "p.X = 1: p.Y = 2",
+        "t.R = 7",
+        "LSet t = p",
+        "? t.P",
+        "? t.Q",
+        "? t.R"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "LSet from a larger type into a smaller one",
+      "source": [
+        "Dim p As TPair, t As TTriple",
+        "t.P = 10: t.Q = 20: t.R = 30",
+        "LSet p = t",
+        "? p.X",
+        "? p.Y"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "20"
+          }
+        }
+      ]
+    },
+    {
+      "name": "LSet of bytes into a fixed-length string member",
+      "source": [
+        "Dim b As TBytes, t As TText, i As Long",
+        "For i = 1 To 8",
+        "    b.Data(i) = 64 + i",
+        "Next",
+        "LSet t = b",
+        "? Len(t.Text)",
+        "? AscW(t.Text)",
+        "? AscW(Mid$(t.Text, 2, 1))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "8"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "16961"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Integer",
+            "value": "17475"
+          }
+        }
+      ]
+    },
+    {
+      "name": "LSet of a fixed-length string member into bytes",
+      "source": [
+        "Dim b As TBytes, t As TText",
+        "t.Text = \"ABCDEFGH\"",
+        "LSet b = t",
+        "? b.Data(1)",
+        "? b.Data(2)",
+        "? b.Data(3)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Byte",
+            "value": "65"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Byte",
+            "value": "0"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Byte",
+            "value": "66"
+          }
+        }
+      ]
+    },
+    {
+      "name": "LSet of a String member past a Long",
+      "source": [
+        "Dim w As TWide, t As TText",
+        "t.Text = \"ABCDEFGH\"",
+        "LSet w = t",
+        "? w.Text",
+        "? w.Tail"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "ABCD"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "4587589"
+          }
+        }
+      ]
+    },
+    {
+      "name": "LSet on a fixed-length string pads and truncates",
+      "source": [
+        "Dim s As String * 6",
+        "LSet s = \"ab\"",
+        "? s",
+        "LSet s = \"abcdefgh\"",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "ab    "
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "abcdef"
+          }
+        }
+      ]
+    },
+    {
+      "name": "RSet on a fixed-length string",
+      "source": [
+        "Dim s As String * 6",
+        "RSet s = \"ab\"",
+        "? s",
+        "RSet s = \"abcdefgh\"",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "    ab"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "abcdef"
+          }
+        }
+      ]
+    },
+    {
+      "name": "LSet on a variable-length string keeps its length",
+      "source": [
+        "Dim s As String",
+        "s = \"hello\"",
+        "LSet s = \"hi\"",
+        "? s",
+        "? Len(s)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "hi   "
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "RSet on a variable-length string keeps its length",
+      "source": [
+        "Dim s As String",
+        "s = \"hello\"",
+        "RSet s = \"hi\"",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "   hi"
+          }
+        }
+      ]
+    },
+    {
+      "name": "LSet on an empty string stays empty",
+      "source": [
+        "Dim s As String",
+        "LSet s = \"abc\"",
+        "? Len(s)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Len and LenB of a mixed type with an empty String member",
+      "source": [
+        "Dim m As TMixed",
+        "? Len(m)",
+        "? LenB(m)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "35"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "40"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Len and LenB of a mixed type with a String member set",
+      "source": [
+        "Dim m As TMixed",
+        "m.S = \"hello\"",
+        "? Len(m)",
+        "? LenB(m)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "35"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "40"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Len and LenB of a type with only Longs",
+      "source": [
+        "Dim t As TTriple",
+        "? Len(t)",
+        "? LenB(t)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "12"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "12"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Len and LenB of a type with a fixed-length string",
+      "source": [
+        "Dim t As TText",
+        "? Len(t)",
+        "? LenB(t)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "8"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "16"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A fixed-length string member truncates and pads",
+      "source": [
+        "Dim m As TMixed",
+        "m.F = \"abcdefgh\"",
+        "? m.F",
+        "m.F = \"a\"",
+        "? m.F",
+        "? Len(m.F)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "abcd"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "a   "
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A fixed-length string member starts as nulls",
+      "source": [
+        "Dim m As TMixed",
+        "? Len(m.F)",
+        "? AscW(m.F)",
+        "? m.F = String$(4, 0)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Comparing a fixed-length string member with a padded value",
+      "source": [
+        "Dim m As TMixed",
+        "m.F = \"ab\"",
+        "? m.F = \"ab  \"",
+        "? m.F = \"ab\"",
+        "? RTrim$(m.F) = \"ab\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The default values of a type",
+      "source": [
+        "Dim m As TMixed",
+        "? m.B",
+        "? m.I",
+        "? m.L",
+        "? m.D",
+        "? m.C",
+        "? m.S = \"\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Byte",
+            "value": "0"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "0"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Double",
+            "value": "0",
+            "bits": "0000000000000000"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Currency",
+            "value": "0",
+            "bits": "0000000000000000"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A type variable reassigned from itself",
+      "source": [
+        "Dim t As TOuter",
+        "t.Name = \"self\"",
+        "t.Fixed(1) = 3",
+        "t = t",
+        "? t.Name",
+        "? t.Fixed(1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "self"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Swapping two types through a third",
+      "source": [
+        "Dim a As TPair, b As TPair, c As TPair",
+        "a.X = 1: b.X = 2",
+        "c = a: a = b: b = c",
+        "? a.X",
+        "? b.X"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "With over a module-level type in another procedure leaves its strings alone",
+      "source": [
+        "gOuter.Name = \"kept\"",
+        "RenameThroughWith",
+        "? gOuter.Name",
+        "? Len(gOuter.Name)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "kept!"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A function returning a type with a String member",
+      "source": [
+        "Dim t As TOuter",
+        "t = MakeNamed(\"n\")",
+        "? t.Name",
+        "? MakeNamed(\"m\").Name"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "n"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "m"
+          }
+        }
+      ]
+    },
+    {
+      "name": "With over a function result copies it for the block",
+      "source": [
+        "With MakeNamed(\"w\")",
+        "    ? .Name & \"!\"",
+        "End With"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "w!"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Len and LenB of a type with a fixed-length string array",
+      "source": [
+        "Dim t As TCodes",
+        "? Len(t)",
+        "? LenB(t)",
+        "t.S(1) = \"xyz\"",
+        "? Len(t)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "8"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "14"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Integer",
+            "value": "8"
+          }
+        }
+      ]
+    }
+  ]
+}

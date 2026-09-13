@@ -1,0 +1,106 @@
+' StringsText: comparison and search under Option Compare Text.
+
+Option Compare Text
+
+' Equality ignores case
+Dim s As String, t As String
+s = "a": t = "A"
+? s = t
+
+' An accented letter compared with its base letter
+Dim s As String, t As String
+s = ChrW(233): t = "e"
+? s = t
+
+' Less-than uses text order
+Dim s As String, t As String
+s = "a": t = "B"
+? s < t
+
+' Digits sort before letters
+? "1" < "a"
+
+' An underscore compared with a letter
+? "_" < "a"
+
+' A hyphen is ignored when ordering words
+? "co-op" < "coop"
+
+' A sharp s compared with ss
+? ChrW(223) = "ss"
+
+' Ligature compared with its letters
+? ChrW(64257) = "fi"
+
+' Comparison of Strings of different lengths
+? "a" < "ab"
+
+' InStr ignores case
+? InStr("hello", "L")
+
+' InStr with an explicit binary compare
+? InStr(1, "hello", "L", vbBinaryCompare)
+
+' Like ignores case
+? "A" Like "a"
+
+' Like with a character range ignores case
+? "b" Like "[A-C]"
+
+' Replace ignores case
+? Replace("hello", "L", "x")
+
+' StrComp default ignores case
+? StrComp("a", "A")
+
+' StrComp with an explicit binary compare
+? StrComp("a", "A", vbBinaryCompare)
+
+' StrComp orders lower case before upper case? text order of the same letter
+? StrComp("a", "A", vbTextCompare)
+
+' Split ignores case
+? Split("aXbxc", "x")
+
+' Filter ignores case
+? Filter(Array("Apple", "banana"), "A")
+
+' Select Case uses text comparison
+Dim s As String
+s = "A"
+Select Case s
+Case "a"
+? "lower"
+Case Else
+? "other"
+End Select
+
+' Select Case with a range under text comparison
+Dim s As String
+s = "B"
+Select Case s
+Case "a" To "c"
+? "in range"
+Case Else
+? "out of range"
+End Select
+
+' Numbers compared with Strings are still numeric comparisons
+Dim s As String
+s = "9"
+? 10 < s
+
+' Variant Strings compare as text
+Dim v As Variant, w As Variant
+v = "a": w = "A"
+? v = w
+
+' InStrRev ignores case
+? InStrRev("hello", "L")
+
+' Binary comparison of the same symbols
+? StrComp("_", "a", vbBinaryCompare)
+
+' Empty compared with a String
+Dim v As Variant
+? v = ""

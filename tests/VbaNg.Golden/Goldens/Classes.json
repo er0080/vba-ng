@@ -1,0 +1,2640 @@
+{
+  "area": "Classes",
+  "excel": "16.0.20326",
+  "culture": "en-US",
+  "options": [],
+  "declarations": [
+    "Private Type THolder",
+    "    Item As Counter",
+    "End Type",
+    "",
+    "Public Trace As String",
+    "",
+    "Public Sub SetVariantByRef(ByRef target As Variant)",
+    "    target = 99",
+    "End Sub",
+    "",
+    "Public Sub SetLongByRef(ByRef target As Long)",
+    "    target = 77",
+    "End Sub",
+    "",
+    "Public Sub SetIntegerByRef(ByRef target As Integer)",
+    "    target = 66",
+    "End Sub",
+    "",
+    "Public Sub MakeLocal()",
+    "    Dim c As Counter",
+    "    Set c = New Counter",
+    "    c.Tag = \"L\"",
+    "End Sub",
+    "",
+    "Public Sub TwoLocals()",
+    "    Dim a As Counter, b As Counter",
+    "    Set a = New Counter",
+    "    a.Tag = \"a\"",
+    "    Set b = New Counter",
+    "    b.Tag = \"b\"",
+    "End Sub",
+    "",
+    "Public Sub UseIt(ByVal c As Counter)",
+    "    c.Tag = \"u\"",
+    "End Sub",
+    "",
+    "Public Function MakeCounter(ByVal tag As String) As Counter",
+    "    Set MakeCounter = New Counter",
+    "    MakeCounter.Tag = tag",
+    "End Function",
+    "",
+    "Public Sub Clear(ByVal c As Counter)",
+    "    Set c = Nothing",
+    "End Sub",
+    "",
+    "Public Sub ClearRef(ByRef c As Counter)",
+    "    Set c = Nothing",
+    "End Sub",
+    "",
+    "Public Sub ReleaseSlot(ByRef s As Slot)",
+    "    Set s = Nothing",
+    "End Sub",
+    "",
+    "Public Sub HoldLocal()",
+    "    Dim t As THolder",
+    "    Set t.Item = New Counter",
+    "    t.Item.Tag = \"h\"",
+    "End Sub",
+    "",
+    "Public Function Describe2(Optional ByVal c As Counter = Nothing) As String",
+    "    If c Is Nothing Then Describe2 = \"none\" Else Describe2 = \"some \" & c.Tag",
+    "End Function",
+    "",
+    "Public Function ValueOf(ByVal v As Variant) As Long",
+    "    ValueOf = v.Value",
+    "End Function",
+    "",
+    "Public Function StaticCounter() As Long",
+    "    Static c As Counter",
+    "    If c Is Nothing Then Set c = New Counter",
+    "    c.Bump",
+    "    StaticCounter = c.Value",
+    "End Function",
+    "",
+    "Public Function TypeNameOfObject(ByRef x As Object) As String",
+    "    TypeNameOfObject = TypeName(x)",
+    "End Function",
+    "",
+    "Public Function TypeNameOfStore(ByRef x As Store) As String",
+    "    TypeNameOfStore = TypeName(x)",
+    "End Function",
+    "",
+    "Public Function MakeStore() As Store",
+    "    Dim s As New Store",
+    "    s(\"k\") = 7",
+    "    Set MakeStore = s",
+    "End Function",
+    "",
+    "Public Function MakeStoreAsObject() As Object",
+    "    Set MakeStoreAsObject = MakeStore()",
+    "End Function",
+    "",
+    "Public Property Get StoreProperty() As Store",
+    "    Set StoreProperty = MakeStore()",
+    "End Property"
+  ],
+  "classes": [
+    {
+      "name": "Bag",
+      "source": [
+        "VERSION 1.0 CLASS",
+        "BEGIN",
+        "  MultiUse = -1  'True",
+        "END",
+        "Attribute VB_Name = \"Bag\"",
+        "Attribute VB_GlobalNameSpace = False",
+        "Attribute VB_Creatable = False",
+        "Attribute VB_PredeclaredId = False",
+        "Attribute VB_Exposed = False",
+        "Option Explicit",
+        "",
+        "' A collection wrapper with a default Item and a NewEnum for For Each.",
+        "",
+        "Private items As Collection",
+        "",
+        "Private Sub Class_Initialize()",
+        "    Set items = New Collection",
+        "End Sub",
+        "",
+        "Public Sub Add(ByVal item As Variant)",
+        "    items.Add item",
+        "End Sub",
+        "",
+        "Public Property Get Count() As Long",
+        "    Count = items.Count",
+        "End Property",
+        "",
+        "Public Property Get Item(ByVal index As Long) As Variant",
+        "Attribute Item.VB_UserMemId = 0",
+        "    Item = items(index)",
+        "End Property",
+        "",
+        "Public Function NewEnum() As IUnknown",
+        "Attribute NewEnum.VB_UserMemId = -4",
+        "Attribute NewEnum.VB_MemberFlags = \"40\"",
+        "    Set NewEnum = items.[_NewEnum]",
+        "End Function"
+      ]
+    },
+    {
+      "name": "Counter",
+      "source": [
+        "VERSION 1.0 CLASS",
+        "BEGIN",
+        "  MultiUse = -1  'True",
+        "END",
+        "Attribute VB_Name = \"Counter\"",
+        "Attribute VB_GlobalNameSpace = False",
+        "Attribute VB_Creatable = False",
+        "Attribute VB_PredeclaredId = False",
+        "Attribute VB_Exposed = False",
+        "Option Explicit",
+        "",
+        "' The workhorse of the Classes golden: logs its lifetime to Trace, exposes a default",
+        "' property, properties of every kind, two events, and Me.",
+        "",
+        "Public Event Changed(ByVal newValue As Long)",
+        "Public Event Adjust(ByRef delta As Long)",
+        "",
+        "Public Tag As String",
+        "Private valueStore As Long",
+        "Private childStore As Counter",
+        "",
+        "Private Sub Class_Initialize()",
+        "    Trace = Trace & \"I\"",
+        "End Sub",
+        "",
+        "Private Sub Class_Terminate()",
+        "    Trace = Trace & \"T\" & Tag",
+        "End Sub",
+        "",
+        "Public Property Get Value() As Long",
+        "Attribute Value.VB_UserMemId = 0",
+        "    Value = valueStore",
+        "End Property",
+        "",
+        "Public Property Let Value(ByVal newValue As Long)",
+        "    valueStore = newValue",
+        "    RaiseEvent Changed(newValue)",
+        "End Property",
+        "",
+        "Public Property Get Child() As Counter",
+        "    Set Child = childStore",
+        "End Property",
+        "",
+        "Public Property Set Child(ByVal newChild As Counter)",
+        "    Set childStore = newChild",
+        "End Property",
+        "",
+        "Public Property Get Doubled(ByVal times As Long) As Long",
+        "    Doubled = valueStore * times",
+        "End Property",
+        "",
+        "Public Property Let Doubled(ByVal times As Long, ByVal total As Long)",
+        "    valueStore = total \\ times",
+        "End Property",
+        "",
+        "Public Function Self() As Counter",
+        "    Set Self = Me",
+        "End Function",
+        "",
+        "Public Sub Bump(Optional ByVal by As Long = 1)",
+        "    valueStore = valueStore + by",
+        "    RaiseEvent Changed(valueStore)",
+        "End Sub",
+        "",
+        "Public Function Nudge() As Long",
+        "    Dim delta As Long",
+        "    delta = 1",
+        "    RaiseEvent Adjust(delta)",
+        "    valueStore = valueStore + delta",
+        "    Nudge = delta",
+        "End Function",
+        "",
+        "Public Sub Drain(ByRef target As Long)",
+        "    target = valueStore",
+        "    valueStore = 0",
+        "End Sub",
+        "",
+        "Public Function Describe(ParamArray parts() As Variant) As String",
+        "    Dim i As Long",
+        "    Describe = Tag & \":\" & valueStore",
+        "    For i = LBound(parts) To UBound(parts)",
+        "        Describe = Describe & \",\" & parts(i)",
+        "    Next",
+        "End Function"
+      ]
+    },
+    {
+      "name": "Disc",
+      "source": [
+        "VERSION 1.0 CLASS",
+        "BEGIN",
+        "  MultiUse = -1  'True",
+        "END",
+        "Attribute VB_Name = \"Disc\"",
+        "Attribute VB_GlobalNameSpace = False",
+        "Attribute VB_Creatable = False",
+        "Attribute VB_PredeclaredId = False",
+        "Attribute VB_Exposed = False",
+        "Option Explicit",
+        "",
+        "' Implements IShape; its own Area differs from the interface's so the dispatch is visible.",
+        "",
+        "Implements IShape",
+        "",
+        "Public Radius As Double",
+        "",
+        "Private Function IShape_Area() As Double",
+        "    IShape_Area = 3 * Radius * Radius",
+        "End Function",
+        "",
+        "Private Property Get IShape_Kind() As String",
+        "    IShape_Kind = \"circle\"",
+        "End Property",
+        "",
+        "Public Function Area() As Double",
+        "    Area = 0",
+        "End Function"
+      ]
+    },
+    {
+      "name": "Failing",
+      "source": [
+        "VERSION 1.0 CLASS",
+        "BEGIN",
+        "  MultiUse = -1  'True",
+        "END",
+        "Attribute VB_Name = \"Failing\"",
+        "Attribute VB_GlobalNameSpace = False",
+        "Attribute VB_Creatable = False",
+        "Attribute VB_PredeclaredId = False",
+        "Attribute VB_Exposed = False",
+        "Option Explicit",
+        "",
+        "' Class_Initialize raises an error.",
+        "",
+        "Private Sub Class_Initialize()",
+        "    Trace = Trace & \"F\"",
+        "    Err.Raise 1001, , \"init failed\"",
+        "End Sub",
+        "",
+        "Private Sub Class_Terminate()",
+        "    Trace = Trace & \"G\"",
+        "End Sub"
+      ]
+    },
+    {
+      "name": "IShape",
+      "source": [
+        "VERSION 1.0 CLASS",
+        "BEGIN",
+        "  MultiUse = -1  'True",
+        "END",
+        "Attribute VB_Name = \"IShape\"",
+        "Attribute VB_GlobalNameSpace = False",
+        "Attribute VB_Creatable = False",
+        "Attribute VB_PredeclaredId = False",
+        "Attribute VB_Exposed = False",
+        "Option Explicit",
+        "",
+        "' An interface: a class with empty members that Disc implements.",
+        "",
+        "Public Function Area() As Double",
+        "End Function",
+        "",
+        "Public Property Get Kind() As String",
+        "End Property"
+      ]
+    },
+    {
+      "name": "Lookup",
+      "source": [
+        "VERSION 1.0 CLASS",
+        "BEGIN",
+        "  MultiUse = -1  'True",
+        "END",
+        "Attribute VB_Name = \"Lookup\"",
+        "Attribute VB_GlobalNameSpace = False",
+        "Attribute VB_Creatable = False",
+        "Attribute VB_PredeclaredId = False",
+        "Attribute VB_Exposed = False",
+        "Option Explicit",
+        "",
+        "' A default member that takes a string, which the ! operator names.",
+        "",
+        "Public Function Item(ByVal key As String) As String",
+        "Attribute Item.VB_UserMemId = 0",
+        "    Item = UCase(key)",
+        "End Function"
+      ]
+    },
+    {
+      "name": "Node",
+      "source": [
+        "VERSION 1.0 CLASS",
+        "BEGIN",
+        "  MultiUse = -1  'True",
+        "END",
+        "Attribute VB_Name = \"Node\"",
+        "Attribute VB_GlobalNameSpace = False",
+        "Attribute VB_Creatable = False",
+        "Attribute VB_PredeclaredId = False",
+        "Attribute VB_Exposed = False",
+        "Option Explicit",
+        "",
+        "' Two Nodes can reference each other, which is the cycle the reference count never breaks.",
+        "",
+        "Public Tag As String",
+        "Public Other As Node",
+        "",
+        "Private Sub Class_Terminate()",
+        "    Trace = Trace & \"T\" & Tag",
+        "End Sub"
+      ]
+    },
+    {
+      "name": "Outer",
+      "source": [
+        "VERSION 1.0 CLASS",
+        "BEGIN",
+        "  MultiUse = -1  'True",
+        "END",
+        "Attribute VB_Name = \"Outer\"",
+        "Attribute VB_GlobalNameSpace = False",
+        "Attribute VB_Creatable = False",
+        "Attribute VB_PredeclaredId = False",
+        "Attribute VB_Exposed = False",
+        "Option Explicit",
+        "",
+        "' Creates a Counter in its Class_Initialize; the Counter goes when Outer does.",
+        "",
+        "Private inner As Counter",
+        "",
+        "Private Sub Class_Initialize()",
+        "    Trace = Trace & \"O\"",
+        "    Set inner = New Counter",
+        "    inner.Tag = \"in\"",
+        "End Sub",
+        "",
+        "Private Sub Class_Terminate()",
+        "    Trace = Trace & \"P\"",
+        "End Sub",
+        "",
+        "Public Property Get Inside() As Counter",
+        "    Set Inside = inner",
+        "End Property"
+      ]
+    },
+    {
+      "name": "Selfish",
+      "source": [
+        "VERSION 1.0 CLASS",
+        "BEGIN",
+        "  MultiUse = -1  'True",
+        "END",
+        "Attribute VB_Name = \"Selfish\"",
+        "Attribute VB_GlobalNameSpace = False",
+        "Attribute VB_Creatable = False",
+        "Attribute VB_PredeclaredId = False",
+        "Attribute VB_Exposed = False",
+        "Option Explicit",
+        "",
+        "' Class_Initialize takes and drops a reference to Me (TypeName(Me)), as VBA-Better-Array's",
+        "' constructor does; the object must outlive it (ROADMAP.md WP3).",
+        "",
+        "Private Sub Class_Initialize()",
+        "    Trace = Trace & \"I\" & TypeName(Me)",
+        "End Sub",
+        "",
+        "Private Sub Class_Terminate()",
+        "    Trace = Trace & \"T\"",
+        "End Sub",
+        "",
+        "Public Function Ping() As String",
+        "    Ping = \"ping\"",
+        "End Function"
+      ]
+    },
+    {
+      "name": "Settings",
+      "source": [
+        "VERSION 1.0 CLASS",
+        "BEGIN",
+        "  MultiUse = -1  'True",
+        "END",
+        "Attribute VB_Name = \"Settings\"",
+        "Attribute VB_GlobalNameSpace = False",
+        "Attribute VB_Creatable = False",
+        "Attribute VB_PredeclaredId = True",
+        "Attribute VB_Exposed = False",
+        "Option Explicit",
+        "",
+        "' A class with a predeclared instance, reached by the class name.",
+        "",
+        "Public Level As Long",
+        "",
+        "Private Sub Class_Initialize()",
+        "    Trace = Trace & \"S\"",
+        "End Sub",
+        "",
+        "Private Sub Class_Terminate()",
+        "    Trace = Trace & \"X\"",
+        "End Sub"
+      ]
+    },
+    {
+      "name": "Slot",
+      "source": [
+        "VERSION 1.0 CLASS",
+        "BEGIN",
+        "  MultiUse = -1  'True",
+        "END",
+        "Attribute VB_Name = \"Slot\"",
+        "Attribute VB_GlobalNameSpace = False",
+        "Attribute VB_Creatable = False",
+        "Attribute VB_PredeclaredId = False",
+        "Attribute VB_Exposed = False",
+        "Option Explicit",
+        "",
+        "' A default property with a Let and a Set accessor both: a late-bound Set reaches the Set, a",
+        "' late-bound Let the Let, as VBA-Dictionary's Item needs (ROADMAP.md WP3).",
+        "",
+        "Public LastAccessor As String",
+        "Private held As Variant",
+        "",
+        "Public Property Get Item(ByVal key As String) As Variant",
+        "Attribute Item.VB_UserMemId = 0",
+        "    If IsObject(held) Then",
+        "        Set Item = held",
+        "    Else",
+        "        Item = held",
+        "    End If",
+        "End Property",
+        "",
+        "Public Property Let Item(ByVal key As String, ByVal newValue As Variant)",
+        "    LastAccessor = \"Let \" & key",
+        "    held = newValue",
+        "End Property",
+        "",
+        "Public Property Set Item(ByVal key As String, ByVal newValue As Variant)",
+        "    LastAccessor = \"Set \" & key",
+        "    Set held = newValue",
+        "End Property",
+        "",
+        "Public Function HandMe() As String",
+        "    ReleaseSlot Me",
+        "    HandMe = TypeName(Me)",
+        "End Function"
+      ]
+    },
+    {
+      "name": "Store",
+      "source": [
+        "VERSION 1.0 CLASS",
+        "BEGIN",
+        "  MultiUse = -1  'True",
+        "END",
+        "Attribute VB_Name = \"Store\"",
+        "Attribute VB_GlobalNameSpace = False",
+        "Attribute VB_Creatable = False",
+        "Attribute VB_PredeclaredId = False",
+        "Attribute VB_Exposed = False",
+        "Option Explicit",
+        "",
+        "' A keyed store whose default member has both a Get and a Let, so s(key) = value assigns through it.",
+        "",
+        "Private items As Collection",
+        "",
+        "Private Sub Class_Initialize()",
+        "    Set items = New Collection",
+        "End Sub",
+        "",
+        "Public Property Get Item(ByVal key As String) As Variant",
+        "Attribute Item.VB_UserMemId = 0",
+        "    Item = items(key)",
+        "End Property",
+        "",
+        "Public Property Let Item(ByVal key As String, ByVal value As Variant)",
+        "    items.Add value, key",
+        "End Property"
+      ]
+    },
+    {
+      "name": "Watcher",
+      "source": [
+        "VERSION 1.0 CLASS",
+        "BEGIN",
+        "  MultiUse = -1  'True",
+        "END",
+        "Attribute VB_Name = \"Watcher\"",
+        "Attribute VB_GlobalNameSpace = False",
+        "Attribute VB_Creatable = False",
+        "Attribute VB_PredeclaredId = False",
+        "Attribute VB_Exposed = False",
+        "Option Explicit",
+        "",
+        "' Handles a Counter's events through WithEvents.",
+        "",
+        "Private WithEvents source As Counter",
+        "Attribute source.VB_VarHelpID = -1",
+        "",
+        "Public Property Get Target() As Counter",
+        "    Set Target = source",
+        "End Property",
+        "",
+        "Public Property Set Target(ByVal newTarget As Counter)",
+        "    Set source = newTarget",
+        "End Property",
+        "",
+        "Private Sub source_Changed(ByVal newValue As Long)",
+        "    Trace = Trace & \"C\" & newValue",
+        "End Sub",
+        "",
+        "Private Sub source_Adjust(ByRef delta As Long)",
+        "    delta = delta * 10",
+        "End Sub"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "name": "New runs Class_Initialize and Set Nothing runs Class_Terminate",
+      "source": [
+        "Trace = \"\"",
+        "Dim c As Counter",
+        "? c Is Nothing",
+        "Set c = New Counter",
+        "? Trace",
+        "? c Is Nothing",
+        "? TypeName(c)",
+        "Set c = Nothing",
+        "? Trace",
+        "? c Is Nothing"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "I"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "String",
+            "value": "Counter"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "String",
+            "value": "IT"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Two references keep the object alive",
+      "source": [
+        "Trace = \"\"",
+        "Dim c As Counter, d As Counter",
+        "Set c = New Counter",
+        "Set d = c",
+        "? c Is d",
+        "Set c = Nothing",
+        "? Trace",
+        "Set d = Nothing",
+        "? Trace"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "I"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "IT"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A local terminates at End Sub",
+      "source": [
+        "Trace = \"\"",
+        "MakeLocal",
+        "? Trace"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "ITL"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Locals terminate in a fixed order at End Sub",
+      "source": [
+        "Trace = \"\"",
+        "TwoLocals",
+        "? Trace"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "IITaTb"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A temporary terminates when its statement ends",
+      "source": [
+        "Trace = \"\"",
+        "UseIt New Counter",
+        "? Trace",
+        "Trace = \"\"",
+        "Call UseIt(New Counter)",
+        "? Trace"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "ITu"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "ITu"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reassigning creates the new object before releasing the old one",
+      "source": [
+        "Trace = \"\"",
+        "Dim c As Counter",
+        "Set c = New Counter",
+        "c.Tag = \"a\"",
+        "Set c = New Counter",
+        "? Trace",
+        "c.Tag = \"b\"",
+        "Set c = Nothing",
+        "? Trace"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "IITa"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "IITaTb"
+          }
+        }
+      ]
+    },
+    {
+      "name": "As New creates on first use and again after Nothing",
+      "source": [
+        "Trace = \"\"",
+        "Dim c As New Counter",
+        "? Trace",
+        "c.Tag = \"n\"",
+        "? Trace",
+        "? c.Value",
+        "Set c = Nothing",
+        "? Trace",
+        "? c Is Nothing",
+        "? Trace",
+        "? c.Value",
+        "? Trace"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": ""
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "I"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "String",
+            "value": "ITn"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "String",
+            "value": "ITnI"
+          }
+        },
+        {
+          "index": 6,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        },
+        {
+          "index": 7,
+          "value": {
+            "type": "String",
+            "value": "ITnI"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Property Let and Get, a Sub with an Optional parameter, and parameterized properties",
+      "source": [
+        "Dim c As New Counter",
+        "c.Value = 5",
+        "? c.Value",
+        "? c.Doubled(3)",
+        "c.Doubled(2) = 14",
+        "? c.Value",
+        "c.Bump",
+        "? c.Value",
+        "c.Bump 10",
+        "? c.Value",
+        "Dim n As Long",
+        "c.Drain n",
+        "? n",
+        "? c.Value"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "15"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "7"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Long",
+            "value": "8"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Long",
+            "value": "18"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "Long",
+            "value": "18"
+          }
+        },
+        {
+          "index": 6,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The default member stands for the object in Let-coercion, operators, and conversions",
+      "source": [
+        "Dim c As New Counter, n As Long, v As Variant",
+        "c.Value = 7",
+        "n = c",
+        "? n",
+        "? c + 1",
+        "? \"v=\" & c",
+        "? CStr(c)",
+        "v = c",
+        "? TypeName(v)",
+        "? v",
+        "? c = 7",
+        "? c.Self.Value",
+        "? c.Self.Self.Value"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "7"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "8"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "v=7"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "String",
+            "value": "7"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "String",
+            "value": "Long"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "Long",
+            "value": "7"
+          }
+        },
+        {
+          "index": 6,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 7,
+          "value": {
+            "type": "Long",
+            "value": "7"
+          }
+        },
+        {
+          "index": 8,
+          "value": {
+            "type": "Long",
+            "value": "7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let on an object variable assigns through its default member",
+      "source": [
+        "Dim c As New Counter",
+        "c = 5",
+        "? c.Value",
+        "c = c + 1",
+        "? c.Value"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "6"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Me, Property Set, and a property returning an object",
+      "source": [
+        "Trace = \"\"",
+        "Dim c As New Counter, d As Counter",
+        "c.Tag = \"p\"",
+        "Set c.Child = New Counter",
+        "c.Child.Tag = \"k\"",
+        "? Trace",
+        "? c.Child.Tag",
+        "Set d = c.Child",
+        "? d Is c.Child",
+        "? c.Self Is c",
+        "Set c.Child = Nothing",
+        "? Trace",
+        "Set d = Nothing",
+        "? Trace"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "II"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "k"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "String",
+            "value": "II"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "String",
+            "value": "IITk"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeName, TypeOf, VarType, and IsObject on class instances",
+      "source": [
+        "Dim c As Counter, o As Object, v As Variant",
+        "? TypeName(c)",
+        "? VarType(c)",
+        "Set c = New Counter",
+        "? TypeName(c)",
+        "? TypeOf c Is Counter",
+        "? TypeOf c Is Object",
+        "? VarType(c)",
+        "? IsObject(c)",
+        "Set o = c",
+        "? TypeName(o)",
+        "? TypeOf o Is Counter",
+        "Set v = c",
+        "? TypeName(v)",
+        "? IsObject(v)",
+        "? VarType(v)",
+        "? TypeOf v Is Counter"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Nothing"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "9"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "Counter"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        },
+        {
+          "index": 6,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 7,
+          "value": {
+            "type": "String",
+            "value": "Counter"
+          }
+        },
+        {
+          "index": 8,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 9,
+          "value": {
+            "type": "String",
+            "value": "Counter"
+          }
+        },
+        {
+          "index": 10,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 11,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        },
+        {
+          "index": 12,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Late-bound access to a project class through Object and Variant",
+      "source": [
+        "Dim o As Object, v As Variant",
+        "Set o = New Counter",
+        "o.Value = 3",
+        "? o.Value",
+        "o.Bump 2",
+        "? o.Value",
+        "? o.Doubled(2)",
+        "o.Tag = \"late\"",
+        "? o.Describe(\"x\", 1)",
+        "Set v = o",
+        "v.Value = 9",
+        "? v.Value",
+        "? ValueOf(o)",
+        "? CallByName(o, \"Value\", VbGet)",
+        "CallByName o, \"Value\", VbLet, 4",
+        "? o.Value",
+        "? CallByName(o, \"Doubled\", VbGet, 3)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "String",
+            "value": "late:5,x,1"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Long",
+            "value": "9"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "Long",
+            "value": "9"
+          }
+        },
+        {
+          "index": 6,
+          "value": {
+            "type": "Long",
+            "value": "9"
+          }
+        },
+        {
+          "index": 7,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        },
+        {
+          "index": 8,
+          "value": {
+            "type": "Long",
+            "value": "12"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A member of Nothing raises 91",
+      "source": [
+        "Dim c As Counter",
+        "c.Value = 1"
+      ],
+      "results": [],
+      "error": {
+        "number": 91,
+        "description": "Object variable or With block variable not set",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "A Collection releases an object on Remove and on Set Nothing",
+      "source": [
+        "Trace = \"\"",
+        "Dim col As Collection, c As Counter",
+        "Set col = New Collection",
+        "Set c = New Counter",
+        "c.Tag = \"1\"",
+        "col.Add c",
+        "Set c = New Counter",
+        "c.Tag = \"2\"",
+        "col.Add c",
+        "Set c = Nothing",
+        "? Trace",
+        "col.Remove 1",
+        "? Trace",
+        "Set col = Nothing",
+        "? Trace"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "II"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "IIT1"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "IIT1T2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Arrays of objects release on Set Nothing, Erase, and ReDim",
+      "source": [
+        "Trace = \"\"",
+        "Dim a(1 To 2) As Counter, b() As Counter",
+        "Set a(1) = New Counter",
+        "a(1).Tag = \"a1\"",
+        "Set a(2) = New Counter",
+        "a(2).Tag = \"a2\"",
+        "? a(2).Tag",
+        "Set a(1) = Nothing",
+        "? Trace",
+        "Erase a",
+        "? Trace",
+        "ReDim b(0 To 0)",
+        "Set b(0) = New Counter",
+        "b(0).Tag = \"b0\"",
+        "ReDim b(0 To 1)",
+        "? Trace",
+        "Set b(0) = New Counter",
+        "b(0).Tag = \"c0\"",
+        "ReDim Preserve b(0 To 2)",
+        "? b(0).Tag",
+        "Erase b",
+        "? Trace"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "a2"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "IITa1"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "IITa1Ta2"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "String",
+            "value": "IITa1Ta2ITb0"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "String",
+            "value": "c0"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "String",
+            "value": "IITa1Ta2ITb0ITc0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Objects in user-defined types",
+      "source": [
+        "Trace = \"\"",
+        "Dim t As THolder",
+        "Set t.Item = New Counter",
+        "t.Item.Tag = \"u\"",
+        "? t.Item.Tag",
+        "Set t.Item = Nothing",
+        "? Trace",
+        "HoldLocal",
+        "? Trace"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "u"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "ITu"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "ITuITh"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A function result lives until its statement ends",
+      "source": [
+        "Trace = \"\"",
+        "Dim c As Counter",
+        "Set c = MakeCounter(\"r\")",
+        "? Trace",
+        "Set c = Nothing",
+        "? Trace",
+        "Trace = \"\"",
+        "MakeCounter \"s\"",
+        "? Trace",
+        "? MakeCounter(\"t\").Value",
+        "? Trace"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "I"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "ITr"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "ITs"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "String",
+            "value": "ITsITt"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Objects that reference each other never terminate",
+      "source": [
+        "Trace = \"\"",
+        "Dim a As Node, b As Node",
+        "Set a = New Node",
+        "a.Tag = \"a\"",
+        "Set b = New Node",
+        "b.Tag = \"b\"",
+        "Set a.Other = b",
+        "Set b.Other = a",
+        "Set a = Nothing",
+        "Set b = Nothing",
+        "? Trace"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "An error in Class_Initialize reaches the New statement",
+      "source": [
+        "Trace = \"\"",
+        "Dim f As Failing",
+        "On Error Resume Next",
+        "Set f = New Failing",
+        "? Err.Number",
+        "? Err.Description",
+        "? f Is Nothing",
+        "? Trace"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1001"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "init failed"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "String",
+            "value": "F"
+          }
+        }
+      ],
+      "error": {
+        "number": 1001,
+        "description": "init failed",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Implements: calls through the interface reach the implementing class",
+      "source": [
+        "Dim s As IShape, c As Disc",
+        "Set c = New Disc",
+        "c.Radius = 2",
+        "Set s = c",
+        "? s.Area",
+        "? s.Kind",
+        "? c.Area"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "12",
+            "bits": "4028000000000000"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "circle"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Double",
+            "value": "0",
+            "bits": "0000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Implements: TypeName, TypeOf, and Is see the implementing class",
+      "source": [
+        "Dim s As IShape, c As Disc",
+        "Set c = New Disc",
+        "Set s = c",
+        "? TypeName(s)",
+        "? TypeOf s Is Disc",
+        "? TypeOf c Is IShape",
+        "? s Is c"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Disc"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Implements: Set from the interface back to the class",
+      "source": [
+        "Dim s As IShape, c As Disc, back As Disc",
+        "Set c = New Disc",
+        "c.Radius = 2",
+        "Set s = c",
+        "Set back = s",
+        "? back.Radius",
+        "? back Is c"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Double",
+            "value": "2",
+            "bits": "4000000000000000"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "WithEvents handlers run on RaiseEvent, including a ByRef event parameter",
+      "source": [
+        "Trace = \"\"",
+        "Dim c As Counter, w As Watcher",
+        "Set c = New Counter",
+        "Set w = New Watcher",
+        "c.Value = 1",
+        "? Trace",
+        "Set w.Target = c",
+        "c.Value = 2",
+        "? Trace",
+        "c.Bump",
+        "? Trace",
+        "? c.Nudge",
+        "? c.Value",
+        "Set w.Target = Nothing",
+        "c.Value = 5",
+        "? Trace"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "I"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "IC2"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "IC2C3"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Long",
+            "value": "10"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Long",
+            "value": "13"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "String",
+            "value": "IC2C3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Two watchers on one source, and one of them released",
+      "source": [
+        "Trace = \"\"",
+        "Dim c As Counter, w1 As Watcher, w2 As Watcher",
+        "Set c = New Counter",
+        "Set w1 = New Watcher",
+        "Set w2 = New Watcher",
+        "Set w1.Target = c",
+        "Set w2.Target = c",
+        "c.Value = 1",
+        "? Trace",
+        "Set w1 = Nothing",
+        "c.Value = 2",
+        "? Trace"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "IC1C1"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "IC1C1C2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A predeclared instance is reached by the class name; New makes another",
+      "source": [
+        "Trace = \"\"",
+        "? Settings.Level",
+        "Settings.Level = 3",
+        "? Settings.Level",
+        "Dim s As Settings",
+        "Set s = New Settings",
+        "? s.Level",
+        "s.Level = 4",
+        "? Settings.Level",
+        "? Trace",
+        "? Settings Is s",
+        "? TypeName(Settings)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "String",
+            "value": "SS"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        },
+        {
+          "index": 6,
+          "value": {
+            "type": "String",
+            "value": "Settings"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Set on the predeclared instance",
+      "source": [
+        "Trace = \"\"",
+        "Settings.Level = 9",
+        "Set Settings = Nothing",
+        "? Trace",
+        "? Settings.Level",
+        "? Trace"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "X"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "XS"
+          }
+        }
+      ]
+    },
+    {
+      "name": "For Each over a class with NewEnum, and its default Item",
+      "source": [
+        "Dim b As New Bag, v As Variant, s As String",
+        "b.Add \"x\"",
+        "b.Add \"y\"",
+        "? b.Count",
+        "? b(1)",
+        "? b.Item(2)",
+        "For Each v In b",
+        "    s = s & v",
+        "Next",
+        "? s"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "x"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "y"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "String",
+            "value": "xy"
+          }
+        }
+      ]
+    },
+    {
+      "name": "With New keeps the object until End With",
+      "source": [
+        "Trace = \"\"",
+        "With New Counter",
+        "    .Tag = \"w\"",
+        "    .Value = 3",
+        "    ? .Value",
+        "    ? Trace",
+        "End With",
+        "? Trace"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "3"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "I"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "ITw"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ByVal and ByRef object parameters",
+      "source": [
+        "Trace = \"\"",
+        "Dim c As Counter",
+        "Set c = New Counter",
+        "c.Tag = \"v\"",
+        "Clear c",
+        "? c Is Nothing",
+        "? Trace",
+        "ClearRef c",
+        "? c Is Nothing",
+        "? Trace"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "I"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "String",
+            "value": "ITv"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Let-assigning a Variant that holds an object releases the object",
+      "source": [
+        "Trace = \"\"",
+        "Dim v As Variant",
+        "Set v = New Counter",
+        "? IsObject(v)",
+        "v = 1",
+        "? Trace",
+        "? IsObject(v)",
+        "? TypeName(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "IT"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "String",
+            "value": "Integer"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Comparing objects with = compares their default members",
+      "source": [
+        "Dim c As New Counter, d As New Counter",
+        "c.Value = 2",
+        "d.Value = 2",
+        "? c = d",
+        "d.Value = 3",
+        "? c = d",
+        "? c < d"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Boolean",
+            "value": "False"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "An Optional object parameter defaults to Nothing",
+      "source": [
+        "? Describe2()",
+        "? Describe2(MakeCounter(\"o\"))"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "none"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "some o"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Self-assignment and a second Set Nothing",
+      "source": [
+        "Trace = \"\"",
+        "Dim c As Counter",
+        "Set c = New Counter",
+        "c.Tag = \"s\"",
+        "Set c = c",
+        "? Trace",
+        "Set c = Nothing",
+        "Set c = Nothing",
+        "? Trace"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "I"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "ITs"
+          }
+        }
+      ]
+    },
+    {
+      "name": "An object created in Class_Initialize goes with its owner",
+      "source": [
+        "Trace = \"\"",
+        "Dim o As Outer",
+        "Set o = New Outer",
+        "? Trace",
+        "? o.Inside.Tag",
+        "Set o = Nothing",
+        "? Trace"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "OI"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "in"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "OIPTin"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A Static local of a class type persists across calls",
+      "source": [
+        "Trace = \"\"",
+        "? StaticCounter()",
+        "? StaticCounter()",
+        "? Trace"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "2"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "I"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The ! operator passes the name to the default member",
+      "source": [
+        "Dim k As New Lookup",
+        "? k!alpha",
+        "? k(\"beta\")",
+        "? k.Item(\"gamma\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "ALPHA"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "BETA"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "GAMMA"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A class variable's default member takes an indexed assignment",
+      "source": [
+        "Dim s As New Store",
+        "s(\"a\") = 5",
+        "? s(\"a\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A late-bound default member takes an indexed assignment",
+      "source": [
+        "Dim o As Object",
+        "Set o = New Store",
+        "o(\"b\") = 6",
+        "? o(\"b\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "6"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A late-bound Set reaches a property's Set accessor and a Let its Let accessor, through the default member or by name",
+      "source": [
+        "Dim o As Object",
+        "Set o = New Slot",
+        "Set o(\"a\") = New Collection",
+        "? o.LastAccessor",
+        "o(\"b\") = 5",
+        "? o.LastAccessor",
+        "Set o.Item(\"c\") = New Collection",
+        "? o.LastAccessor",
+        "o.Item(\"d\") = 6",
+        "? o.LastAccessor"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Set a"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "Let b"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "Set c"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "String",
+            "value": "Let d"
+          }
+        }
+      ]
+    },
+    {
+      "name": "An object of any type reaches a ByRef parameter of another object type",
+      "source": [
+        "Dim s As New Store",
+        "Dim o As Object",
+        "Set o = s",
+        "? TypeNameOfObject(s)",
+        "? TypeNameOfStore(o)",
+        "? TypeNameOfObject(o)",
+        "? TypeNameOfObject(Nothing)",
+        "? TypeNameOfStore(New Store)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Store"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "Store"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "Store"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "String",
+            "value": "Nothing"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "String",
+            "value": "Store"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Arguments after a parameterless function or property reach its result's default member",
+      "source": [
+        "? MakeStore()(\"k\")",
+        "? MakeStore(\"k\")",
+        "? MakeStoreAsObject(\"k\")",
+        "? StoreProperty(\"k\")",
+        "? StoreProperty.Item(\"k\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Integer",
+            "value": "7"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Integer",
+            "value": "7"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Integer",
+            "value": "7"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Integer",
+            "value": "7"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "Integer",
+            "value": "7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A property passed to a ByRef parameter is a temporary: the callee's change does not reach it",
+      "source": [
+        "Dim c As Counter",
+        "Set c = New Counter",
+        "c.Value = 5",
+        "SetVariantByRef c.Value",
+        "? c.Value",
+        "SetLongByRef c.Value",
+        "? c.Value",
+        "SetVariantByRef c.Doubled(2)",
+        "? c.Value"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A public variable of a class passed to a ByRef parameter, of its own type and of another",
+      "source": [
+        "Dim s As New Settings",
+        "s.Level = 5",
+        "SetLongByRef s.Level",
+        "? s.Level",
+        "s.Level = 5",
+        "SetIntegerByRef s.Level",
+        "? s.Level"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "An object whose default member needs an argument is an object to VarType, and a Let of it fails",
+      "source": [
+        "Dim s As New Store, v As Variant",
+        "? VarType(s)",
+        "Set v = s",
+        "? VarType(v)",
+        "On Error Resume Next",
+        "v = s",
+        "? Err.Number",
+        "? IsObject(v)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "9"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "9"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "449"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ],
+      "error": {
+        "number": 449,
+        "description": "Argument not optional",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "The Is functions on an object whose default member needs an argument",
+      "source": [
+        "Dim s As New Store, r As Variant",
+        "On Error Resume Next",
+        "r = \"x\": r = IsEmpty(s)",
+        "? r & \" \" & Err.Number",
+        "Err.Clear: r = \"x\": r = IsNull(s)",
+        "? r & \" \" & Err.Number",
+        "Err.Clear: r = \"x\": r = IsNumeric(s)",
+        "? r & \" \" & Err.Number",
+        "Err.Clear: r = \"x\": r = IsDate(s)",
+        "? r & \" \" & Err.Number",
+        "Err.Clear: r = \"x\": r = IsError(s)",
+        "? r & \" \" & Err.Number",
+        "Err.Clear: r = \"x\": r = IsArray(s)",
+        "? r & \" \" & Err.Number"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "False 0"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "False 0"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "False 0"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "String",
+            "value": "False 0"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "String",
+            "value": "False 0"
+          }
+        },
+        {
+          "index": 5,
+          "value": {
+            "type": "String",
+            "value": "False 0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Me reaches a ByRef parameter as a temporary, which the callee's Set does not reach",
+      "source": [
+        "Dim s As New Slot",
+        "? s.HandMe()",
+        "? TypeName(s)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Slot"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "Slot"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Class_Initialize may take and drop a reference to Me without ending the object",
+      "source": [
+        "Trace = \"\"",
+        "Dim o As New Selfish",
+        "? o.Ping",
+        "? Trace",
+        "Set o = Nothing",
+        "? Trace"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "ping"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "ISelfish"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "ISelfishT"
+          }
+        }
+      ]
+    }
+  ]
+}

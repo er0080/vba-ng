@@ -1,0 +1,966 @@
+' FileSystem: the file statements (MS-VBAL 5.4.5) and the FileSystem module (6.1.2.?):
+' Open, Close, Reset, Print #, Write #, Input #, Line Input #, Get, Put, Seek, Lock, Width,
+' FreeFile, EOF, LOF, Loc, Seek(), Input(), and the directory functions. Every case works under
+' the temp folder, so the replay needs no Excel; a case starts with Reset so a file left open by
+' an earlier error cannot change its outcome.
+
+Public Type TRecord
+    Id As Long
+    Label As String * 5
+    Amount As Currency
+End Type
+
+Public Type TCoded
+    Id As Long
+    Codes(1 To 2) As String * 3
+End Type
+
+Public Function TempDir() As String
+    TempDir = Environ("TEMP") & "\vbang-golden"
+    If Dir(TempDir, vbDirectory) = "" Then MkDir TempDir
+End Function
+
+Public Function TempPath(name As String) As String
+    TempPath = TempDir() & "\" & name
+End Function
+
+Public Sub Zap(path As String)
+    On Error Resume Next
+    Kill path
+    Err.Clear
+End Sub
+
+Public Function CountLines(path As String) As Long
+    Dim f As Integer, s As String
+    f = FreeFile
+    Open path For Input As #f
+    Do Until EOF(f)
+        Line Input #f, s
+        CountLines = CountLines + 1
+    Loop
+    Close #f
+End Function
+
+' CurDir and ChDir
+Dim old As String
+old = CurDir
+? Len(old) > 3
+? Left(CurDir("C"), 2)
+ChDir TempDir
+? CurDir = TempDir
+ChDir old
+? CurDir = old
+
+' ChDir to a missing folder
+ChDir TempPath("no-such-folder")
+
+' ChDrive to the current drive
+ChDrive Left(CurDir, 1)
+? Left(CurDir, 2) = Left(TempDir, 2)
+ChDrive ""
+
+' MkDir, Dir with vbDirectory, GetAttr, RmDir
+Dim d As String
+d = TempPath("sub")
+On Error Resume Next
+RmDir d
+On Error GoTo 0
+MkDir d
+? Dir(d, vbDirectory)
+? (GetAttr(d) And vbDirectory) = vbDirectory
+RmDir d
+? Dir(d, vbDirectory)
+
+' MkDir of an existing folder
+MkDir TempDir
+
+' RmDir of a missing folder
+RmDir TempPath("no-such-folder")
+
+' Kill of a missing file
+Kill TempPath("no-such-file.txt")
+
+' FreeFile ranges and the next free number
+Reset
+Dim f As Integer
+? FreeFile
+? FreeFile(0)
+? FreeFile(1)
+Open TempPath("free.txt") For Output As #1
+? FreeFile
+Close #1
+? FreeFile
+Zap TempPath("free.txt")
+
+' FreeFile with a bad range
+? FreeFile(2)
+
+' Print # writes lines the way Debug.Print shows them
+Reset
+Dim f As Integer, p As String, s As String
+p = TempPath("lines.txt")
+Zap p
+f = FreeFile
+Open p For Output As #f
+Print #f, "hello"; 1; True; 2.5
+Print #f, "a", "b"
+Print #f,
+Print #f, "x";
+Close #f
+? FileLen(p)
+Open p For Input As #f
+Line Input #f, s
+? s
+Line Input #f, s
+? s
+Line Input #f, s
+? s
+? EOF(f)
+Line Input #f, s
+? s
+? EOF(f)
+? Loc(f)
+? Seek(f)
+Close #f
+Zap p
+
+' Write # quotes strings and marks the other types
+Reset
+Dim f As Integer, p As String, s As String
+p = TempPath("write.txt")
+Zap p
+f = FreeFile
+Open p For Output As #f
+Write #f, "text", 12, -3.5, True, False, Null, Empty, CDate("2024-03-05 06:07:08"), CCur(12.5), 1E+21, "quo""te"
+Write #f,
+Write #f, 1; 2
+Write #f, "end";
+Close #f
+? FileLen(p)
+Open p For Input As #f
+Line Input #f, s
+? s
+Line Input #f, s
+? s
+Line Input #f, s
+? s
+Line Input #f, s
+? s
+? EOF(f)
+Close #f
+Zap p
+
+' Write # of dates and errors
+Reset
+Dim f As Integer, p As String, s As String
+p = TempPath("write2.txt")
+Zap p
+f = FreeFile
+Open p For Output As #f
+Write #f, DateSerial(2024, 3, 5), TimeSerial(6, 7, 8), CVErr(2042), CInt(7), CByte(8), 0.1
+Close #f
+Open p For Input As #f
+Line Input #f, s
+? s
+Close #f
+Zap p
+
+' Input # reads what Write # wrote into typed variables
+Reset
+Dim f As Integer, p As String
+Dim s As String, n As Long, d As Double, b As Boolean, v As Variant, dt As Date, c As Currency
+p = TempPath("input.txt")
+Zap p
+f = FreeFile
+Open p For Output As #f
+Write #f, "text", 12, -3.5, True, Null, DateSerial(2024, 3, 5) + TimeSerial(6, 7, 8), CCur(12.5), Empty
+Print #f, "bare words, second"; 7
+Close #f
+Open p For Input As #f
+Input #f, s, n, d, b, v, dt, c
+? s
+? n
+? d
+? b
+? IsNull(v)
+? dt
+? c
+Input #f, v
+? TypeName(v)
+Input #f, s, v
+? s
+? TypeName(v)
+? v
+Input #f, n
+? n
+? EOF(f)
+Close #f
+Zap p
+
+' Input # converts text to the variable's type
+Reset
+Dim f As Integer, p As String, n As Long, d As Double, v As Variant, b As Boolean
+p = TempPath("input2.txt")
+Zap p
+f = FreeFile
+Open p For Output As #f
+Print #f, "abc,12.5,#TRUE#,1e3"
+Close #f
+Open p For Input As #f
+Input #f, n, v, b, d
+? n
+? TypeName(v)
+? v
+? b
+? d
+Close #f
+Zap p
+
+' Input # past the end of the file
+Reset
+Dim f As Integer, p As String, s As String
+p = TempPath("past.txt")
+Zap p
+f = FreeFile
+Open p For Output As #f
+Write #f, "only"
+Close #f
+Open p For Input As #f
+Input #f, s
+? s
+Input #f, s
+
+' Line Input past the end of the file
+Reset
+Dim f As Integer, p As String, s As String
+p = TempPath("past2.txt")
+Zap p
+f = FreeFile
+Open p For Output As #f
+Print #f, "only"
+Close #f
+Open p For Input As #f
+Line Input #f, s
+? EOF(f)
+Line Input #f, s
+
+' Append adds to the end
+Reset
+Dim f As Integer, p As String
+p = TempPath("append.txt")
+Zap p
+f = FreeFile
+Open p For Output As #f
+Print #f, "one"
+Close #f
+Open p For Append As #f
+Print #f, "two"
+Close #f
+? CountLines(p)
+? FileLen(p)
+Zap p
+
+' Input() reads a number of characters
+Reset
+Dim f As Integer, p As String
+p = TempPath("chars.txt")
+Zap p
+f = FreeFile
+Open p For Output As #f
+Print #f, "abcdef"
+Close #f
+Open p For Input As #f
+? Input(3, f)
+? Input(2, #f)
+? Loc(f)
+? Seek(f)
+? EOF(f)
+? Input(3, f)
+? EOF(f)
+Close #f
+Zap p
+
+' InputB() reads a number of bytes as a byte string
+Reset
+Dim f As Integer, p As String, b As String
+p = TempPath("bytes.bin")
+Zap p
+f = FreeFile
+Open p For Output As #f
+Print #f, "abcdef";
+Close #f
+Open p For Binary As #f
+b = InputB(3, f)
+? LenB(b)
+? AscB(b) & "," & AscB(MidB(b, 2, 1)) & "," & AscB(MidB(b, 3, 1))
+? Loc(f)
+b = InputB(2, #f)
+? LenB(b) & ":" & AscB(b)
+Close #f
+Zap p
+
+' InputB() past the end of the file
+Reset
+Dim f As Integer, p As String, b As String
+p = TempPath("short.bin")
+Zap p
+f = FreeFile
+Open p For Output As #f
+Print #f, "ab";
+Close #f
+Open p For Binary As #f
+b = InputB(5, f)
+? LenB(b)
+? AscB(b) & "," & AscB(MidB(b, 2, 1)) & "," & AscB(MidB(b, 3, 1))
+? Loc(f)
+? EOF(f)
+Close #f
+Zap p
+
+' InputB() in Input mode past the end of the file
+Reset
+Dim f As Integer, p As String, b As String
+p = TempPath("short.txt")
+Zap p
+f = FreeFile
+Open p For Output As #f
+Print #f, "ab";
+Close #f
+Open p For Input As #f
+b = InputB(2, f)
+? LenB(b)
+b = InputB(1, f)
+Close #f
+Zap p
+
+' Input() past the end of the file
+Reset
+Dim f As Integer, p As String
+p = TempPath("chars2.txt")
+Zap p
+f = FreeFile
+Open p For Output As #f
+Print #f, "ab"
+Close #f
+Open p For Input As #f
+? Input(9, f)
+
+' Open For Input on a missing file
+Reset
+Dim f As Integer
+f = FreeFile
+Open TempPath("no-such-file.txt") For Input As #f
+
+' Open with a bad file name
+Reset
+Dim f As Integer
+f = FreeFile
+Open TempPath("bad<>name.txt") For Output As #f
+
+' Open with a file number already in use
+Reset
+Dim p As String
+p = TempPath("twice.txt")
+Open p For Output As #1
+Open TempPath("twice2.txt") For Output As #1
+
+' Open with file number zero
+Reset
+Open TempPath("zero.txt") For Output As #0
+
+' Print # to a file that is not open
+Reset
+Print #7, "x"
+
+' Print # to a file opened for Input
+Reset
+Dim p As String
+p = TempPath("mode.txt")
+Zap p
+Open p For Output As #1
+Print #1, "x"
+Close #1
+Open p For Input As #1
+Print #1, "y"
+
+' Input # from a file opened for Output
+Reset
+Dim s As String
+Open TempPath("mode2.txt") For Output As #1
+Input #1, s
+
+' Get from a sequential file
+Reset
+Dim n As Long
+Open TempPath("mode3.txt") For Output As #1
+Get #1, , n
+
+' Binary Put and Get of scalars, with LOF, Loc, and Seek
+Reset
+Dim f As Integer, p As String
+Dim i As Integer, l As Long, d As Double, s As String, b As Byte, cur As Currency, bo As Boolean
+p = TempPath("bin.dat")
+Zap p
+f = FreeFile
+Open p For Binary As #f
+Put #f, , CInt(7)
+Put #f, , 123456789
+Put #f, , 2.5
+Put #f, , "abc"
+Put #f, , CByte(255)
+Put #f, , CCur(1.25)
+Put #f, , True
+? LOF(f)
+? Loc(f)
+? Seek(f)
+Seek #f, 1
+Get #f, , i
+Get #f, , l
+Get #f, , d
+s = "   "
+Get #f, , s
+Get #f, , b
+Get #f, , cur
+Get #f, , bo
+? i
+? l
+? d
+? s
+? b
+? cur
+? bo
+? Loc(f)
+? Seek(f)
+? EOF(f)
+Get #f, 3, l
+? l
+? Seek(f)
+Close #f
+? FileLen(p)
+Zap p
+
+' Binary Put and Get of a record, an array, and Variants
+Reset
+Dim f As Integer, p As String, r As TRecord, r2 As TRecord, a(1 To 3) As Long, a2(1 To 3) As Long, v As Variant, v2 As Variant
+p = TempPath("bin2.dat")
+Zap p
+f = FreeFile
+Open p For Binary As #f
+r.Id = 42
+r.Label = "ab"
+r.Amount = 9.5
+Put #f, , r
+a(1) = 10
+a(2) = 20
+a(3) = 30
+Put #f, , a
+v = 3.75
+Put #f, , v
+v = "hey"
+Put #f, , v
+? LOF(f)
+Seek #f, 1
+Get #f, , r2
+Get #f, , a2
+Get #f, , v2
+? r2.Id
+? r2.Label
+? Len(r2.Label)
+? r2.Amount
+? a2(1) + a2(2) + a2(3)
+? TypeName(v2)
+? v2
+Get #f, , v2
+? TypeName(v2)
+? v2
+? Seek(f)
+Close #f
+Zap p
+
+' Binary Get past the end
+Reset
+Dim f As Integer, p As String, l As Long, l2 As Long
+p = TempPath("bin3.dat")
+Zap p
+f = FreeFile
+Open p For Binary As #f
+Put #f, , CLng(5)
+? EOF(f)
+Seek #f, 1
+Get #f, , l
+? l
+? EOF(f)
+Get #f, , l2
+? l2
+? EOF(f)
+Close #f
+Zap p
+
+' Binary Access Read on a missing file creates it
+Reset
+Dim f As Integer, p As String
+p = TempPath("no-such-file.dat")
+Zap p
+f = FreeFile
+Open p For Binary Access Read As #f
+? LOF(f)
+Close #f
+? FileLen(p)
+Zap p
+
+' Binary mode creates a missing file
+Reset
+Dim f As Integer, p As String
+p = TempPath("created.dat")
+Zap p
+f = FreeFile
+Open p For Binary As #f
+? LOF(f)
+Close #f
+? FileLen(p)
+Zap p
+
+' Random Put and Get of records with Len
+Reset
+Dim f As Integer, p As String, r As TRecord, r2 As TRecord
+p = TempPath("rand.dat")
+Zap p
+f = FreeFile
+? Len(r)
+Open p For Random As #f Len = Len(r)
+r.Id = 1
+r.Label = "one"
+r.Amount = 1.5
+Put #f, 1, r
+r.Id = 2
+r.Label = "two"
+r.Amount = 2.5
+Put #f, 2, r
+r.Id = 3
+r.Label = "three"
+r.Amount = 3.5
+Put #f, 3, r
+? LOF(f)
+? Loc(f)
+? Seek(f)
+Get #f, 2, r2
+? r2.Id
+? r2.Label
+? r2.Amount
+? Loc(f)
+? Seek(f)
+Get #f, , r2
+? r2.Id
+? EOF(f)
+Get #f, 5, r2
+? r2.Id
+? EOF(f)
+Close #f
+? FileLen(p)
+Zap p
+
+' Random mode with the default record length
+Reset
+Dim f As Integer, p As String, l As Long, s As String
+p = TempPath("rand2.dat")
+Zap p
+f = FreeFile
+Open p For Random As #f
+Put #f, 2, CLng(9)
+? LOF(f)
+Put #f, , "abc"
+? LOF(f)
+? Seek(f)
+Get #f, 3, s
+? s
+? Len(s)
+Close #f
+Zap p
+
+' Random Put longer than the record length
+Reset
+Dim f As Integer, p As String, r As TRecord
+p = TempPath("rand3.dat")
+Zap p
+f = FreeFile
+Open p For Random As #f Len = 4
+Put #f, 1, r
+
+' Seek to zero
+Reset
+Dim f As Integer, p As String
+p = TempPath("seek0.dat")
+Zap p
+f = FreeFile
+Open p For Binary As #f
+Seek #f, 0
+
+' Seek beyond the end of a Binary file, then Loc and EOF
+Reset
+Dim f As Integer, p As String, l As Long
+p = TempPath("seek.dat")
+Zap p
+f = FreeFile
+Open p For Binary As #f
+Put #f, , CLng(1)
+Seek #f, 10
+? Seek(f)
+? Loc(f)
+? EOF(f)
+Put #f, , CLng(2)
+? LOF(f)
+Close #f
+Zap p
+
+' Lock and Unlock a file
+Reset
+Dim f As Integer, p As String
+p = TempPath("lock.dat")
+Zap p
+f = FreeFile
+Open p For Binary As #f
+Put #f, , CLng(1)
+Lock #f
+Unlock #f
+Lock #f, 1
+Unlock #f, 1
+Lock #f, 1 To 2
+Unlock #f, 1 To 2
+? LOF(f)
+Close #f
+Zap p
+
+' Width wraps Print # lines
+Reset
+Dim f As Integer, p As String, s As String
+p = TempPath("width.txt")
+Zap p
+f = FreeFile
+Open p For Output As #f
+Width #f, 5
+Print #f, "abcdefgh"
+Print #f, "ij"; "kl"; "mn"
+Close #f
+? FileLen(p)
+? CountLines(p)
+Open p For Input As #f
+Line Input #f, s
+? s
+Line Input #f, s
+? s
+Close #f
+Zap p
+
+' Close without arguments and Reset close every file
+Reset
+Open TempPath("all1.txt") For Output As #1
+Open TempPath("all2.txt") For Output As #2
+? FreeFile
+Close
+? FreeFile
+Open TempPath("all1.txt") For Output As #1
+Reset
+? FreeFile
+Zap TempPath("all1.txt")
+Zap TempPath("all2.txt")
+
+' Close of a file that is not open
+Reset
+Close #9
+? FreeFile
+
+' FileLen, FileCopy, FileDateTime, GetAttr, SetAttr, Name
+Reset
+Dim f As Integer, p As String, q As String, r As String
+p = TempPath("orig.txt")
+q = TempPath("copy.txt")
+r = TempPath("renamed.txt")
+Zap p
+Zap q
+Zap r
+f = FreeFile
+Open p For Output As #f
+Print #f, "12345"
+Close #f
+? FileLen(p)
+FileCopy p, q
+? FileLen(q)
+? TypeName(FileDateTime(q))
+? Abs(FileDateTime(q) - Now) < 1
+? GetAttr(q) And vbReadOnly
+SetAttr q, vbReadOnly
+? GetAttr(q) And vbReadOnly
+SetAttr q, vbNormal
+? GetAttr(q) And vbReadOnly
+Name q As r
+? Dir(q)
+? Dir(r)
+Kill r
+Kill p
+? Dir(p)
+
+' FileLen of a missing file
+? FileLen(TempPath("no-such-file.txt"))
+
+' FileCopy from a missing file
+FileCopy TempPath("no-such-file.txt"), TempPath("copy2.txt")
+
+' Name onto an existing file
+Reset
+Dim f As Integer, p As String, q As String
+p = TempPath("n1.txt")
+q = TempPath("n2.txt")
+f = FreeFile
+Open p For Output As #f
+Close #f
+Open q For Output As #f
+Close #f
+Name p As q
+
+' GetAttr of a missing file
+? GetAttr(TempPath("no-such-file.txt"))
+
+' Dir walks a wildcard pattern
+Reset
+Dim d As String, f As Integer, n As Long, names As String
+d = TempPath("dir")
+If Dir(d, vbDirectory) = "" Then MkDir d
+Zap d & "\a1.txt"
+Zap d & "\a2.txt"
+Zap d & "\b.txt"
+f = FreeFile
+Open d & "\a1.txt" For Output As #f
+Close #f
+Open d & "\a2.txt" For Output As #f
+Close #f
+Open d & "\b.txt" For Output As #f
+Close #f
+? Dir(d & "\a*.txt")
+? Dir
+? Dir
+names = Dir(d & "\*.txt")
+Do While names <> ""
+    n = n + 1
+    names = Dir
+Loop
+? n
+? Dir(d & "\nomatch*")
+? Dir(d & "\")
+? Dir(d)
+Kill d & "\*.txt"
+? Dir(d & "\*.txt")
+RmDir d
+
+' Dir without a pattern after the walk ended
+? Dir(TempPath("none-*.zzz"))
+? Dir
+
+' Dir with vbDirectory lists folders and files
+Reset
+Dim d As String, f As Integer, entry As String, folders As Long, files As Long
+d = TempPath("dir2")
+If Dir(d, vbDirectory) = "" Then MkDir d
+If Dir(d & "\inner", vbDirectory) = "" Then MkDir d & "\inner"
+f = FreeFile
+Open d & "\file.txt" For Output As #f
+Close #f
+entry = Dir(d & "\*", vbDirectory)
+Do While entry <> ""
+    If entry <> "." And entry <> ".." Then
+        If (GetAttr(d & "\" & entry) And vbDirectory) = vbDirectory Then folders = folders + 1 Else files = files + 1
+    End If
+    entry = Dir
+Loop
+? folders
+? files
+Kill d & "\file.txt"
+RmDir d & "\inner"
+RmDir d
+
+' Settings in the registry
+SaveSetting "VbaNgGolden", "Section", "Key", "value"
+? GetSetting("VbaNgGolden", "Section", "Key")
+? GetSetting("VbaNgGolden", "Section", "Missing")
+? GetSetting("VbaNgGolden", "Section", "Missing", "dflt")
+SaveSetting "VbaNgGolden", "Section", "Other", "2"
+? UBound(GetAllSettings("VbaNgGolden", "Section"), 1)
+? UBound(GetAllSettings("VbaNgGolden", "Section"), 2)
+DeleteSetting "VbaNgGolden", "Section", "Other"
+? UBound(GetAllSettings("VbaNgGolden", "Section"), 1)
+DeleteSetting "VbaNgGolden"
+? GetSetting("VbaNgGolden", "Section", "Key")
+? IsEmpty(GetAllSettings("VbaNgGolden", "Section"))
+
+' Len of a record
+Dim r As TRecord
+? Len(r)
+? LenB(r)
+
+' Input # into a Variant types an integer, a large integer, an exponent form, and a negative
+Reset
+Dim p As String, f As Integer, a As Variant, b As Variant, c As Variant, d As Variant
+p = TempPath("variants.txt")
+f = FreeFile
+Open p For Output As #f
+Write #f, 12, 100000, 1.5E+20, -7
+Close #f
+Open p For Input As #f
+Input #f, a, b, c, d
+Close #f
+? TypeName(a)
+? TypeName(b)
+? TypeName(c)
+? TypeName(d)
+? c
+
+' Input # into a Variant reads the Write # forms of Boolean, Null, Date, and Empty
+Reset
+Dim p As String, f As Integer, a As Variant, b As Variant, c As Variant, d As Variant
+p = TempPath("variants2.txt")
+f = FreeFile
+Open p For Output As #f
+Write #f, True, Null, #1/2/2020 3:04:05 PM#, Empty
+Close #f
+Open p For Input As #f
+Input #f, a, b, c, d
+Close #f
+? TypeName(a)
+? TypeName(b)
+? TypeName(c)
+? c
+? TypeName(d)
+
+' Dir with vbDirectory lists the dot entries first
+Reset
+Dim d As String, f As Integer, first As String, second As String
+d = TempPath("dir3")
+If Dir(d, vbDirectory) = "" Then MkDir d
+If Dir(d & "\aaa", vbDirectory) = "" Then MkDir d & "\aaa"
+f = FreeFile
+Open d & "\000.txt" For Output As #f
+Close #f
+first = Dir(d & "\*", vbDirectory)
+second = Dir()
+? first
+? second
+
+' Dir lists a hidden file only with vbHidden
+Reset
+Dim d As String, f As Integer, plain As String, hidden As String
+d = TempPath("dir4")
+If Dir(d, vbDirectory) = "" Then MkDir d
+f = FreeFile
+Open d & "\h.txt" For Output As #f
+Close #f
+SetAttr d & "\h.txt", vbHidden
+plain = Dir(d & "\h.txt")
+hidden = Dir(d & "\h.txt", vbHidden)
+SetAttr d & "\h.txt", vbNormal
+? plain
+? hidden
+
+' Dir lists a system file only with vbSystem
+Reset
+Dim d As String, f As Integer, plain As String, system As String
+d = TempPath("dir5")
+If Dir(d, vbDirectory) = "" Then MkDir d
+f = FreeFile
+Open d & "\s.txt" For Output As #f
+Close #f
+SetAttr d & "\s.txt", vbSystem
+plain = Dir(d & "\s.txt")
+system = Dir(d & "\s.txt", vbSystem)
+SetAttr d & "\s.txt", vbNormal
+? plain
+? system
+
+' Loc on a sequential file counts 128-byte blocks
+Reset
+Dim p As String, f As Integer, s As String, i As Long
+p = TempPath("loc.txt")
+f = FreeFile
+Open p For Output As #f
+For i = 1 To 30
+    Print #f, String$(18, "x")
+Next
+Close #f
+Open p For Input As #f
+? Loc(f)
+Line Input #f, s
+? Loc(f)
+For i = 1 To 6
+    Line Input #f, s
+Next
+? Loc(f)
+? Seek(f)
+Close #f
+
+' Binary Put of a dynamic array writes a descriptor that Get reads back
+Reset
+Dim p As String, f As Integer, a() As Long, b() As Long, c(1 To 3) As Long
+p = TempPath("dynamic.bin")
+Zap p
+ReDim a(2 To 4)
+a(2) = 10: a(3) = 20: a(4) = 30
+f = FreeFile
+Open p For Binary As #f
+Put #f, , a
+? LOF(f)
+Get #f, 1, b
+? LBound(b)
+? UBound(b)
+? b(3)
+Get #f, 1, c
+? c(1)
+? c(2)
+Close #f
+
+' Binary Put of a fixed array writes the elements only
+Reset
+Dim p As String, f As Integer, a(1 To 3) As Long, b() As Long
+p = TempPath("fixed.bin")
+Zap p
+a(1) = 1: a(2) = 2: a(3) = 3
+f = FreeFile
+Open p For Binary As #f
+Put #f, , a
+? LOF(f)
+Close #f
+
+' Binary Put and Get of a record with a fixed-length string array
+Reset
+Dim f As Integer, p As String, r As TCoded, r2 As TCoded
+p = TempPath("codes.dat")
+Zap p
+f = FreeFile
+Open p For Binary As #f
+r.Id = 7
+r.Codes(1) = "ab"
+r.Codes(2) = "wxyz"
+Put #f, , r
+? LOF(f)
+Seek #f, 1
+Get #f, , r2
+? r2.Id
+? "[" & r2.Codes(1) & "]"
+? r2.Codes(2)
+Close #f
+Zap p
+? Len(r)
+
+' Binary Put and Get of a fixed-length String array
+Reset
+Dim f As Integer, p As String, a(1) As String * 3, a2(1) As String * 3
+p = TempPath("fixed.dat")
+Zap p
+f = FreeFile
+Open p For Binary As #f
+a(0) = "ab"
+a(1) = "xyz"
+Put #f, , a
+? LOF(f)
+Seek #f, 1
+Get #f, , a2
+? "[" & a2(0) & "]" & a2(1)
+Close #f
+Zap p
