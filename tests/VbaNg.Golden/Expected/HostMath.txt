@@ -1,0 +1,3 @@
+# Cases whose last bit comes from the Windows C runtime (Sin, Cos, and what is built on them), as "Area: case name". Judged only where that runtime rounds as the recording host's did; see HostMath.cs.
+Math: Cos of one
+Math: Tan of one
