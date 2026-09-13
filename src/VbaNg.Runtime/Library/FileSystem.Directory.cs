@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Runtime.InteropServices;
 
 using Microsoft.Win32;
 
@@ -22,26 +23,23 @@ public static partial class FileSystem
 
     private static string CurDirText(in Variant drive)
     {
+        var current = CurrentDirectoryAsHeld();
         if (drive.IsMissing)
         {
-            return Environment.CurrentDirectory;
+            return current;
         }
 
         var letter = Coerce.ToString(drive);
-        if (letter.Length == 0)
-        {
-            return Environment.CurrentDirectory;
-        }
-
-        var current = Environment.CurrentDirectory;
-        if (current.Length >= 2 && char.ToUpperInvariant(current[0]) == char.ToUpperInvariant(letter[0]))
+        if (letter.Length == 0 || (current.Length >= 2 && char.ToUpperInvariant(current[0]) == char.ToUpperInvariant(letter[0])))
         {
             return current;
         }
 
         try
         {
-            return Path.GetFullPath(letter[0] + ":");
+            // Validates the drive the way VBA refuses one, then reads that drive's directory as held.
+            _ = Path.GetFullPath(letter[0] + ":");
+            return FullPathAsHeld(letter[0] + ":");
         }
         catch (ArgumentException)
         {
@@ -52,6 +50,63 @@ public static partial class FileSystem
             throw new VbaException(68);
         }
     }
+
+    /// <summary>
+    /// The current directory as Windows holds it. Environment.CurrentDirectory and Path.GetFullPath
+    /// expand an 8.3 short name on the way out, which VBA's CurDir does not, so ChDir to a short path
+    /// and CurDir compared with it must stay equal (FileSystem golden).
+    /// </summary>
+    private static unsafe string CurrentDirectoryAsHeld()
+    {
+        for (var size = 260u; ;)
+        {
+            var buffer = new char[size];
+            fixed (char* chars = buffer)
+            {
+                var length = GetCurrentDirectory(size, chars);
+                if (length == 0)
+                {
+                    return Environment.CurrentDirectory;
+                }
+
+                if (length < size)
+                {
+                    return new string(chars, 0, (int)length);
+                }
+
+                size = length;
+            }
+        }
+    }
+
+    private static unsafe string FullPathAsHeld(string path)
+    {
+        for (var size = 260u; ;)
+        {
+            var buffer = new char[size];
+            fixed (char* chars = buffer)
+            {
+                var length = GetFullPathName(path, size, chars, 0);
+                if (length == 0)
+                {
+                    return Path.GetFullPath(path);
+                }
+
+                if (length < size)
+                {
+                    return new string(chars, 0, (int)length);
+                }
+
+                size = length;
+            }
+        }
+    }
+
+    [DllImport("kernel32.dll", EntryPoint = "GetCurrentDirectoryW", ExactSpelling = true)]
+    private static extern unsafe uint GetCurrentDirectory(uint bufferLength, char* buffer);
+
+    [DllImport("kernel32.dll", EntryPoint = "GetFullPathNameW", CharSet = CharSet.Unicode, ExactSpelling = true)]
+    private static extern unsafe uint GetFullPathName(string fileName, uint bufferLength, char* buffer, nint filePart);
 
     public static void ChDir(in Variant path)
     {
