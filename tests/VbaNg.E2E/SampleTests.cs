@@ -800,6 +800,7 @@ public sealed class SampleTests : IDisposable
             string.Empty,
         ]));
 
+        Assert.SkipUnless(OfficeTypeLibrariesRegistered(), "The project init starts references Excel and Office, whose type libraries are not registered here.");
         var build = ProjectCompiler.Build(projectDir, reference => TypeLibraryCache.Resolve(reference.Name, reference.Guid, reference.Version));
         Assert.True(build.Success, string.Join(Environment.NewLine, build.Diagnostics));
     }
@@ -840,7 +841,12 @@ public sealed class SampleTests : IDisposable
         Assert.Contains("build.log", entries, StringComparer.Ordinal);
         Assert.Contains("vbang.json", entries, StringComparer.Ordinal);
         Assert.Contains("source/Module1.bas", entries, StringComparer.Ordinal);
-        Assert.Contains("out/gen/Module1.cs", entries, StringComparer.Ordinal);
+        if (OfficeTypeLibrariesRegistered())
+        {
+            // Generated C# exists only when the build succeeds, which needs the references init writes.
+            Assert.Contains("out/gen/Module1.cs", entries, StringComparer.Ordinal);
+        }
+
         Assert.DoesNotContain(entries, e => e.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase) || e.EndsWith(".xlsm", StringComparison.OrdinalIgnoreCase));
 
         using var versions = new StreamReader(zip.GetEntry("versions.txt")!.Open());
@@ -1126,6 +1132,13 @@ public sealed class SampleTests : IDisposable
         Assert.True(File.Exists(path), "Add-in not built: " + path);
         return path;
     }
+
+    /// <summary>
+    /// Whether Excel's and Office's type libraries are registered, which a project <c>vbang init</c>
+    /// starts needs in order to build. A machine without Office, such as a CI runner, has neither.
+    /// </summary>
+    private static bool OfficeTypeLibrariesRegistered() =>
+        TypeLibraryCache.Resolve("Excel", null, null) is not null && TypeLibraryCache.Resolve("Office", null, null) is not null;
 
     private static string RequireCli()
     {

@@ -76,7 +76,13 @@ internal static partial class ExcelAutomation
 
     private static object? FromRunningObjectTable()
     {
-        Marshal.ThrowExceptionForHR(CLSIDFromProgID("Excel.Application", out var clsid));
+        // On a machine where Excel is not installed the ProgID does not resolve at all. That is Excel
+        // not reachable, as much as an Excel that is not running, never an unhandled exception.
+        if (CLSIDFromProgID("Excel.Application", out var clsid) != 0)
+        {
+            return null;
+        }
+
         if (GetActiveObject(in clsid, 0, out var unknown) != 0)
         {
             return null;
