@@ -67,15 +67,21 @@ public interface IComEventSource
 public abstract class VbaClassObject : RuntimeObject, IVbaClassInstance
 {
     private bool terminated;
+    private bool storageReleased;
     private List<(WeakReference<IVbaEventSink> Sink, string Source)>? handlers;
 
     public abstract string TypeName { get; }
 
-    /// <summary>The last reference went, from VBA code or from COM: Class_Terminate once, then the instance's storage.</summary>
+    /// <summary>
+    /// The last reference went, from VBA code or from COM: Class_Terminate once, then the instance's storage. A
+    /// Class_Terminate that stored Me brought the object back, so its storage stays until that reference goes, and then
+    /// goes without a second Class_Terminate (Lifetime cases).
+    /// </summary>
     protected sealed override void OnLastRelease()
     {
         if (terminated)
         {
+            ReleaseStorage();
             return;
         }
 
@@ -91,19 +97,28 @@ public abstract class VbaClassObject : RuntimeObject, IVbaClassInstance
         finally
         {
             // Class_Terminate runs before the object's own references go, and they go even when it raises (Classes golden: Outer).
-            ReleaseFields();
+            if (References == 0)
+            {
+                ReleaseStorage();
+            }
         }
     }
 
     /// <summary>A project reset destroys the instance whatever its count: its storage goes, Class_Terminate does not run (docs/vba-quirks.md).</summary>
     internal override void Destroy()
     {
-        if (terminated)
+        terminated = true;
+        ReleaseStorage();
+    }
+
+    private void ReleaseStorage()
+    {
+        if (storageReleased)
         {
             return;
         }
 
-        terminated = true;
+        storageReleased = true;
         ReleaseFields();
     }
 

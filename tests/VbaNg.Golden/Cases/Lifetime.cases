@@ -1,0 +1,50 @@
+' Lifetime: an object that its own Class_Terminate brings back by storing Me. VBA-TDD's SpecDefinition
+' hands Me to its suite from Class_Terminate, and the suite reads the spec's variables afterwards.
+' Phoenix, the companion class, stores Me in Keep when Revive is set.
+
+Public Trace As String
+Public Keep As Collection
+Public Revive As Boolean
+
+' An object Class_Terminate stores keeps its variables
+Trace = ""
+Set Keep = New Collection
+Revive = True
+Dim p As Phoenix
+Set p = New Phoenix
+p.Tag = "a"
+Set p = Nothing
+Revive = False
+? Trace
+? Keep.Count
+? Keep(1).Tag
+? Keep(1).Child.Count
+? Keep(1).Child(1)
+
+' A revived object does not run Class_Terminate again, and its variables go when it does
+Trace = ""
+Set Keep = New Collection
+Revive = True
+Dim p As Phoenix
+Set p = New Phoenix
+p.Tag = "b"
+p.Child.Add New Phoenix
+p.Child(2).Tag = "c"
+Set p = Nothing
+Revive = False
+? Trace
+Keep.Remove 1
+? Trace
+? Keep.Count
+
+' The object of a With block, revived at End With
+Trace = ""
+Set Keep = New Collection
+Revive = True
+With New Phoenix
+    .Tag = "w"
+End With
+Revive = False
+? Trace
+? Keep(1).Tag
+? Keep(1).Child(1)

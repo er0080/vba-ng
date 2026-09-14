@@ -644,6 +644,47 @@ public sealed class PipelineTests : IDisposable
     }
 
     /// <summary>
+    /// A Class_Terminate that stores Me brings the object back, as VBA-TDD's SpecDefinition hands itself to its suite
+    /// (Lifetime cases): its variables stay, and when that reference goes they go too, with no second Class_Terminate.
+    /// vba-ng released them right after Class_Terminate, so a spec read back later said 91.
+    /// </summary>
+    [Fact]
+    public void ClassTerminate_StoringMe_KeepsTheObjectUntilThatReferenceGoes()
+    {
+        var projectDir = Path.Combine(workDir, "Revive.vbang");
+        Directory.CreateDirectory(projectDir);
+        File.WriteAllText(
+            Path.Combine(projectDir, "Phoenix.cls"),
+            "VERSION 1.0 CLASS\r\nBEGIN\r\n  MultiUse = -1  'True\r\nEND\r\n"
+            + "Attribute VB_Name = \"Phoenix\"\r\nAttribute VB_GlobalNameSpace = False\r\nAttribute VB_Creatable = False\r\n"
+            + "Attribute VB_PredeclaredId = False\r\nAttribute VB_Exposed = False\r\n"
+            + "Option Explicit\r\n"
+            + "Public Tag As String\r\n"
+            + "Public Child As Collection\r\n"
+            + "Private Sub Class_Initialize()\r\n    Set Child = New Collection\r\nEnd Sub\r\n"
+            + "Private Sub Class_Terminate()\r\n    Debug.Print \"T\" & Tag\r\n    If Revive Then Keep.Add Me\r\nEnd Sub\r\n");
+        File.WriteAllText(
+            Path.Combine(projectDir, "Main.bas"),
+            "Attribute VB_Name = \"Main\"\r\n"
+            + "Option Explicit\r\n"
+            + "Public Keep As New Collection\r\n"
+            + "Public Revive As Boolean\r\n"
+            + "Public Sub Run()\r\n"
+            + "    Revive = True\r\n"
+            + "    With New Phoenix\r\n        .Tag = \"b\"\r\n        .Child.Add New Phoenix\r\n        .Child(1).Tag = \"c\"\r\n    End With\r\n"
+            + "    Revive = False\r\n"
+            + "    Debug.Print Keep(1).Tag & \",\" & Keep(1).Child.Count\r\n"
+            + "    Keep.Remove 1\r\n"
+            + "    Debug.Print \"removed\"\r\n"
+            + "End Sub\r\n");
+        var build = ProjectCompiler.Build(projectDir);
+        Assert.True(build.Success, string.Join(Environment.NewLine, build.Diagnostics));
+        using var host = new ProjectHost(Path.Combine(workDir, "shadow"));
+
+        Assert.Equal(["Tb", "b,1", "Tc", "removed"], RunCapturing(host, projectDir, "Main.Run"));
+    }
+
+    /// <summary>
     /// A class instance keeps its variables in a block of its own (ROADMAP.md M7 E4): VarPtr of a
     /// class variable is the address of its storage, which CopyMemory reads and writes, and the
     /// address stays the same from call to call.
