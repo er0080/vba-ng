@@ -52,7 +52,7 @@ internal static class RunCommand
 
         if (!response.Ok)
         {
-            Console.Error.WriteLine("vbang: run-time error: " + response.Error);
+            Console.Error.WriteLine("vbang: " + response.Error);
             if (response.Detail is not null)
             {
                 Console.Error.WriteLine(response.Detail);

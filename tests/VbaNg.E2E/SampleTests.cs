@@ -560,6 +560,17 @@ public sealed class SampleTests : IDisposable
             Assert.True(big.ExitCode == 0, big.ToString());
             Assert.Equal(600, big.Output.Split('\n', StringSplitOptions.RemoveEmptyEntries).Length);
             Assert.True(File.Exists(ProjectPaths.ResponsePath(bigDir)), "the long response should have gone through out/response.json");
+
+            // An error the run leaves unhandled is named with VBA's number and text, and reaches the log as a button's does.
+            var errorDir = Path.Combine(workDir, "RunError" + ProjectPaths.FolderSuffix);
+            Directory.CreateDirectory(errorDir);
+            File.WriteAllText(Path.Combine(errorDir, "Main.bas"), "Attribute VB_Name = \"Main\"\r\nOption Explicit\r\n\r\nPublic Sub Fails()\r\n    Dim zero As Long, x As Long\r\n    Debug.Print \"before\"\r\n    x = 1 / zero\r\nEnd Sub\r\n");
+            var error = RunCli(cli, "run", "Main.Fails", "--project", errorDir);
+            Assert.True(error.ExitCode == 4, error.ToString());
+            Assert.Contains("before", error.Output, StringComparison.Ordinal);
+            Assert.Contains("vbang: Run-time error '11': Division by zero", error.Error, StringComparison.Ordinal);
+            var errorLog = RunCli(cli, "logs", "--project", errorDir);
+            Assert.Contains("Run-time error in Main.Fails: '11': Division by zero", errorLog.Output, StringComparison.Ordinal);
         });
     }
 

@@ -40,7 +40,15 @@ public static class HostCommands
             }
             catch (Exception ex)
             {
-                return Transport(RunResponse.Failure(capture.Text, ex.GetType().Name + ": " + ex.Message, ex.StackTrace), projectDir);
+                // An error the procedure left unhandled reaches the project's log as a button's does, and the reply names it
+                // as VBA's dialog would; the output printed before it is the reply's.
+                var output = capture.Text;
+                ExcelHostServices.Instance.ReportUnhandled(procedure, ex, dialog: ui == "ui");
+                var error = UnhandledError.Of(ex);
+                var message = error is null
+                    ? $"vba-ng could not run {procedure}: {ex.GetType().Name}: {ex.Message}"
+                    : string.Create(CultureInfo.InvariantCulture, $"Run-time error '{error.Number}': {error.Description}");
+                return Transport(RunResponse.Failure(output, message, ex.StackTrace), projectDir);
             }
         }
     }
@@ -132,9 +140,9 @@ public static class HostCommands
             : "error (" + procedure + "): " + response.Error;
         lastStartupRun = outcome + "; " + readinessSummary;
 
+        // Run has already printed the error itself.
         if (!response.Ok)
         {
-            ExcelHostServices.Instance.Print("Run-time error: " + response.Error);
             if (response.Detail is not null)
             {
                 ExcelHostServices.Instance.Print(response.Detail);
