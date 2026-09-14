@@ -188,6 +188,163 @@ public sealed class CorpusSpecTests : IDisposable
         Assert.Equal(RunnerTotal(vba), RunnerTotal(report));
     }
 
+    /// <summary>
+    /// The fifth real workbook: VBA-Web's spec workbook. The same bridge module runs the eight suites its own
+    /// RunSpecs runs, once under VBA in a copy of the original workbook and once under vbang in the project
+    /// imported from it and bound to its macro-free copy, and the two reports must agree spec by spec. The
+    /// suites reach httpbin.org, so this needs the network as well as Excel and runs only in the local gate;
+    /// a spec the network decides is compared, not assumed to pass, since VBA's own result is the reference.
+    /// The workbook's Credentials module opens credentials.txt one folder above the workbook with no error handler
+    /// around the Open, and without the file the OAuth1 suite asks for keys in InputBoxes, so the repository's example
+    /// file stands in for it, placeholders and all.
+    /// </summary>
+    [Fact]
+    public void VbaWeb_SpecWorkbook_MatchesVba()
+    {
+        var addIn = RequireAddIn();
+        var source = RequireCorpusFile("VBA-Web", "specs/VBA-Web - Specs.xlsm");
+        var folder = Path.Combine(workDir, "VBA-Web-Specs");
+        // Both workbooks sit one folder below credentials.txt, and the original apart from the project folder, so
+        // the VBA run is VBA's alone.
+        Directory.CreateDirectory(Path.Combine(folder, "vba"));
+        Directory.CreateDirectory(Path.Combine(folder, "vbang"));
+        File.Copy(RequireCorpusFile("VBA-Web", "credentials - example.txt"), Path.Combine(folder, "credentials.txt"));
+        var macroBook = Path.Combine(folder, "vba", "WebSpecs.xlsm");
+        var bindingBook = Path.Combine(folder, "vbang", "WebSpecs.xlsx");
+        File.Copy(source, macroBook);
+        var bridge = Path.Combine(folder, "VbangWebSpecs.bas");
+        // CRLF, as the VBE exports and imports modules.
+        File.WriteAllText(bridge, WebSpecsBridge.ReplaceLineEndings("\r\n"), new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+
+        var projectDir = Path.Combine(folder, "vbang", "WebSpecs" + ProjectPaths.FolderSuffix);
+        var project = VbaProjectReader.FromWorkbook(macroBook);
+        Assert.NotNull(project);
+        ProjectWriter.Write(project, projectDir, documentKinds: WorkbookCodeNames.Read(macroBook));
+        File.Copy(bridge, Path.Combine(projectDir, "VbangWebSpecs.bas"));
+        AddVbangReference(projectDir);
+        var build = ProjectCompiler.Build(projectDir, reference => TypeLibraryCache.Resolve(reference.Name, reference.Guid, reference.Version));
+        Assert.True(build.Success, string.Join(Environment.NewLine, build.Diagnostics.Where(d => d.IsError)));
+
+        // VBA first, in the original workbook, which also leaves the macro-free copy the project binds to. A run-time
+        // error in VBA stops on a dialog nobody sees, so a watcher ends it and the test fails on its text.
+        var vba = string.Empty;
+        string? vbaStopped = null;
+        var before = ExcelInstance.RunningInstances();
+        Sta.Run(() =>
+        {
+            using var excel = ExcelInstance.Start(addIn);
+            var workbook = excel.OpenWorkbook(macroBook);
+            ExcelInstance.ImportModule(workbook, bridge);
+            using var finished = new CancellationTokenSource();
+            var dialog = Task.Run(() => excel.AnswerDialog("Microsoft Visual Basic", "End", CommandTimeout, cancellation: finished.Token));
+            try
+            {
+                vba = excel.RunMacro("'" + ExcelInstance.Name(workbook) + "'!VbangWebSpecs.SpecReport", attempts: 1) as string ?? string.Empty;
+            }
+            catch (System.Runtime.InteropServices.COMException)
+            {
+                vbaStopped = dialog.Result is { } texts ? "VBA stopped: " + string.Join(" ", texts) : "VBA did not finish within " + CommandTimeout + "; Excel was killed.";
+                return;
+            }
+            finally
+            {
+                finished.Cancel();
+            }
+
+            ExcelInstance.SaveAs(workbook, bindingBook, 51);
+            ExcelInstance.CloseWorkbook(workbook);
+        });
+        ExcelInstance.WaitForOtherInstances(before, OthersTimeout);
+        Assert.True(vbaStopped is null, vbaStopped);
+
+        var junitPath = Path.Combine(folder, "specs.xml");
+        var json = string.Empty;
+        before = ExcelInstance.RunningInstances();
+        Sta.Run(() =>
+        {
+            using var excel = ExcelInstance.Start(addIn);
+            var workbook = excel.OpenWorkbook(bindingBook);
+            json = excel.RunHostCommand("vbang.Test", CommandTimeout, projectDir, junitPath, string.Empty);
+            ExcelInstance.CloseWorkbook(workbook);
+        });
+        ExcelInstance.WaitForOtherInstances(before, OthersTimeout);
+
+        var response = RunResponse.FromJson(RunResponse.ResolveTransport(json));
+        Assert.True(response.Ok, response.Output + Environment.NewLine + response.Error);
+        var report = string.Join("\n", XDocument.Load(junitPath).Descendants("testcase")
+            .Where(test => (string?)test.Attribute("name") == "AllSpecs")
+            .Select(test => (string?)test.Element("system-out") ?? string.Empty));
+        File.WriteAllText(Path.Combine(AppContext.BaseDirectory, "webspecs-report.txt"), "VBA:\n" + vba + "\n\nvbang:\n" + report);
+
+        var vbaSpecs = SpecLines(vba);
+        var vbangSpecs = SpecLines(report);
+        Assert.True(vbaSpecs.Length > 0, "VBA reported no specs:\n" + vba);
+        Assert.True(
+            vbaSpecs.SequenceEqual(vbangSpecs),
+            "under vbang only: " + string.Join(" | ", vbangSpecs.Except(vbaSpecs)) + Environment.NewLine + "under VBA only: " + string.Join(" | ", vbaSpecs.Except(vbangSpecs)));
+    }
+
+    /// <summary>
+    /// The suites VBA-Web's RunSpecs runs, one line per spec: suite, spec, result. A suite that raises an error ends
+    /// there, as under RunSpecs, and its line is the error, so the number and text are compared too.
+    /// </summary>
+    private const string WebSpecsBridge = """
+        Attribute VB_Name = "VbangWebSpecs"
+        Option Explicit
+
+        '@Test
+        Public Sub AllSpecs()
+            Debug.Print SpecReport()
+        End Sub
+
+        Public Function SpecReport() As String
+            Dim Name As Variant
+            For Each Name In Array("WebClient", "WebRequest", "WebResponse", "WebHelpers", "IWebAuthenticator", "HttpBasicAuthenticator", "OAuth1Authenticator", "DigestAuthenticator")
+                SpecReport = SpecReport & Suite(CStr(Name))
+            Next Name
+        End Function
+
+        Private Function Suite(Name As String) As String
+            Dim Specs As SpecSuite
+            On Error GoTo Failed
+            Select Case Name
+            Case "WebClient": Set Specs = Specs_WebClient.Specs
+            Case "WebRequest": Set Specs = Specs_WebRequest.Specs
+            Case "WebResponse": Set Specs = Specs_WebResponse.Specs
+            Case "WebHelpers": Set Specs = Specs_WebHelpers.Specs
+            Case "IWebAuthenticator": Set Specs = Specs_IWebAuthenticator.Specs
+            Case "HttpBasicAuthenticator": Set Specs = Specs_HttpBasicAuthenticator.Specs
+            Case "OAuth1Authenticator": Set Specs = Specs_OAuth1Authenticator.Specs
+            Case "DigestAuthenticator": Set Specs = Specs_DigestAuthenticator.Specs
+            End Select
+            Suite = Lines(Specs)
+            Exit Function
+        Failed:
+            Suite = "spec " & Name & " :: raised " & Err.Number & ": " & Err.Description & vbLf
+        End Function
+
+        Private Function Lines(Suite As SpecSuite) As String
+            Dim Spec As SpecDefinition
+            For Each Spec In Suite.Specs
+                Lines = Lines & "spec " & Suite.Description & " :: " & Spec.Description & " :: " & Array("pass", "fail", "pending")(Spec.Result) & vbLf
+            Next Spec
+        End Function
+
+        """;
+
+    /// <summary>The bridge's lines, in order.</summary>
+    private static string[] SpecLines(string report) =>
+        [.. ReportLines(report).Where(line => line.StartsWith("spec ", StringComparison.Ordinal))];
+
+    private static void AddVbangReference(string projectDir)
+    {
+        // The Assert module and '@Test come with the vbang reference (ARCHITECTURE.md section 8).
+        var manifestPath = ProjectPaths.ManifestPath(projectDir);
+        var manifest = File.ReadAllText(manifestPath);
+        manifest = manifest.Replace("\"references\": [", "\"references\": [\n    { \"name\": \"vbang\" },", StringComparison.Ordinal);
+        File.WriteAllText(manifestPath, manifest, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+    }
+
     /// <summary>The runner's report lines, trimmed. Under vbang they are the bridge test's system-out in the JUnit file, since the text report shows only a failing test's output.</summary>
     private static IEnumerable<string> ReportLines(string text) =>
         text.Split('\n').Select(line => line.Trim());

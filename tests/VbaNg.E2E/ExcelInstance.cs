@@ -253,13 +253,19 @@ internal sealed partial class ExcelInstance : IDisposable
     /// Excel's process, returns the texts of its controls, and clicks the button captioned <paramref name="button"/> (an
     /// accelerator's &amp; ignored). Win32 only, so it runs on another thread while the STA thread is blocked in the call
     /// that raised the dialog; when none appears within the timeout, the result is null and Excel is killed so that call
-    /// returns, unless <paramref name="killIfAbsent"/> is false because no dialog is the outcome being tested.
+    /// returns, unless <paramref name="killIfAbsent"/> is false because no dialog is the outcome being tested. Cancelling
+    /// stops the wait without killing: the call returned, so no dialog is coming.
     /// </summary>
-    public string[]? AnswerDialog(string title, string button, TimeSpan timeout, bool killIfAbsent = true)
+    public string[]? AnswerDialog(string title, string button, TimeSpan timeout, bool killIfAbsent = true, CancellationToken cancellation = default)
     {
         var deadline = DateTime.UtcNow + timeout;
         while (DateTime.UtcNow < deadline)
         {
+            if (cancellation.IsCancellationRequested)
+            {
+                return null;
+            }
+
             for (var window = FindWindowEx(0, 0, null, title); window != 0; window = FindWindowEx(0, window, null, title))
             {
                 _ = GetWindowThreadProcessId(window, out var owner);
