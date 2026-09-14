@@ -82,8 +82,10 @@ try {
         Invoke-Step 'end to end (Excel)' { dotnet test tests/VbaNg.E2E }
 
         if ($Benchmarks) {
-            # Release only: a Debug run measures the Debug runtime rather than the design.
-            Invoke-Step 'benchmarks (Excel, Release)' { dotnet test tests/VbaNg.E2E -c Release }
+            # Release only: a Debug run measures the Debug runtime rather than the design. The tests do not reference
+            # the add-in, so the solution builds first, or Excel loads whatever Release add-in an older build left.
+            Invoke-Step 'build (Release)' { dotnet build -c Release }
+            Invoke-Step 'benchmarks (Excel, Release)' { dotnet test tests/VbaNg.E2E -c Release --no-build }
         }
 
         if ($Package) {
