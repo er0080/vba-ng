@@ -17,6 +17,10 @@
 .PARAMETER Benchmarks
     Also run the Release benchmarks, which take several minutes and start Excel more than once.
 
+.PARAMETER Package
+    Also build the release zip with tools/New-ReleasePackage.ps1 and install it the way README.md
+    does, in a hidden Excel. Run it before tagging.
+
 .PARAMETER Corpus
     Corpus roots for the parse rate and the compile scorecard, separated by ';'. Defaults to
     VBANG_CORPUS when that is already set.
@@ -31,6 +35,7 @@
 param(
     [switch] $SkipExcel,
     [switch] $Benchmarks,
+    [switch] $Package,
     [string] $Corpus = $env:VBANG_CORPUS
 )
 
@@ -79,6 +84,14 @@ try {
         if ($Benchmarks) {
             # Release only: a Debug run measures the Debug runtime rather than the design.
             Invoke-Step 'benchmarks (Excel, Release)' { dotnet test tests/VbaNg.E2E -c Release }
+        }
+
+        if ($Package) {
+            Invoke-Step 'release zip' { powershell -ExecutionPolicy Bypass -File tools/New-ReleasePackage.ps1 }
+            $zip = @(Get-ChildItem artifacts -Filter 'vbang-*-win-x64.zip' -ErrorAction SilentlyContinue)
+            $env:VBANG_PACKAGE = if ($zip.Count -eq 1) { $zip[0].FullName } else { '' }
+            # Without a zip the test would skip and pass, so the step fails instead.
+            Invoke-Step 'release zip installs (Excel)' { if ($env:VBANG_PACKAGE) { dotnet test tests/VbaNg.E2E --filter-class '*ReleasePackageTests' } else { cmd /c exit 1 } }
         }
     }
 }

@@ -8,6 +8,7 @@ something goes wrong.
 | | |
 |---|---|
 | Excel | desktop Excel for Windows, 64-bit. 32-bit is not supported: the add-in is built x64 only |
+| .NET Desktop Runtime | 10.0, x64, to run a release |
 | .NET SDK | 10.0.400 or later, to build from source |
 | VS Code | optional, with the C# extension, for breakpoints in VBA source |
 
@@ -23,8 +24,16 @@ administrator rights.
 
 ## Getting the add-in and the CLI
 
+**From a release.** `vbang-<version>-win-x64.zip` on the GitHub releases page unpacks to one folder:
+`vbang.exe`, the add-in as a single `vba-ng.xll`, and `samples\Quickstart`. Check the zip against
+`SHA256SUMS` and run `Unblock-File` on it before unpacking, or Excel refuses an add-in that came from
+the internet. Keep `vba-ng.xll` beside `vbang.exe`: the add-in builds projects with the CLI next to
+it. README.md's Quickstart has the commands, putting the folder on `PATH` included.
+
+**From source.**
+
 ```powershell
-git clone <this repository> vba-ng
+git clone https://github.com/er0080/vba-ng.git
 cd vba-ng
 dotnet build
 ```
@@ -36,7 +45,8 @@ dotnet build
 
 Put the CLI folder on `PATH` and `vbang` works anywhere; without it, run
 `dotnet run --project src/VbaNg.Cli -- <command>`. A release build also writes a single-file
-add-in, `bin\Release\net10.0-windows\publish\VbaNg.AddIn-AddIn64-packed.xll`.
+add-in, `bin\Release\net10.0-windows\publish\VbaNg.AddIn-AddIn64-packed.xll`, which the release
+zip ships as `vba-ng.xll`.
 
 ### Loading the add-in
 

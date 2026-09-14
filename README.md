@@ -60,14 +60,13 @@ works on a machine with no Excel installed at all.
 
 ## Quickstart
 
-This ends with a button in a workbook running VBA under vba-ng and a breakpoint you hit in the
-`.bas` source. [docs/user-manual.md](docs/user-manual.md) has the rest: every command and option,
-starting a project beside a workbook of your own, importing an existing VBA project, the test
-runner.
+This installs vba-ng from a release, runs VBA from a button in a workbook, and drives the same code
+from a terminal. [docs/user-manual.md](docs/user-manual.md) has the rest: every command and
+option, starting a project beside a workbook of your own, importing an existing VBA project, the
+test runner.
 
-**Prerequisites.** Windows with 64-bit Excel 2016 or later, the
-[.NET 10 SDK](https://dotnet.microsoft.com/download), git, and
-[VS Code](https://code.visualstudio.com/) with the C# extension for F5 debugging. The add-in's
+**Prerequisites.** Windows with 64-bit Excel 2016 or later, and the
+[.NET 10 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/10.0), x64. The add-in's
 bitness must match Excel's, so check it:
 
 ```powershell
@@ -76,29 +75,27 @@ bitness must match Excel's, so check it:
 
 It should print `x64`. (32-bit Excel is planned, not supported yet.)
 
-**1. Build.**
+**1. Install.** Download `vbang-<version>-win-x64.zip` and `SHA256SUMS` from
+[Releases](https://github.com/er0080/vba-ng/releases). In PowerShell, in the download folder,
+compare the hash with `SHA256SUMS`, unblock the zip so Excel does not refuse an add-in from the
+internet, unpack it, and put the folder on your `PATH`:
 
-```bash
-git clone <this repository> vba-ng
-cd vba-ng
-dotnet build
+```powershell
+Get-FileHash .\vbang-*-win-x64.zip
+Unblock-File .\vbang-*-win-x64.zip
+Expand-Archive .\vbang-*-win-x64.zip "$env:LOCALAPPDATA\vba-ng"
+$dir = (Get-Item "$env:LOCALAPPDATA\vba-ng\vbang-*-win-x64").FullName
+[Environment]::SetEnvironmentVariable('Path', [Environment]::GetEnvironmentVariable('Path', 'User') + ";$dir", 'User')
 ```
 
-That builds the compiler, the runtime, the `vbang` CLI and the `.xll` add-in. No Excel is needed,
-here or for `dotnet test`. The CLI lands in
-`src\VbaNg.Cli\bin\Debug\net10.0-windows\vbang.exe`; put that folder on your `PATH`, or use
-`dotnet run --project src/VbaNg.Cli --` as below.
+Open a new terminal and `vbang --version` prints the version you installed.
 
-**2. Read the sample.** `samples/Quickstart` is a workbook with one button plus the project bound
-to it by name:
+**2. Load the add-in.** In Excel, **File > Options > Add-ins > Manage: Excel Add-ins > Go >
+Browse**, pick `vba-ng.xll` in that folder, and accept the notice Excel shows for an unsigned
+add-in. Excel loads it at every start from then on.
 
-```
-samples/Quickstart/
-  Quickstart.xlsx           a normal .xlsx: no VBA project, one Form button on Sheet1
-  Quickstart.vbang/         the code for that workbook, found by the matching name
-    vbang.json              the manifest: this project's references, as Tools > References
-    Greeting.bas            the module, in the format the VBA editor exports
-```
+**3. Click the button.** Open `samples\Quickstart\Quickstart.xlsx` in that folder: a plain `.xlsx`
+with one button, and beside it `Quickstart.vbang\`, the code bound to it by name:
 
 ```vba
 Attribute VB_Name = "Greeting"
@@ -110,49 +107,52 @@ Public Sub SayHello()
 End Sub
 ```
 
-The button's macro is `Greeting.SayHello`, set the way Excel sets any Form control's macro.
+The add-in builds the project as the workbook opens. Click **Say hello** and `Hello, world` lands
+in **B2**, exactly as the same module would in VBA.
 
-**3. Press F5.** In VS Code, choose **Debug Quickstart sample in Excel** in the Run panel. One
-keypress builds the solution, compiles the sample, starts Excel with the add-in and the workbook,
-and runs `Greeting.SayHello`: `Hello, world` lands in **B2** and in the **Debug Console**. Click
-the **Say hello** button on the sheet and the same procedure runs, exactly as it would in VBA.
-(If the debugger cannot find Excel, correct the `program` path in `.vscode/launch.json`; it
-assumes `C:\Program Files\Microsoft Office\Root\Office16\EXCEL.EXE`.)
+**4. Drive it from the terminal.** Leave Excel running:
 
-**4. Break in the VBA.** Put a breakpoint in the gutter beside the `Worksheets(...)` line in
-`Greeting.bas` and click the button again. Execution stops on that line inside `EXCEL.EXE`, with
-locals, stepping and a call stack.
-
-**5. Drive it from the terminal.** Leave Excel running and open a terminal in the repository:
-
-```bash
-dotnet run --project src/VbaNg.Cli -- build samples/Quickstart/Quickstart.vbang
-dotnet run --project src/VbaNg.Cli -- run Greeting.SayHello --project samples/Quickstart/Quickstart.vbang
-dotnet run --project src/VbaNg.Cli -- status
+```powershell
+cd "$env:LOCALAPPDATA\vba-ng\vbang-*-win-x64\samples\Quickstart"
+vbang run Greeting.SayHello --project Quickstart.vbang
+vbang status
 ```
 
-`build` compiles the project with no Excel involved. `run` builds, then runs the procedure in the
-Excel you have open and prints its `Debug.Print` output. `status` reports the add-in's version,
-its loaded projects, the workbooks they are bound to and the most recent output.
+`run` builds the project, runs the procedure in the Excel you have open, and prints its
+`Debug.Print` output. `status` reports the add-in's version, its loaded projects, the workbooks they
+are bound to and the most recent output.
 
-**6. Edit while Excel stays open.** Change `Greeting.bas` and save. The add-in watches the project
+**5. Edit while Excel stays open.** Change `Greeting.bas` and save. The add-in watches the project
 folder, rebuilds it half a second later, and reloads it between macros; click the button again and
 the new code runs. If the edit does not compile, the error is reported and the loaded version stays
 in place, so the workbook keeps working.
 
 ## Building from source
 
+With the [.NET 10 SDK](https://dotnet.microsoft.com/download) and git:
+
 ```bash
+git clone https://github.com/er0080/vba-ng.git
+cd vba-ng
 dotnet build                       # everything; warnings are errors
 dotnet test                        # unit and golden tests; never needs Excel
 dotnet format --verify-no-changes  # style gate
 ```
 
-Excel-dependent tests sit behind an environment variable, so a normal test run never opens Excel:
+The CLI lands in `src\VbaNg.Cli\bin\Debug\net10.0-windows\vbang.exe`, and the add-in beside the
+add-in project's build output. Excel-dependent tests sit behind an environment variable, so a normal
+test run never opens Excel:
 
 ```powershell
 $env:VBANG_E2E = "1"; dotnet test tests/VbaNg.E2E
 ```
+
+**Break in the VBA.** With [VS Code](https://code.visualstudio.com/) and the C# extension, choose
+**Debug Quickstart sample in Excel** in the Run panel. One keypress builds the solution, compiles
+the sample, starts Excel with the add-in and the workbook, and runs `Greeting.SayHello`. Put a
+breakpoint beside the `Worksheets(...)` line in `Greeting.bas` and click the button: execution stops
+on that line inside `EXCEL.EXE`, with locals, stepping and a call stack. (If the debugger cannot
+find Excel, correct the `program` path in `.vscode/launch.json`.)
 
 ## Documentation
 
