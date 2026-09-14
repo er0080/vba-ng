@@ -69,10 +69,10 @@ ratios within one run compare.
 
 | Benchmark | vbang | VBA | ratio |
 |---|---:|---:|---:|
-| Variant loop | 206 ms | 51 ms | 4.02x |
-| Typed Double arithmetic | 43 ms | 37 ms | 1.18x |
-| String building | 104 ms | 53 ms | 1.96x |
-| Range loop | 2,213 ms | 795 ms | 2.79x |
-| UDF over 10,000 cells | 52 ms | 65 ms | 0.80x |
-| Late-bound Collection (fifty thousand Adds and Counts) | 19 ms | 70 ms | 0.27x |
-| Late-bound Excel (twenty thousand property reads) | 52 ms | 85 ms | 0.62x |
+| Variant loop | 161 ms | 46 ms | 3.51x |
+| Typed Double arithmetic | 44 ms | 43 ms | 1.03x |
+| String building | 103 ms | 59 ms | 1.74x |
+| Range loop | 2,336 ms | 835 ms | 2.80x |
+| UDF over 10,000 cells | 44 ms | 60 ms | 0.74x |
+| Late-bound Collection (fifty thousand Adds and Counts) | 19 ms | 63 ms | 0.30x |
+| Late-bound Excel (twenty thousand property reads) | 57 ms | 86 ms | 0.67x |
