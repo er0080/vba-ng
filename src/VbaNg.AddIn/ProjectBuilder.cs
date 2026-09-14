@@ -80,7 +80,11 @@ internal static class ProjectBuilder
         return process.ExitCode == 0 ? BuildOutcome.Built : BuildOutcome.Failed;
     }
 
-    /// <summary>True when out/build.json is missing or any source (.bas, .cls, vbang.json) was added, removed, or changed since it was written.</summary>
+    /// <summary>
+    /// True when out/build.json is missing, another version of vba-ng wrote it, or any source (.bas, .cls, .frm,
+    /// vbang.json) was added, removed, or changed since. The add-in and the CLI ship as one version, so a project an
+    /// older one built is built again after an upgrade.
+    /// </summary>
     public static bool IsStale(string projectDir)
     {
         var infoPath = ProjectPaths.BuildInfoPath(projectDir);
@@ -93,6 +97,11 @@ internal static class ProjectBuilder
         try
         {
             using var document = JsonDocument.Parse(File.ReadAllText(infoPath));
+            if (document.RootElement.GetProperty("Compiler").GetString() != typeof(ProjectBuilder).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion)
+            {
+                return true;
+            }
+
             recorded = document.RootElement.GetProperty("Inputs").EnumerateObject()
                 .ToDictionary(p => p.Name, p => p.Value.GetString() ?? string.Empty, StringComparer.OrdinalIgnoreCase);
         }
@@ -102,7 +111,7 @@ internal static class ProjectBuilder
         }
 
         var current = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        foreach (var source in Directory.GetFiles(projectDir, "*.bas").Concat(Directory.GetFiles(projectDir, "*.cls")))
+        foreach (var source in Directory.GetFiles(projectDir, "*.bas").Concat(Directory.GetFiles(projectDir, "*.cls")).Concat(Directory.GetFiles(projectDir, "*.frm")))
         {
             current[Path.GetFileName(source)] = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(File.ReadAllText(source))));
         }

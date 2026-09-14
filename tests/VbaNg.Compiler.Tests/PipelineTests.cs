@@ -50,6 +50,43 @@ public sealed class PipelineTests : IDisposable
     }
 
     /// <summary>
+    /// out/build.json records every source as it is on disk, a form included, so the add-in can tell from the files alone
+    /// that nothing changed. The compiler hashed a form after blanking its designer block, which no reader of the file
+    /// could reproduce, so a workbook with a UserForm was rebuilt on every open.
+    /// </summary>
+    [Fact]
+    public void Build_RecordsEachSourceAsItIsOnDisk()
+    {
+        var projectDir = Path.Combine(workDir, "Recorded" + ProjectPaths.FolderSuffix);
+        Directory.CreateDirectory(projectDir);
+        var form = Path.Combine(projectDir, "Dialog.frm");
+        File.WriteAllText(form, string.Join("\r\n", [
+            "VERSION 5.00",
+            "Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} Dialog ",
+            "   Caption         =   \"Dialog\"",
+            "End",
+            "Attribute VB_Name = \"Dialog\"",
+            "Attribute VB_PredeclaredId = True",
+            "Attribute VB_Exposed = False",
+            "Public Sub Shout()",
+            "End Sub",
+            string.Empty,
+        ]));
+        var module = Path.Combine(projectDir, "Main.bas");
+        File.WriteAllText(module, "Attribute VB_Name = \"Main\"\r\nPublic Sub Go()\r\nEnd Sub\r\n");
+
+        Assert.True(ProjectCompiler.Build(projectDir).Success);
+
+        using var info = System.Text.Json.JsonDocument.Parse(File.ReadAllText(ProjectPaths.BuildInfoPath(projectDir)));
+        var inputs = info.RootElement.GetProperty("Inputs");
+        foreach (var path in new[] { form, module })
+        {
+            var onDisk = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(File.ReadAllText(path))));
+            Assert.Equal(onDisk, inputs.GetProperty(Path.GetFileName(path)).GetString());
+        }
+    }
+
+    /// <summary>
     /// A project with a UserForm builds, so the rest of such a workbook can be tested (ROADMAP.md
     /// D-D): the form is a warning rather than an error, its code compiles as a class so callers
     /// bind, and entering that code raises a run-time error naming the gap.

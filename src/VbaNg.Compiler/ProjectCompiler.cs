@@ -37,9 +37,8 @@ public static class ProjectCompiler
     /// above the attributes and the importer writes none; the block becomes blank lines rather than
     /// going, so every statement keeps the line it is on and its <c>#line</c> with it (R10).
     /// </summary>
-    private static SourceFile FormSource(string path)
+    private static SourceFile FormSource(SourceFile file)
     {
-        var file = SourceFile.Load(path);
         var start = file.Text.IndexOf("Attribute VB_Name", StringComparison.Ordinal);
         if (start <= 0)
         {
@@ -65,13 +64,18 @@ public static class ProjectCompiler
             .Select(SourceFile.Load)
             .ToList();
 
+        // What out/build.json records: every source as it is on disk, so the add-in can compare the files alone.
+        var inputs = new List<SourceFile>(sources);
+
         var diagnostics = new List<Diagnostic>();
         foreach (var form in Directory.GetFiles(fullDir, "*.frm").OrderBy(path => path, StringComparer.OrdinalIgnoreCase))
         {
             // The alpha does not carry UserForms, but the rest of a workbook that has one still has
             // to build, so the form is a warning and only its signatures compile.
             diagnostics.Add(new Diagnostic(DiagnosticIds.NotSupported, DiagnosticSeverity.Warning, "UserForms are not supported yet: only the form's signatures compile, its controls are Nothing, and every procedure of it raises error 438.", form, 1, 1));
-            sources.Add(FormSource(form));
+            var loaded = SourceFile.Load(form);
+            inputs.Add(loaded);
+            sources.Add(FormSource(loaded));
         }
         // The workbook beside the folder says which .cls files are its document modules (ARCHITECTURE.md D19).
         var manifest = ProjectManifest.Load(fullDir, diagnostics) with { WorkbookDocuments = WorkbookCodeNames.ReadBeside(fullDir) };
@@ -110,7 +114,7 @@ public static class ProjectCompiler
             return new BuildResult(false, name, null, diagnostics);
         }
 
-        WriteBuildInfo(fullDir, name, sources);
+        WriteBuildInfo(fullDir, name, inputs);
         return new BuildResult(true, name, assemblyPath, diagnostics);
     }
 

@@ -859,6 +859,47 @@ public sealed class SampleTests : IDisposable
     }
 
     /// <summary>
+    /// The add-in builds a bound project again only when it changed or another version of vba-ng built it. A project with a
+    /// UserForm used to count as changed on every open, since the form was left out of the comparison, which froze Excel
+    /// for a build each time; and a project an older version built used to load its old DLL after an upgrade.
+    /// </summary>
+    [Fact]
+    public void Binding_RebuildsOnlyAChangedProjectOrAnotherVersionsBuild()
+    {
+        var addIn = RequireAddIn();
+        var dir = Path.Combine(workDir, "Stale");
+        Directory.CreateDirectory(dir);
+        var workbookPath = Path.Combine(dir, "Stale.xlsx");
+        File.Copy(Path.Combine(RepositoryRoot(), "samples", "Hello", "Hello.xlsx"), workbookPath);
+        var projectDir = Path.Combine(dir, "Stale" + ProjectPaths.FolderSuffix);
+        Directory.CreateDirectory(projectDir);
+        File.WriteAllText(Path.Combine(projectDir, "Main.bas"), "Attribute VB_Name = \"Main\"\r\nPublic Sub Go()\r\nEnd Sub\r\n");
+        File.WriteAllText(Path.Combine(projectDir, "Dialog.frm"), "Attribute VB_Name = \"Dialog\"\r\nAttribute VB_PredeclaredId = True\r\nAttribute VB_Exposed = False\r\nPublic Sub Shout()\r\nEnd Sub\r\n");
+        Assert.True(ProjectCompiler.Build(projectDir).Success);
+        var infoPath = ProjectPaths.BuildInfoPath(projectDir);
+        var built = File.ReadAllText(infoPath);
+        var builtAt = File.GetLastWriteTimeUtc(infoPath);
+
+        string? afterOpen = null;
+        DateTime afterOpenAt = default;
+        string? afterUpgrade = null;
+        Sta.Run(() =>
+        {
+            using var excel = ExcelInstance.Start(addIn);
+            ExcelInstance.CloseWorkbook(excel.OpenWorkbook(workbookPath));
+            afterOpen = File.ReadAllText(infoPath);
+            afterOpenAt = File.GetLastWriteTimeUtc(infoPath);
+
+            File.WriteAllText(infoPath, built.Replace("\"Compiler\": \"", "\"Compiler\": \"0.0.1-older+", StringComparison.Ordinal));
+            ExcelInstance.CloseWorkbook(excel.OpenWorkbook(workbookPath));
+            afterUpgrade = File.ReadAllText(infoPath);
+        });
+
+        Assert.True(afterOpenAt == builtAt && afterOpen == built, "An unchanged project with a form was built again on open.");
+        Assert.True(afterUpgrade == built, "A project another version built was not built again: " + afterUpgrade);
+    }
+
+    /// <summary>
     /// An import never overwrites: not a project folder, whose sources may have been edited since the last import, and not
     /// the macro-free copy, which may have been worked in. Both are checked before anything is written. Needs no Excel.
     /// </summary>
