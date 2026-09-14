@@ -49,13 +49,32 @@ The five criteria set 2026-09-09, as they stand. Each is shown by a test or a re
    the corpus configured.
 3. **Goldens.** Every miss closed or carried by a decision. *Met*: two named misses, D22.
 4. **Real workbooks.** Five go through `vbang import` and `vbang build` and run in Excel with no
-   source edits, every divergence filed as an issue before the tag. *Four*; the fifth is VBA-Web's
-   spec workbook, which reaches the network and so runs only in the local gate.
+   source edits, every divergence filed as an issue before the tag. *Met 2026-09-14*: the fifth is
+   VBA-Web's spec workbook, which reaches the network and so runs only in the local gate.
 5. **Packaging.** A tester installs from the release zip by following README.md in ten minutes;
    `vbang init` starts a project, an unhandled error shows on screen, and `vbang report` writes the
-   bug bundle. *Open*: the last three hold, the zip install is neither written nor timed.
+   bug bundle. *Written and tested 2026-09-14*: README installs from the zip, and
+   ReleasePackageTests installs it in Excel. Open: a first tester's timing.
    `vbang install` and `--out` moved to 1.0.0-alpha2, and so did ribbon `onAction` and the MSForms
    argument order, which docs/vba-quirks.md lists as unverified.
+
+## 2026-09-14
+
+- **The fifth real workbook: VBA-Web's spec workbook.** Imported with no edits, its eight suites run
+  under VBA and under vbang and agree spec by spec, error lines included. Getting there found three
+  divergences, each now a golden area recorded in Excel. A `Class_Terminate` that stores `Me` keeps
+  the object's variables; VBA-TDD records every spec that way, and vba-ng released them, so every
+  suite said 91. `Line Input` ends a line at CR or CRLF, never at a lone LF. A late-bound call
+  passes a parameterless member's extra arguments to the default member of what it returns; the
+  rule went into the runtime as `LateBound.PassOn` rather than into every generated class.
+- **vba-ng's own notices never block an unattended Excel.** The not-bound notice was a modal box
+  even in a hidden automation Excel, and it hung that test's first run for twenty minutes. It opens
+  a dialog only in a visible Excel now. `MsgBox` and the run-time error dialog keep VBA's behavior.
+- **The release zip is proven by installing it.** One script builds it for release.yml and for a
+  local run. ReleasePackageTests unpacks it, loads its `vba-ng.xll`, and opens the Quickstart sample
+  with no build output, so the packaged CLI has to build it. The add-in looks for the CLI beside
+  itself, which is why the two share a folder. README's Quickstart starts from the zip; a
+  `workflow_dispatch` run of release.yml is the dry run.
 
 ## 2026-09-12
 
