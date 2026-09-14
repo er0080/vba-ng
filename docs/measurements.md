@@ -18,13 +18,13 @@ older copy of the same file name, so read the one whose path matches the run.
 ## Goldens
 
 <!-- generated from golden-report.txt by tools/Update-Measurements.ps1 -->
-**2,482 cases, 2,480 pass (3 of them within one ulp of VBA), 2 fail,
-99.9%**, over 26 areas.
+**2,488 cases, 2,486 pass (3 of them within one ulp of VBA), 2 fail,
+99.9%**, over 28 areas.
 
 Every case passes in: Arrays 88, ArraysBase1 12, Classes 48, Constants 129, ControlFlow 73,
 Conversion 318, DateLiterals 12, DateTime 178, Declares 44, Errors 97, FileSystem 64, Financial 101,
-Format 148, Information 191, Interaction 80, LateBinding 10, Lexer 14, Math 89, Memory 63,
-Objects 24, Procedures 81, Scope 27, Strings 280, StringsText 26, Types 45.
+Format 148, Information 191, Interaction 80, LateBinding 10, Lexer 14, Lifetime 3, LineInput 3,
+Math 89, Memory 63, Objects 24, Procedures 81, Scope 27, Strings 280, StringsText 26, Types 45.
 
 Short of it: Operators, 240 cases, 99.2%: 1 within one ulp, 2 named misses.
 <!-- end generated -->

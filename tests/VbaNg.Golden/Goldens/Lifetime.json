@@ -1,0 +1,186 @@
+{
+  "area": "Lifetime",
+  "excel": "16.0.20326",
+  "culture": "en-US",
+  "options": [],
+  "declarations": [
+    "Public Trace As String",
+    "Public Keep As Collection",
+    "Public Revive As Boolean"
+  ],
+  "classes": [
+    {
+      "name": "Phoenix",
+      "source": [
+        "VERSION 1.0 CLASS",
+        "BEGIN",
+        "  MultiUse = -1  'True",
+        "END",
+        "Attribute VB_Name = \"Phoenix\"",
+        "Attribute VB_GlobalNameSpace = False",
+        "Attribute VB_Creatable = False",
+        "Attribute VB_PredeclaredId = False",
+        "Attribute VB_Exposed = False",
+        "Option Explicit",
+        "",
+        "' Class_Terminate stores Me when Revive is set, as VBA-TDD's SpecDefinition hands itself to its suite.",
+        "",
+        "Public Tag As String",
+        "Public Child As Collection",
+        "",
+        "Private Sub Class_Initialize()",
+        "    Set Child = New Collection",
+        "    Child.Add \"kept\"",
+        "End Sub",
+        "",
+        "Private Sub Class_Terminate()",
+        "    Trace = Trace & \"T\" & Tag",
+        "    If Revive Then Keep.Add Me",
+        "End Sub"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "name": "An object Class_Terminate stores keeps its variables",
+      "source": [
+        "Trace = \"\"",
+        "Set Keep = New Collection",
+        "Revive = True",
+        "Dim p As Phoenix",
+        "Set p = New Phoenix",
+        "p.Tag = \"a\"",
+        "Set p = Nothing",
+        "Revive = False",
+        "? Trace",
+        "? Keep.Count",
+        "? Keep(1).Tag",
+        "? Keep(1).Child.Count",
+        "? Keep(1).Child(1)",
+        "Set Keep = Nothing",
+        "Trace = \"\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Ta"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "a"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        },
+        {
+          "index": 4,
+          "value": {
+            "type": "String",
+            "value": "kept"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A revived object does not run Class_Terminate again, and its variables go when it does",
+      "source": [
+        "Trace = \"\"",
+        "Set Keep = New Collection",
+        "Revive = True",
+        "Dim p As Phoenix",
+        "Set p = New Phoenix",
+        "p.Tag = \"b\"",
+        "p.Child.Add New Phoenix",
+        "p.Child(2).Tag = \"c\"",
+        "Set p = Nothing",
+        "Revive = False",
+        "? Trace",
+        "Keep.Remove 1",
+        "? Trace",
+        "? Keep.Count",
+        "Set Keep = Nothing",
+        "Trace = \"\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Tb"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "TbTc"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The object of a With block, revived at End With",
+      "source": [
+        "Trace = \"\"",
+        "Set Keep = New Collection",
+        "Revive = True",
+        "With New Phoenix",
+        "    .Tag = \"w\"",
+        "End With",
+        "Revive = False",
+        "? Trace",
+        "? Keep(1).Tag",
+        "? Keep(1).Child(1)",
+        "Set Keep = Nothing",
+        "Trace = \"\""
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "Tw"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "w"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "kept"
+          }
+        }
+      ]
+    }
+  ]
+}

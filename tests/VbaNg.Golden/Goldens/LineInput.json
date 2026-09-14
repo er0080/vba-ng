@@ -1,0 +1,146 @@
+{
+  "area": "LineInput",
+  "excel": "16.0.20326",
+  "culture": "en-US",
+  "options": [],
+  "declarations": [
+    "Public Function TempPath(name As String) As String",
+    "    TempPath = Environ(\"TEMP\") & \"\\vbang-golden\"",
+    "    If Dir(TempPath, vbDirectory) = \"\" Then MkDir TempPath",
+    "    TempPath = TempPath & \"\\\" & name",
+    "End Function",
+    "",
+    "Public Sub WriteText(path As String, text As String)",
+    "    Dim f As Integer",
+    "    On Error Resume Next",
+    "    Kill path",
+    "    On Error GoTo 0",
+    "    f = FreeFile",
+    "    Open path For Output As #f",
+    "    Print #f, text;",
+    "    Close #f",
+    "End Sub"
+  ],
+  "cases": [
+    {
+      "name": "A lone LF does not end a line",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String, s As String",
+        "p = TempPath(\"lf.txt\")",
+        "WriteText p, \"one\" & vbLf & \"two\" & vbLf",
+        "f = FreeFile",
+        "Open p For Input As #f",
+        "Line Input #f, s",
+        "? Len(s)",
+        "? InStr(s, vbLf)",
+        "? EOF(f)",
+        "Close #f"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "8"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A lone CR ends a line, and CRLF ends one line, not two",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String, s As String",
+        "p = TempPath(\"cr.txt\")",
+        "WriteText p, \"one\" & vbCr & \"two\" & vbCrLf & \"three\"",
+        "f = FreeFile",
+        "Open p For Input As #f",
+        "Line Input #f, s",
+        "? s",
+        "Line Input #f, s",
+        "? s",
+        "Line Input #f, s",
+        "? s",
+        "? EOF(f)",
+        "Close #f"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "one"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "two"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "three"
+          }
+        },
+        {
+          "index": 3,
+          "value": {
+            "type": "Boolean",
+            "value": "True"
+          }
+        }
+      ]
+    },
+    {
+      "name": "An LF before a CR stays in the line the CR ends",
+      "source": [
+        "Reset",
+        "Dim f As Integer, p As String, s As String",
+        "p = TempPath(\"lfcr.txt\")",
+        "WriteText p, \"one\" & vbLf & vbCr & \"two\"",
+        "f = FreeFile",
+        "Open p For Input As #f",
+        "Line Input #f, s",
+        "? Len(s)",
+        "Line Input #f, s",
+        "? s",
+        "Close #f"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "4"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "two"
+          }
+        }
+      ]
+    }
+  ]
+}

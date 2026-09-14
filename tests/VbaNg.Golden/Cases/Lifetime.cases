@@ -20,6 +20,8 @@ Revive = False
 ? Keep(1).Tag
 ? Keep(1).Child.Count
 ? Keep(1).Child(1)
+Set Keep = Nothing
+Trace = ""
 
 ' A revived object does not run Class_Terminate again, and its variables go when it does
 Trace = ""
@@ -36,6 +38,8 @@ Revive = False
 Keep.Remove 1
 ? Trace
 ? Keep.Count
+Set Keep = Nothing
+Trace = ""
 
 ' The object of a With block, revived at End With
 Trace = ""
@@ -48,3 +52,5 @@ Revive = False
 ? Trace
 ? Keep(1).Tag
 ? Keep(1).Child(1)
+Set Keep = Nothing
+Trace = ""
