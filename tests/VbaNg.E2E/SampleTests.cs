@@ -606,6 +606,8 @@ public sealed class SampleTests : IDisposable
     /// bound to the project folder next to it, so no macro runs twice, and vba-ng says why,
     /// naming vbang import --to-xlsx. The workbook is made here, with a module imported into
     /// its VBA project, so the test owns it and does not reach into the Import tests fixture.
+    /// This Excel is hidden, so the notice goes to the log without a dialog: a modal box nobody
+    /// can see blocked the automation call that opened the workbook until Excel was killed.
     /// </summary>
     [Fact]
     public void Workbook_WithItsVbaProject_IsNotBound()
@@ -632,15 +634,16 @@ public sealed class SampleTests : IDisposable
             ExcelInstance.Save(made);
             ExcelInstance.CloseWorkbook(made);
 
-            var answer = Task.Run(() => excel.AnswerDialog("vba-ng", "OK", TimeSpan.FromSeconds(60)));
+            // A dialog, if one opened, would open inside Open; the watcher clicks it so the call returns either way.
+            var answer = Task.Run(() => excel.AnswerDialog("vba-ng", "OK", TimeSpan.FromSeconds(10), killIfAbsent: false));
             var workbook = excel.OpenWorkbook(workbookPath);
             dialog = answer.Result;
             status = RunResponse.FromJson((string)excel.RunMacro("vbang.Status")!).Output;
             ExcelInstance.CloseWorkbook(workbook);
         });
 
-        Assert.NotNull(dialog);
-        Assert.Contains(dialog, text => text.Contains("vbang import --to-xlsx Legacy.xlsm", StringComparison.Ordinal));
+        Assert.True(dialog is null, "a dialog opened in a hidden Excel: " + string.Join(" | ", dialog ?? []));
+        Assert.Contains("vbang import --to-xlsx Legacy.xlsm", status, StringComparison.Ordinal);
         Assert.Contains("bound workbooks: none", status, StringComparison.Ordinal);
     }
 

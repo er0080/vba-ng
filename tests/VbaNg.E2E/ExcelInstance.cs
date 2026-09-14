@@ -252,10 +252,10 @@ internal sealed partial class ExcelInstance : IDisposable
     /// Answers a dialog this Excel shows, as a person would: waits for a visible window titled <paramref name="title"/> in
     /// Excel's process, returns the texts of its controls, and clicks the button captioned <paramref name="button"/> (an
     /// accelerator's &amp; ignored). Win32 only, so it runs on another thread while the STA thread is blocked in the call
-    /// that raised the dialog; when none appears within the timeout, Excel is killed so that call returns, and the result
-    /// is null.
+    /// that raised the dialog; when none appears within the timeout, the result is null and Excel is killed so that call
+    /// returns, unless <paramref name="killIfAbsent"/> is false because no dialog is the outcome being tested.
     /// </summary>
-    public string[]? AnswerDialog(string title, string button, TimeSpan timeout)
+    public string[]? AnswerDialog(string title, string button, TimeSpan timeout, bool killIfAbsent = true)
     {
         var deadline = DateTime.UtcNow + timeout;
         while (DateTime.UtcNow < deadline)
@@ -290,7 +290,11 @@ internal sealed partial class ExcelInstance : IDisposable
             Thread.Sleep(200);
         }
 
-        Kill();
+        if (killIfAbsent)
+        {
+            Kill();
+        }
+
         return null;
     }
 

@@ -177,13 +177,31 @@ internal sealed class ExcelHostServices : IHostServices
         form.ShowDialog(new ExcelWindow());
     }
 
-    /// <summary>A message from vba-ng itself: printed, and shown in a dialog when dialogs may open.</summary>
+    /// <summary>
+    /// A message from vba-ng itself: printed, and shown in a dialog when dialogs may open and someone can see Excel. VBA has
+    /// no such message to be bug-for-bug with, so a hidden Excel, which automation started and nobody watches, only logs it:
+    /// a modal box there would block the automation call that raised it for good.
+    /// </summary>
     public void Notify(string message)
     {
         Print(message);
-        if (Interactive)
+        if (Interactive && ExcelIsVisible())
         {
             MessageBox.Show(new ExcelWindow(), message, "vba-ng", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+    }
+
+    private static bool ExcelIsVisible()
+    {
+        try
+        {
+            var application = ExcelDnaUtil.Application;
+            return application.GetType().InvokeMember("Visible", System.Reflection.BindingFlags.GetProperty, binder: null, application, args: null, System.Globalization.CultureInfo.InvariantCulture) is true;
+        }
+        catch (Exception ex) when (ex is System.Runtime.InteropServices.COMException or System.Reflection.TargetInvocationException)
+        {
+            // Excel too busy to answer is no place for a dialog either.
+            return false;
         }
     }
 

@@ -278,7 +278,8 @@ the only part of an import that needs Excel installed, and exit 3 when it cannot
 
 Then `vbang build Book.vbang`, fix what the compiler reports, and open the `.xlsx` in an Excel with
 the add-in loaded. Keep the original `.xlsm` out of the way: a workbook that still has its own VBA
-project is **not** bound, because both would run; vba-ng says so in a dialog naming `--to-xlsx`.
+project is **not** bound, because both would run; vba-ng says so in a dialog naming `--to-xlsx`, or
+only in the log when Excel is hidden.
 
 ## Inside Excel
 
