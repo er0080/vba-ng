@@ -604,7 +604,7 @@ public sealed class SampleTests : IDisposable
     /// <summary>
     /// ROADMAP.md WP4, ARCHITECTURE.md D17: a workbook that still has its VBA project is not
     /// bound to the project folder next to it, so no macro runs twice, and vba-ng says why,
-    /// naming vbang import --to-xlsx. The workbook is made here, with a module imported into
+    /// naming Save As .xlsx. The workbook is made here, with a module imported into
     /// its VBA project, so the test owns it and does not reach into the Import tests fixture.
     /// This Excel is hidden, so the notice goes to the log without a dialog: a modal box nobody
     /// can see blocked the automation call that opened the workbook until Excel was killed.
@@ -643,7 +643,7 @@ public sealed class SampleTests : IDisposable
         });
 
         Assert.True(dialog is null, "a dialog opened in a hidden Excel: " + string.Join(" | ", dialog ?? []));
-        Assert.Contains("vbang import --to-xlsx Legacy.xlsm", status, StringComparison.Ordinal);
+        Assert.Contains("Save a copy as an Excel Workbook (.xlsx)", status, StringComparison.Ordinal);
         Assert.Contains("bound workbooks: none", status, StringComparison.Ordinal);
     }
 
@@ -856,6 +856,70 @@ public sealed class SampleTests : IDisposable
         var text = versions.ReadToEnd();
         Assert.Contains("vbang: ", text, StringComparison.Ordinal);
         Assert.Contains("culture: ", text, StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// An import never overwrites: not a project folder, whose sources may have been edited since the last import, and not
+    /// the macro-free copy, which may have been worked in. Both are checked before anything is written. Needs no Excel.
+    /// </summary>
+    [Fact]
+    public void Cli_Import_NeverOverwritesAProjectOrACopy()
+    {
+        var cli = RequireCli();
+        var dir = Path.Combine(workDir, "Reimport");
+        Directory.CreateDirectory(dir);
+        var macroBook = Path.Combine(dir, "Legacy.xlsm");
+        File.Copy(Path.Combine(RepositoryRoot(), "tests", "VbaNg.Import.Tests", "Fixtures", "Legacy.xlsm"), macroBook);
+        Assert.Equal(0, RunCli(cli, "import", macroBook).ExitCode);
+        var edited = Path.Combine(dir, "Legacy" + ProjectPaths.FolderSuffix, "Sales.bas");
+        File.AppendAllText(edited, "' edited after the import\r\n");
+
+        var again = RunCli(cli, "import", macroBook);
+
+        Assert.True(again.ExitCode == 2, again.ToString());
+        Assert.Contains("already holds a project", again.Error, StringComparison.Ordinal);
+        Assert.EndsWith("' edited after the import\r\n", File.ReadAllText(edited), StringComparison.Ordinal);
+
+        var copy = Path.Combine(dir, "Legacy.xlsx");
+        File.WriteAllText(copy, "worked in");
+        var elsewhere = Path.Combine(dir, "Other" + ProjectPaths.FolderSuffix);
+
+        var toXlsx = RunCli(cli, "import", macroBook, elsewhere, "--to-xlsx");
+
+        Assert.True(toXlsx.ExitCode == 2, toXlsx.ToString());
+        Assert.Contains("already exists", toXlsx.Error, StringComparison.Ordinal);
+        Assert.Equal("worked in", File.ReadAllText(copy));
+        Assert.False(Directory.Exists(elsewhere), "the import wrote sources before it refused");
+    }
+
+    /// <summary>
+    /// Excel enables macros in a workbook automation opens, so --to-xlsx would run the Workbook_Open of the workbook it
+    /// reads unless it disables them first. The workbook here writes a marker file when it opens.
+    /// </summary>
+    [Fact]
+    public void Import_ToXlsx_RunsNoMacroOfTheWorkbook()
+    {
+        var addIn = RequireAddIn();
+        var cli = RequireCli();
+        var dir = Path.Combine(workDir, "NoMacros");
+        Directory.CreateDirectory(dir);
+        var macroBook = Path.Combine(dir, "Opens.xlsm");
+        var marker = Path.Combine(dir, "opened.txt");
+        Sta.Run(() =>
+        {
+            using var excel = ExcelInstance.Start(addIn);
+            var made = excel.ActiveWorkbook();
+            ExcelInstance.SaveAs(made, macroBook, 52);
+            ExcelInstance.AddWorkbookCode(made, $"Private Sub Workbook_Open()\r\n    Dim f As Integer\r\n    f = FreeFile\r\n    Open \"{marker}\" For Output As #f\r\n    Close #f\r\nEnd Sub\r\n");
+            ExcelInstance.Save(made);
+            ExcelInstance.CloseWorkbook(made);
+        });
+
+        var imported = RunCli(cli, "import", macroBook, "--to-xlsx");
+
+        Assert.True(imported.ExitCode == 0, imported.ToString());
+        Assert.True(File.Exists(Path.Combine(dir, "Opens.xlsx")), imported.ToString());
+        Assert.False(File.Exists(marker), "--to-xlsx ran the workbook's Workbook_Open");
     }
 
     /// <summary>

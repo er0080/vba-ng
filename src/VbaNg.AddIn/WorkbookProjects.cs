@@ -151,7 +151,7 @@ internal sealed class WorkbookProjects : IDisposable
         {
             // A workbook that keeps its VBA project would run its own macros as well as the project's (ARCHITECTURE.md D17).
             var name = Path.GetFileName(fullName);
-            ExcelHostServices.Instance.Notify($"{name} still has a VBA project, so vba-ng does not bind {Path.GetFileName(projectDir)} to it: both would run. Save a macro-free copy with \"vbang import --to-xlsx {name}\" and open that one.");
+            ExcelHostServices.Instance.Notify($"{name} still has a VBA project, so vba-ng does not bind {Path.GetFileName(projectDir)} to it: both would run. Save a copy as an Excel Workbook (.xlsx), which leaves the VBA project behind, and open that one.");
             return;
         }
 

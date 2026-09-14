@@ -50,6 +50,21 @@ internal static class ImportCommand
         var projectDir = options.Positionals.Count > 1
             ? Path.GetFullPath(options.Positionals[1])
             : Path.ChangeExtension(workbook, ProjectPaths.FolderSuffix);
+        // Sources edited since an earlier import, and a copy the user has worked in, would be lost, so an import
+        // checks both before it writes anything.
+        if (HoldsProject(projectDir))
+        {
+            Console.Error.WriteLine($"vbang: {projectDir} already holds a project; import never overwrites one. Import into another folder, or delete that one first.");
+            return ExitCodes.Usage;
+        }
+
+        var copy = Path.ChangeExtension(workbook, ".xlsx");
+        if (options.ToXlsx && File.Exists(copy))
+        {
+            Console.Error.WriteLine($"vbang: {copy} already exists; import never replaces it. Move it away first.");
+            return ExitCodes.Usage;
+        }
+
         // The workbook's own parts say which CodeName is the Workbook, a Worksheet, or a Chart,
         // which the vbaProject.bin does not; the manifest carries them so the folder stands on its
         // own in git (D19). An .xls or an unreadable package reads as empty, leaving the name rule.
@@ -62,7 +77,6 @@ internal static class ImportCommand
             return ExitCodes.Ok;
         }
 
-        var copy = Path.ChangeExtension(workbook, ".xlsx");
         try
         {
             SaveMacroFreeCopy(workbook, copy);
@@ -76,10 +90,17 @@ internal static class ImportCommand
         }
     }
 
+    /// <summary>A folder with a manifest or a module in it is a project an import would overwrite.</summary>
+    private static bool HoldsProject(string projectDir) =>
+        Directory.Exists(projectDir)
+        && (File.Exists(ProjectPaths.ManifestPath(projectDir))
+            || Directory.EnumerateFiles(projectDir).Any(file => Path.GetExtension(file).ToUpperInvariant() is ".BAS" or ".CLS" or ".FRM"));
+
     /// <summary>
     /// Saves a macro-free copy through Excel automation, in a hidden instance of its own so the
     /// user's Excel and the workbook itself are left alone (D14, D17). CodeNames are preserved,
-    /// because Excel keeps them with the sheets.
+    /// because Excel keeps them with the sheets. Excel enables macros in a workbook automation
+    /// opens, so they are disabled first: an import must never run the code it reads.
     /// </summary>
     private static void SaveMacroFreeCopy(string workbook, string copy)
     {
@@ -89,15 +110,12 @@ internal static class ImportCommand
         {
             Set(application, "Visible", false);
             Set(application, "DisplayAlerts", false);
+            // 3 is msoAutomationSecurityForceDisable.
+            Set(application, "AutomationSecurity", 3);
             var workbooks = Get(application, "Workbooks")!;
             var opened = Invoke(workbooks, "Open", workbook)!;
             try
             {
-                if (File.Exists(copy))
-                {
-                    File.Delete(copy);
-                }
-
                 // 51 is xlOpenXMLWorkbook, the macro-free format.
                 Invoke(opened, "SaveAs", copy, 51);
                 Invoke(opened, "Close", false);

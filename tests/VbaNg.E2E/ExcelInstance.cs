@@ -69,6 +69,26 @@ internal sealed partial class ExcelInstance : IDisposable
         }
     }
 
+    /// <summary>Adds code to the workbook's ThisWorkbook module, where Workbook_Open lives (VBE object model access must be trusted).</summary>
+    public static void AddWorkbookCode(object workbook, string code)
+    {
+        var project = Get(workbook, "VBProject")!;
+        var components = Get(project, "VBComponents")!;
+        var component = Call(components, "Item", "ThisWorkbook")!;
+        var module = Get(component, "CodeModule")!;
+        try
+        {
+            Call(module, "AddFromString", code);
+        }
+        finally
+        {
+            Release(module);
+            Release(component);
+            Release(components);
+            Release(project);
+        }
+    }
+
     /// <summary>Saves a workbook under a path in a file format (52: macro-enabled), so its Path is that folder.</summary>
     public static void SaveAs(object workbook, string path, int format) => Call(workbook, "SaveAs", path, format);
 
