@@ -426,6 +426,18 @@ public sealed class ParserTests
         Assert.Single(tree.Root.Members);
     }
 
+    /// <summary>An expression MS-VBAL 3.4.1 does not allow in conditional compilation is VBA0004, and the message names what was refused (docs/diagnostics.md).</summary>
+    [Theory]
+    [InlineData("#If Foo() Then\r\nConst A = 1\r\n#End If\r\n", "'Foo' is not allowed in a conditional compilation expression.")]
+    [InlineData("#Const X = 1 / 0\r\n", "Division by zero.")]
+    public void ConditionalCompilation_RefusedExpression_ReportsVba0004(string text, string message)
+    {
+        var diagnostic = Assert.Single(Parse(text).Diagnostics);
+
+        Assert.Equal(DiagnosticIds.ConditionalCompilationError, diagnostic.Id);
+        Assert.Equal(message, diagnostic.Message);
+    }
+
     [Fact]
     public void Diagnostics_UseTheCanonicalFormat()
     {
