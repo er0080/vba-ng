@@ -1,0 +1,312 @@
+{
+  "area": "LateBinding",
+  "excel": "16.0.20326",
+  "culture": "en-US",
+  "options": [],
+  "classes": [
+    {
+      "name": "Box",
+      "source": [
+        "VERSION 1.0 CLASS",
+        "BEGIN",
+        "  MultiUse = -1  'True",
+        "END",
+        "Attribute VB_Name = \"Box\"",
+        "Attribute VB_GlobalNameSpace = False",
+        "Attribute VB_Creatable = False",
+        "Attribute VB_PredeclaredId = False",
+        "Attribute VB_Exposed = False",
+        "Option Explicit",
+        "",
+        "' Members that take fewer arguments than a late-bound call passes them. Calls counts the procedures that ran.",
+        "",
+        "Public Data As Object",
+        "Public Items As Variant",
+        "Public Tag As String",
+        "Public Calls As Long",
+        "",
+        "Public Property Get Prop() As Object",
+        "    Set Prop = Data",
+        "End Property",
+        "",
+        "Public Property Get Named(ByVal key As String) As Collection",
+        "    Calls = Calls + 1",
+        "    Set Named = Data",
+        "End Property",
+        "",
+        "Public Function Make() As Collection",
+        "    Set Make = Data",
+        "End Function",
+        "",
+        "Public Function Number() As Long",
+        "    Calls = Calls + 1",
+        "    Number = 7",
+        "End Function",
+        "",
+        "Public Function Pick(ByVal i As Long) As Collection",
+        "    Calls = Calls + 1",
+        "    Set Pick = Data",
+        "End Function",
+        "",
+        "Public Sub Act()",
+        "    Calls = Calls + 1",
+        "End Sub"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "name": "A field that holds an object passes extra arguments to its default member",
+      "source": [
+        "Dim b As New Box",
+        "Set b.Data = New Collection",
+        "b.Data.Add \"one\", \"k\"",
+        "Dim v As Variant",
+        "Set v = b",
+        "? v.Data(\"k\")",
+        "? v.Data(1)",
+        "Dim o As Object",
+        "Set o = b",
+        "? o.Data(\"k\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "one"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "one"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "String",
+            "value": "one"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A Variant field that holds an object passes them on too",
+      "source": [
+        "Dim b As New Box",
+        "Set b.Items = New Collection",
+        "b.Items.Add \"two\", \"k\"",
+        "Dim v As Variant",
+        "Set v = b",
+        "? v.Items(\"k\")"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "two"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A Property Get and a Function without parameters pass them on the same way",
+      "source": [
+        "Dim b As New Box",
+        "Set b.Data = New Collection",
+        "b.Data.Add \"one\", \"k\"",
+        "Dim v As Variant",
+        "Set v = b",
+        "? v.Prop(\"k\")",
+        "? v.Make(1)"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "String",
+            "value": "one"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "String",
+            "value": "one"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A Function without parameters that returns no object runs, then raises 451",
+      "source": [
+        "Dim b As New Box",
+        "Dim v As Variant",
+        "Set v = b",
+        "On Error Resume Next",
+        "? v.Number(1)",
+        "? Err.Number",
+        "On Error GoTo 0",
+        "? b.Calls"
+      ],
+      "results": [
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "451"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A Function with parameters given too many raises 450 without running",
+      "source": [
+        "Dim b As New Box",
+        "Set b.Data = New Collection",
+        "b.Data.Add \"one\", \"k\"",
+        "Dim v As Variant",
+        "Set v = b",
+        "On Error Resume Next",
+        "? v.Pick(0, \"k\")",
+        "? Err.Number",
+        "On Error GoTo 0",
+        "? b.Calls"
+      ],
+      "results": [
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "450"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A Property Get with a parameter given too many raises 450 without running",
+      "source": [
+        "Dim b As New Box",
+        "Set b.Data = New Collection",
+        "b.Data.Add \"one\", \"k\"",
+        "Dim v As Variant",
+        "Set v = b",
+        "On Error Resume Next",
+        "? v.Named(\"a\", \"k\")",
+        "? Err.Number",
+        "On Error GoTo 0",
+        "? b.Calls"
+      ],
+      "results": [
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "450"
+          }
+        },
+        {
+          "index": 2,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A Sub given an argument raises 450 without running",
+      "source": [
+        "Dim b As New Box",
+        "Dim v As Variant",
+        "Set v = b",
+        "On Error Resume Next",
+        "v.Act 1",
+        "? Err.Number",
+        "On Error GoTo 0",
+        "? b.Calls"
+      ],
+      "results": [
+        {
+          "index": 0,
+          "value": {
+            "type": "Long",
+            "value": "450"
+          }
+        },
+        {
+          "index": 1,
+          "value": {
+            "type": "Long",
+            "value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "A field that holds an array does not take extra arguments as indices",
+      "source": [
+        "Dim b As New Box",
+        "b.Items = Array(10, 20)",
+        "Dim v As Variant",
+        "Set v = b",
+        "? v.Items(1)"
+      ],
+      "results": [],
+      "error": {
+        "number": 451,
+        "description": "Property let procedure not defined and property get procedure did not return an object",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Extra arguments to a String field",
+      "source": [
+        "Dim b As New Box",
+        "b.Tag = \"tag\"",
+        "Dim v As Variant",
+        "Set v = b",
+        "? v.Tag(1)"
+      ],
+      "results": [],
+      "error": {
+        "number": 451,
+        "description": "Property let procedure not defined and property get procedure did not return an object",
+        "source": "VBAProject"
+      }
+    },
+    {
+      "name": "Extra arguments to a field that holds Nothing",
+      "source": [
+        "Dim b As New Box",
+        "Dim v As Variant",
+        "Set v = b",
+        "? v.Data(\"k\")"
+      ],
+      "results": [],
+      "error": {
+        "number": 438,
+        "description": "Object doesn't support this property or method",
+        "source": "VBAProject"
+      }
+    }
+  ]
+}

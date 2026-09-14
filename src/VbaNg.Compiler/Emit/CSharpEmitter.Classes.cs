@@ -384,23 +384,41 @@ public sealed partial class CSharpEmitter
 
     private static bool HoldsRecord(VbaType type) => type.IsRecord || (type.IsArray && type.ElementType is { IsRecord: true });
 
-    /// <summary>Reading a member through a dispid: the field's value, or the call with its arguments taken from the late-bound list.</summary>
+    /// <summary>
+    /// Reading a member through a dispid: the field's value, or the call with its arguments taken from the late-bound list.
+    /// A member without parameters passes the arguments on to the default member of what it returns; any other member given
+    /// more than it takes raises 450 before it runs (LateBinding golden).
+    /// </summary>
     private string? InvokeCode(Symbol member)
     {
         switch (member)
         {
             case VariableSymbol field:
-                return $"return {Convert(new Emitted(IsObjectSlot(field) ? field.EmitName + ".Target" : field.EmitName, field.Type), VbaType.Variant)};";
+                return $"return {R}LateBound.PassOn({Convert(new Emitted(IsObjectSlot(field) ? field.EmitName + ".Target" : field.EmitName, field.Type), VbaType.Variant)}, arguments);";
             case ProcedureSymbol { ReturnsValue: false } sub:
-                return $"{{ {sub.EmitName}({LateArguments(sub)}); return {VariantType}.Empty; }}";
+                return $"{{ {TooManyArguments(sub)}{sub.EmitName}({LateArguments(sub)}); return {VariantType}.Empty; }}";
             case ProcedureSymbol function:
-                return $"return {Convert(new Emitted($"{function.EmitName}({LateArguments(function)})", function.ReturnType ?? VbaType.Variant), VbaType.Variant)};";
+                return ValueCode(function);
             case PropertySymbol { Get: { } get }:
-                return $"return {Convert(new Emitted($"{get.EmitName}({LateArguments(get)})", get.ReturnType ?? VbaType.Variant), VbaType.Variant)};";
+                return ValueCode(get);
             default:
                 return null;
         }
+
+        string ValueCode(ProcedureSymbol procedure)
+        {
+            var value = Convert(new Emitted($"{procedure.EmitName}({LateArguments(procedure)})", procedure.ReturnType ?? VbaType.Variant), VbaType.Variant);
+            return procedure.Parameters.Count == 0
+                ? $"return {R}LateBound.PassOn({value}, arguments);"
+                : $"{{ {TooManyArguments(procedure)}return {value}; }}";
+        }
     }
+
+    /// <summary>The 450 a late-bound call raises when it passes a procedure more arguments than it declares, a ParamArray aside.</summary>
+    private static string TooManyArguments(ProcedureSymbol procedure) =>
+        procedure.Parameters.Any(p => p.IsParamArray)
+            ? string.Empty
+            : $"if (arguments.Length > {procedure.Parameters.Count.ToString(CultureInfo.InvariantCulture)}) throw new {R}VbaException({R}VbaErrors.WrongNumberOfArguments); ";
 
     /// <summary>Writing a member through a dispid: a public field, or the property's Let or Set with the index arguments before the value.</summary>
     private static string? PutCode(Symbol member)

@@ -461,6 +461,26 @@ public static class LateBound
         throw new VbaException(VbaErrors.ObjectDoesNotSupportMember);
     }
 
+    /// <summary>
+    /// A late-bound call passed a class member without parameters (a field, a Property Get, a Function) arguments: they go
+    /// to the default member of the object the member returned (MS-VBAL 5.6.12; LateBinding golden). Nothing raises 438, and
+    /// any other value 451, an array included, which the arguments do not index.
+    /// </summary>
+    public static Variant PassOn(in Variant value, ReadOnlySpan<Variant> arguments)
+    {
+        if (arguments.Length == 0)
+        {
+            return value;
+        }
+
+        if (value.IsNothing)
+        {
+            throw new VbaException(VbaErrors.ObjectDoesNotSupportMember);
+        }
+
+        return value.IsObject ? Index(value, arguments) : throw new VbaException(451);
+    }
+
     /// <summary>value(indices) on a Variant: an array element, the default member of a COM object, or Item of a Collection.</summary>
     public static Variant Index(in Variant target, ReadOnlySpan<Variant> indices)
     {

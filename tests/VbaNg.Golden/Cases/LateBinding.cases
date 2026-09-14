@@ -1,0 +1,96 @@
+' LateBinding: a late-bound call that passes a project class member more arguments than it takes (MS-VBAL
+' 5.6.12). VBA-Web's specs read Response.Data("authenticated") through a Variant, where Data is an Object
+' field. Box, the companion class, has a member of each kind and counts the procedures that ran.
+
+' A field that holds an object passes extra arguments to its default member
+Dim b As New Box
+Set b.Data = New Collection
+b.Data.Add "one", "k"
+Dim v As Variant
+Set v = b
+? v.Data("k")
+? v.Data(1)
+Dim o As Object
+Set o = b
+? o.Data("k")
+
+' A Variant field that holds an object passes them on too
+Dim b As New Box
+Set b.Items = New Collection
+b.Items.Add "two", "k"
+Dim v As Variant
+Set v = b
+? v.Items("k")
+
+' A Property Get and a Function without parameters pass them on the same way
+Dim b As New Box
+Set b.Data = New Collection
+b.Data.Add "one", "k"
+Dim v As Variant
+Set v = b
+? v.Prop("k")
+? v.Make(1)
+
+' A Function without parameters that returns no object runs, then raises 451
+Dim b As New Box
+Dim v As Variant
+Set v = b
+On Error Resume Next
+? v.Number(1)
+? Err.Number
+On Error GoTo 0
+? b.Calls
+
+' A Function with parameters given too many raises 450 without running
+Dim b As New Box
+Set b.Data = New Collection
+b.Data.Add "one", "k"
+Dim v As Variant
+Set v = b
+On Error Resume Next
+? v.Pick(0, "k")
+? Err.Number
+On Error GoTo 0
+? b.Calls
+
+' A Property Get with a parameter given too many raises 450 without running
+Dim b As New Box
+Set b.Data = New Collection
+b.Data.Add "one", "k"
+Dim v As Variant
+Set v = b
+On Error Resume Next
+? v.Named("a", "k")
+? Err.Number
+On Error GoTo 0
+? b.Calls
+
+' A Sub given an argument raises 450 without running
+Dim b As New Box
+Dim v As Variant
+Set v = b
+On Error Resume Next
+v.Act 1
+? Err.Number
+On Error GoTo 0
+? b.Calls
+
+' A field that holds an array does not take extra arguments as indices
+Dim b As New Box
+b.Items = Array(10, 20)
+Dim v As Variant
+Set v = b
+? v.Items(1)
+
+' Extra arguments to a String field
+Dim b As New Box
+b.Tag = "tag"
+Dim v As Variant
+Set v = b
+? v.Tag(1)
+
+' Extra arguments to a field that holds Nothing
+Dim b As New Box
+Dim v As Variant
+Set v = b
+? v.Data("k")
