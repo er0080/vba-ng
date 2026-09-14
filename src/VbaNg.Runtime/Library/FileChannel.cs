@@ -161,6 +161,7 @@ internal sealed class FileChannel : IDisposable
 
     // Sequential input.
 
+    /// <summary>The bytes up to a CR or a CRLF, which ends one line; a lone LF is part of the line (LineInput cases).</summary>
     public string LineInput()
     {
         if (stream.Position >= stream.Length)
@@ -184,11 +185,6 @@ internal sealed class FileChannel : IDisposable
                     stream.ReadByte();
                 }
 
-                break;
-            }
-
-            if (b == '\n')
-            {
                 break;
             }
 
