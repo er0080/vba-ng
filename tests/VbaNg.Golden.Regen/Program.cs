@@ -163,6 +163,15 @@ internal static class Program
         }
 
         Console.WriteLine(Invariant($"{area.Name} cases {range.First}-{range.Last}: {golden.Cases.Count} ran, {golden.Cases.Sum(c => c.Results.Count)} values, {golden.Cases.Count(c => c.Error is not null)} ended in a VBA error (no golden written for a range)"));
+        foreach (var ran in golden.Cases)
+        {
+            Console.WriteLine("  " + ran.Name);
+            foreach (var result in ran.Results)
+            {
+                Console.WriteLine(Invariant($"    ? {result.Index}: {result.Value.Type} {result.Value.Value ?? result.Value.Class}"));
+            }
+        }
+
         foreach (var failed in golden.Cases.Where(c => c.Error is not null))
         {
             Console.WriteLine(Invariant($"  error {failed.Error!.Number} in '{failed.Name}': {failed.Error.Description}"));
