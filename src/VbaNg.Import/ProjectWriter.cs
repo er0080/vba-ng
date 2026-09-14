@@ -73,6 +73,14 @@ public static class ProjectWriter
         var manifestPath = Path.Combine(projectDir, "vbang.json");
         File.WriteAllText(manifestPath, Manifest(project, hostLibrary, documentKinds), Utf8);
         files.Add("vbang.json");
+
+        // The build output stays out of git, as after vbang init; an ignore file the user already has is theirs.
+        var ignorePath = Path.Combine(projectDir, ".gitignore");
+        if (!File.Exists(ignorePath))
+        {
+            File.WriteAllText(ignorePath, "out/\n", Utf8);
+        }
+
         return new ImportResult(projectDir, files, report);
     }
 

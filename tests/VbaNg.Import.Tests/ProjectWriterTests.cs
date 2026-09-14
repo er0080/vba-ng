@@ -40,6 +40,20 @@ public sealed class ProjectWriterTests : IDisposable
         Assert.All(result.Files, f => Assert.True(File.Exists(Path.Combine(result.ProjectDir, f)), f));
     }
 
+    /// <summary>The build output stays out of git, as after vbang init, and an ignore file already there is left as it is.</summary>
+    [Fact]
+    public void Write_IgnoresTheBuildOutputWithoutReplacingAnIgnoreFile()
+    {
+        var result = Import();
+
+        Assert.Equal("out/\n", File.ReadAllText(Path.Combine(result.ProjectDir, ".gitignore")));
+
+        File.WriteAllText(Path.Combine(result.ProjectDir, ".gitignore"), "mine\n");
+        var again = Import();
+
+        Assert.Equal("mine\n", File.ReadAllText(Path.Combine(again.ProjectDir, ".gitignore")));
+    }
+
     /// <summary>A class module's file starts with the header the VBE writes above the attributes, which the module stream does not carry.</summary>
     [Fact]
     public void Write_AddsTheClassHeaderToClassAndDocumentModules()
