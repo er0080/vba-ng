@@ -4,7 +4,7 @@
 
 .DESCRIPTION
     One folder, vbang-<version>-win-x64, holding the vbang CLI, the add-in as a single vba-ng.xll,
-    the Quickstart sample, and the README, manual and license. The add-in finds vbang.exe beside
+    the Quickstart sample, and the docs and license. The add-in finds vbang.exe beside
     itself, which is why both share the folder. The version in the name is read off the built
     vbang.dll, never passed along as text.
 
@@ -67,7 +67,12 @@ try {
         Copy-Item -LiteralPath $file -Destination $target
     }
 
-    Copy-Item -LiteralPath README.md, docs/user-manual.md, LICENSE -Destination $folder
+    # The docs keep the repository's layout, so README's and the manual's relative links resolve in the zip.
+    Copy-Item -LiteralPath README.md, ARCHITECTURE.md, ROADMAP.md, CLAUDE.md, LICENSE -Destination $folder
+    New-Item -ItemType Directory -Force -Path (Join-Path $folder 'docs') | Out-Null
+    foreach ($doc in @(git ls-files 'docs/*.md')) {
+        Copy-Item -LiteralPath $doc -Destination (Join-Path $folder $doc)
+    }
 
     $zip = Join-Path $Output "$name.zip"
     Compress-Archive -LiteralPath $folder -DestinationPath $zip
