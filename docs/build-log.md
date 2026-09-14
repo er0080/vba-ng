@@ -40,7 +40,7 @@ doc's scope is its contract · R35 ARCHITECTURE.md is present tense · R36 ROADM
 
 ## 1.0.0-alpha1 ships when
 
-The five criteria set 2026-09-09, as they stand. Each is shown by a test or a report.
+The five criteria set 2026-09-09, as they stand.
 
 1. **Compile.** Every corpus library builds against the registered libraries, and stdVBA's `src`
    builds at least 90% of its files. *Met*: the compile scorecard in measurements.md.
@@ -60,42 +60,42 @@ The five criteria set 2026-09-09, as they stand. Each is shown by a test or a re
 
 ## 2026-09-14
 
-- **The fifth real workbook: VBA-Web's spec workbook.** Imported with no edits, its eight suites run
-  under VBA and under vbang and agree spec by spec, error lines included. Getting there found three
-  divergences, each now a golden area recorded in Excel. A `Class_Terminate` that stores `Me` keeps
-  the object's variables; VBA-TDD records every spec that way, and vba-ng released them, so every
-  suite said 91. `Line Input` ends a line at CR or CRLF, never at a lone LF. A late-bound call
-  passes a parameterless member's extra arguments to the default member of what it returns; the
-  rule went into the runtime as `LateBound.PassOn` rather than into every generated class.
+- **The fifth real workbook: VBA-Web's spec workbook.** Imported with no edits, its eight suites
+  agree under VBA and vbang spec by spec, error lines included. Three divergences found on the way
+  are now golden areas: a `Class_Terminate` that stores `Me` keeps the variables (vba-ng released
+  them, so every suite said 91), `Line Input` never ends a line at a lone LF, and a late-bound
+  call's extra arguments go to the default member of what it returns, in the runtime as
+  `LateBound.PassOn` rather than in every generated class.
 - **vba-ng's own notices never block an unattended Excel.** The not-bound notice was a modal box
   even in a hidden automation Excel, and it hung that test's first run for twenty minutes. It opens
   a dialog only in a visible Excel now. `MsgBox` and the run-time error dialog keep VBA's behavior.
 - **The release zip is proven by installing it.** One script builds it for release.yml and for a
   local run. ReleasePackageTests unpacks it, loads its `vba-ng.xll`, and opens the Quickstart sample
   with no build output, so the packaged CLI has to build it. The add-in looks for the CLI beside
-  itself, which is why the two share a folder. README's Quickstart starts from the zip; a
-  `workflow_dispatch` run of release.yml is the dry run.
+  itself, which is why the two share a folder, and the docs keep the repository's layout so their
+  links resolve. README's Quickstart starts from the zip; a `workflow_dispatch` run of release.yml
+  is the dry run.
+- **A stranger's read of the docs found four defects the tests had not.** Two read-only reviews
+  before the alpha, one for prose and one installing from README. `--to-xlsx` ran the imported
+  workbook's `Workbook_Open`, since Excel enables macros for automation; a second import overwrote
+  edited sources; a project with a UserForm rebuilt on every open, and nothing read the build's
+  version stamp; `vbang run` left its errors out of the log. Each fix came with a test that failed
+  first. The gate's Release step had loaded a stale add-in, and now builds Release first.
 
 ## 2026-09-12
 
 - **CI is the half that needs no Excel, and a release is a tag.** GitHub-hosted runners have no
-  Office, so ci.yml runs build, `dotnet format`, the unit and golden tests, the version guard and a
-  check that docs/measurements.md still matches `golden-report.txt`. That is not a compromise: the
-  rule that a build and a test never require Excel means the runner enforces the rule. The Excel
-  half stays local behind tools/Invoke-Gate.ps1, which runs CI's steps in CI's order and then the
-  E2E tests and, on request, the Release benchmarks. A self-hosted runner was considered and
-  rejected for now: on a public repository a fork's pull request would run on the machine hosting
-  it. release.yml takes the version from the tag (`v1.0.0-alpha1`), gates it, publishes the CLI and
-  the packed `.xll`, and attaches the zip and its SHA256 to a GitHub release through `gh`, so no
-  third-party action handles the upload. Package lock files are committed and CI restores in locked
-  mode, so a dependency change arrives as a reviewable diff.
+  Office, so ci.yml runs build, `dotnet format`, the unit and golden tests, the version guard and the
+  measurements check; tools/Invoke-Gate.ps1 runs the same steps locally, then the E2E tests and, on
+  request, the Release benchmarks. Rejected: a self-hosted runner, which would run a fork's pull
+  request on the host. release.yml gates the tag's version and attaches the zip and its SHA256
+  through `gh`, no third-party action. Lock files are committed and restored locked, so a dependency
+  change is a reviewable diff.
 - **Measurements moved out of this file** into docs/measurements.md, where the golden block is
-  generated from the report by tools/Update-Measurements.ps1 rather than typed. This file keeps why
-  a number moved.
+  generated from the report by tools/Update-Measurements.ps1 rather than typed.
 - **One job per doc.** ROADMAP.md (1,473 lines) and ARCHITECTURE.md's decision section had both
   become build logs; this file is their destination, and each doc got a scope contract and a line
-  budget. The numbered `R`/`D`/`WP`/`M` labels were discontinued with 1.0.0-alpha1 — they turned
-  every doc and comment into a lookup — while source comments keep theirs.
+  budget.
 - **The import round trip (WP6), which is M4's exit criterion through the importer.** The manifest
   now names every document module and its kind, read from the workbook's own parts, so a project
   folder in git without its workbook still says which `.cls` files are document modules (D19). The
@@ -110,8 +110,8 @@ The five criteria set 2026-09-09, as they stand. Each is shown by a test or a re
   a document and registered nowhere falls back to the library its name gives; the `documents` map
   is the whole list, so a predeclared and exposed class is no longer taken for a sheet module;
   `End` and `Exit` keywords are interchangeable and VBA checks neither which one closes a
-  procedure; `ws.[Name] = value` assigns through the sheet's `Evaluate`. The compile scorecard was
-  unchanged, as it should be: these only show in the copies the workbooks carry.
+  procedure; `ws.[Name] = value` assigns through the sheet's `Evaluate`. The compile scorecard did
+  not move: these only show in the copies the workbooks carry.
 - **`stdVBA/fullBuild.xlsm` went 14 errors to 1, `VBA-Web - Example.xlsm` 24 to 2.** Ours were
   stdole, which every VBA project references and no manifest names, and an `Optional` default of
   `library.Enum.Member`. What is left is not ours: `oNext.children.Object` on a `Collection` (a VBE
@@ -119,13 +119,9 @@ The five criteria set 2026-09-09, as they stand. Each is shown by a test or a re
 - **`MsgBox` as a value emits an `int`, as its declared `Long` says.** A private project in the
   corpus hid 113 VBA0003 of ours behind its own dead procedures; with those gone, one emitter bug
   remained. Strict whole-project compilation (D-I) held: the fix went into the project, not vba-ng.
-- **`vbang init` and `vbang report` (WP7).** `init [--vscode]` writes the manifest, a `.gitignore`,
-  a build task whose `$msCompile` matcher reads the diagnostics vbang already prints, and an
-  `EXCEL.EXE` attach configuration; it never overwrites a project. `report` zips the versions, a
-  build it runs itself (diagnostics go to stdout, so there is no build log to collect), the
-  manifest, the sources, `out/`'s json and log, the generated C#, and `status.json` when the
-  add-in answers — never the workbook, which makes the zip safe on a public issue. Still open:
-  the release zip, `vbang install`, `--out`.
+- **`vbang init` and `vbang report` (WP7).** `report` runs a build itself, since diagnostics go to
+  stdout and leave no log to collect, and never takes the workbook, which makes the zip safe on a
+  public issue.
 - **Cross-workbook `Application.Run` deferred past the alpha.** A `Book!Proc` prefix naming another
   loaded project's workbook does not resolve, because Excel no longer has a VBA project to answer
   it; the fix is a seam to the other project's Run table, a Runtime public API change. Of 37
@@ -164,11 +160,9 @@ The five criteria set 2026-09-09, as they stand. Each is shown by a test or a re
   `VarPtrArray`, and `rtcCallByName` are answered by the runtime, so code declaring them works
   without VBE7 loaded. The corpus then reported no VBA0002.
 - **The Financial functions compute in x87 extended precision (D-F closed).** About eight hundred
-  values probed from Excel showed VBA evaluates them in the extended format, rounding to Double
-  only at `pow`, the due factor, the objective `Rate` and `IRR` iterate on, and the result; `NPV`
-  of six flows is the exact value rounded once, which no ordering in Double reaches. Two earlier
-  sessions had chased evaluation order through sixty forms: the wrong thing. Financial went from 17
-  named misses to none.
+  values probed from Excel showed VBA evaluates them in the extended format and rounds to Double only
+  where a value leaves the formula; two earlier sessions had chased evaluation order in Double
+  through sixty forms. Financial went from 17 named misses to none.
 - **Typed Double arithmetic stays in Double (D22), the one deliberate exception to bug-for-bug.**
   Measured before deciding: the software extended format costs about a hundred times a hardware
   operation and would have roughly doubled the typed-Double benchmark's gap, to remove one-ulp
@@ -180,21 +174,14 @@ The five criteria set 2026-09-09, as they stand. Each is shown by a test or a re
   `Specs.ToBeAnEmptyArray`. The runtime now looks a macro name up in the calling project first,
   through a Run table per module, with the name forms an Excel probe showed.
 - **The corpus libraries' own suites pass in Excel (WP3 closed).** VBA-JSON's, VBA-Dictionary's,
-  and VBA-UTC's spec suites pass under `vbang.Test`, and VBA-Better-Array's own TestRunner gives
-  VBA's report — 407 tests, 406 passed, the one VBA fails failing the same way. Compiling is not
-  compatibility: running the authors' tests found about fifteen gaps no scorecard showed, each
-  closed with a golden. `Format` took a pattern with digit placeholders as a number format even
-  when a date code came first, so ISO 8601 came back as the pattern; a late-bound `Set` with an
-  argument went out as a put, not a putref; and a For Each over a COM collection now keeps the
-  element it is on, which had crashed Excel across processes.
+  and VBA-UTC's spec suites pass under `vbang.Test`, and VBA-Better-Array's TestRunner gives VBA's
+  report: 407 tests, 406 passed, the one VBA fails failing the same way. The authors' tests found
+  about fifteen gaps no scorecard showed, each closed with a golden; one, a For Each over a COM
+  collection not keeping its current element, had crashed Excel across processes.
 - **Host fidelity (WP4).** `Application.Volatile`, `Caller`, and `ThisCell` answer from the call
-  Excel is making while a UDF is on the thread. Measured first, and only one of the three had
-  worked: `Caller` was right through COM, `ThisCell` raised 1004, and `Volatile` was accepted and
-  silently ignored, so a function that asked to be volatile never evaluated again. Every UDF now
-  registers as macro-type, since the XLM functions may only be called from such a function, which
-  is what VBA is. An unhandled error shows VBA's dialog text and reaches the project's log, and a
-  workbook that still carries its VBA project is not bound (D17). `WithEvents App As Application`
-  in a document module, `Application.OnTime`, the workbook-qualified `Application.Run`, the
+  Excel is making. Measured first, only `Caller` had worked: `ThisCell` raised 1004 and `Volatile`
+  was silently ignored. Every UDF registers as macro-type, since only such a function may call the
+  XLM functions. `WithEvents App As Application`, `OnTime`, the workbook-qualified `Run`, the
   two-projects-one-name policy, and `Stop` were verified rather than written; `End` left `Open`'s
   files open, caught by a failing test first.
 - **A project log, and the locals window checked (M7 F3, WP4).** `ProjectLog` writes
@@ -227,13 +214,11 @@ The five criteria set 2026-09-09, as they stand. Each is shown by a test or a re
   The VARIANT lands when every payload has a native form, which puts objects first: a Variant
   array's elements are VARIANTs, and a VARIANT cannot hold an object until objects have pointers.
 - **A COM object a call returns is a temporary of its statement.** The benchmark E2E hung inside a
-  COM call Excel never returned from, and a second Range loop in the same Excel read wrong values
-  or raised 438. The same probes hung against older builds, so the fault predated M7 and was
-  timing-dependent: a returned wrapper was released by the finalizer, on the finalizer thread,
-  against Excel's STA objects, and Excel's state went wrong once enough Ranges had gone that way.
-  Every wrapper Interop makes from a returned pointer is now a temporary of its statement, host
-  calls open a frame, the add-in pins what it keeps, and the finalizer only counts. The Range loop
-  then ran in a quarter of the time, 2.29x VBA from 2.6x.
+  COM call and a second Range loop read wrong values or raised 438: a timing-dependent fault older
+  than M7, the finalizer releasing returned wrappers on its own thread against Excel's STA objects.
+  Every wrapper Interop makes from a returned pointer is now a statement temporary, host calls open
+  a frame, the add-in pins what it keeps, and the finalizer only counts. The Range loop went from
+  2.6x VBA to 2.29x.
 - **A project resets at `End` and at unload, without `Class_Terminate` (M7 D1).** Excel probes
   showed that a workbook closing destroys the objects its project holds without running
   `Class_Terminate`, and that `End` does the same for the objects its unwound locals hold, runs
@@ -251,36 +236,29 @@ The five criteria set 2026-09-09, as they stand. Each is shown by a test or a re
 
 ## 2026-09-09
 
-- **The project review that set the road to the alpha.** Numbers first: 2,004 of 2,028 goldens
-  (98.8%), and 64 of 131 corpus files compiling against the fixture libraries. Then seven defects
-  no list carried: reading the Office type library threw an unhandled exception out of the CLI,
-  and the importer dodged it by treating Office as implicit and losing the library instead; the
-  document-module attribute rule also matched a PublicNotCreatable class with a predeclared
-  instance, which is how stdVBA exports every class, so seven compiled as worksheets; a `Property
-  Let` with a parameter emitted its dispatch case without `ref`; `Mid$(s, 1, 1) =` did not parse;
-  `[A1]` foreign names bound as variables; duplicate enum member names were reported at the
-  declaration where VBA reports only at an unqualified use; and the scorecard's total left out the
-  cases the binder rejects. All closed the same day (WP0).
-- **VBA storage is real memory (D20), the largest decision since the runtime core.** Pointers are
-  a paradigm code in the wild builds on, not a corner — `CopyMemory` between variables, the BSTR
-  swap, reading a VARIANT's type bytes, `VarPtrArray` into the SAFEARRAY descriptor, a weak
-  reference kept in a `LongPtr`. The corpus makes 206 uses of the three functions, 139 of them
-  arguments of a `Declare`. Rejected, each incomplete or silently wrong: leaving them diagnosed
-  (four of seven corpus projects would not build); pinning a variable for the call, which hands a
-  dangling address to any callee that keeps it; a handle for `ObjPtr` alone; a stub that raises.
+- **The project review that set the road to the alpha (WP0).** 2,004 of 2,028 goldens (98.8%) and
+  64 of 131 corpus files compiling against the fixture libraries, plus seven defects no list
+  carried, all closed the same day. The largest two: reading the Office type library crashed the
+  CLI, and the importer dodged it by dropping Office; and the document-module attribute rule
+  compiled seven of stdVBA's predeclared PublicNotCreatable classes as worksheets.
+- **VBA storage is real memory (D20).** Code in the wild builds on pointers: `CopyMemory` between
+  variables, the BSTR swap, reading a VARIANT's type bytes, `VarPtrArray` into the SAFEARRAY
+  descriptor, a weak reference kept in a `LongPtr`. The corpus makes 206 uses of the three
+  functions, 139 of them arguments of a `Declare`. Rejected, each incomplete or silently wrong:
+  leaving them diagnosed (four of seven corpus projects would not build); pinning a variable for the
+  call, which hands a dangling address to any callee that keeps it; a handle for `ObjPtr` alone; a
+  stub that raises.
 - **Two hazards a compile does not show,** found reviewing a `Declare`-heavy private project: an
   array element passed ByRef to a `Declare` was copied into an eight-byte temporary, so a DLL that
   reads the elements after it (the Fortran convention of passing an array by its first element)
   read garbage and overwrote the stack; and with the Office library missing, `msoTrue` in a module
   without `Option Explicit` bound as an implicit Empty, wrong rather than failing to build.
-- **The corpus compiles against the registered libraries (WP1).** Named arguments to intrinsics by
-  their MS-VBAL parameter names and to late-bound targets through `GetIDsOfNames` — the recording
-  found that `InStr` and `StrComp` take no named argument at all in Excel. `WithEvents` on a
-  referenced library's type advises through the runtime's `IComEventSource`. The scorecard loads
-  every type library model the CLI has cached, one replacing the fixture of the same library, so
-  `dotnet test` without `VBANG_CORPUS` still needs nothing registered. `MSForms.Control` members
-  its interface lacks bind late, as VBA does: the reader records whether an interface carries
-  `TYPEFLAG_FNONEXTENSIBLE` (Excel's do, MSForms' do not).
+- **The corpus compiles against the registered libraries (WP1).** Named arguments bind to
+  intrinsics by their MS-VBAL names and to late-bound targets through `GetIDsOfNames`; `WithEvents`
+  on a library type advises through `IComEventSource`; an interface without
+  `TYPEFLAG_FNONEXTENSIBLE` binds unknown members late. The scorecard loads every cached type
+  library model over its fixture, so `dotnet test` without `VBANG_CORPUS` still needs nothing
+  registered.
 - **Six golden areas recorded, and what they forced (WP5).** ControlFlow (73 cases), Types (41),
   Lexer (14), Scope (27), Memory (46), and eight more FileSystem. `LSet` and `RSet` were
   implemented; `For Each` reads array elements live; a typed `For` counter let-coerces its limit
@@ -298,12 +276,11 @@ The five criteria set 2026-09-09, as they stand. Each is shown by a test or a re
 
 ## 2026-09-06
 
-- **Class modules with VBA's object lifetime (M5).** Reference counting in generated code (D18)
-  rather than the collector, because `Class_Terminate` is observable and code in the wild depends
-  on when it runs; the Classes golden pins the order, down to a failed `Class_Initialize` never
-  seeing `Class_Terminate`. `Implements` emits a C# interface beside the class's own
-  implementation, so a variable of the interface type holds the implementing object itself and
-  `TypeOf`, `Is`, and a cast back all work without a wrapper.
+- **Class modules with VBA's object lifetime (M5).** Reference counting in generated code (D18); the
+  Classes golden pins the order, down to a failed `Class_Initialize` never seeing `Class_Terminate`.
+  `Implements` emits a C# interface beside the class's own implementation, so a variable of the
+  interface type holds the implementing object itself and `TypeOf`, `Is`, and a cast back all work
+  without a wrapper.
 - **The importer, `Declare`, and `AddressOf` (M6 opened).** `vbang import` reads vbaProject.bin
   per MS-OVBA and writes the VBE's own export formats, with no COM and no Excel; the corpus
   compile scorecard started running. The README and its quickstart sample followed the same day.
@@ -332,15 +309,14 @@ The five criteria set 2026-09-09, as they stand. Each is shown by a test or a re
   module cannot deadlock Excel behind a modal dialog. `IMEStatus` is unsupported for good.
 - **File statements and FileSystem**, `Open` through the registry functions. The golden recorder
   now reopens its results file per record, so a case's own `Close` cannot cut a recording short.
-- **D14 to D17 settled** the open questions of the day. Host command responses longer than Excel's
+- **D14 to D17 settled.** Host command responses longer than Excel's
   32,767-character string limit travel through `out/response.json`.
 
 ## 2026-09-04
 
 - **Scaffold and the spike (M0).** A breakpoint in `Hello.bas` hit inside `EXCEL.EXE` and `vbang
   run` printed `Debug.Print` output. That settled the approach: compile out of process (D1) to C#
-  with a `#line` per statement (D2) and let Roslyn and the portable PDB do the debugging, which
-  every .NET debugger then reads for free.
+  with a `#line` per statement (D2) and let Roslyn and the portable PDB do the debugging.
 - **The MS-VBAL front end (M1).** Lexer, recursive-descent parser, conditional compilation,
   attributes, and error recovery, written from the specification with no GPL grammar consulted
   (D3, D10). The corpus — 131 files of permissively licensed VBA, gathered outside the repository
@@ -424,9 +400,5 @@ In force unless marked; the design itself is ARCHITECTURE.md's.
 - **D-J** — Typed fast paths went into M7's compiler storage work, not a pass of their own.
 - **D-K** — Benchmarks always run the Release build, generated code as `vbang build` emits it.
 - **D-L** — No dispid cache: measured first, and late-bound calls already beat VBA's own.
-- **D-M** — *Became D22.* Option (c), the cases stay named, after measurement killed option (a).
+- **D-M** — *Became D22.*
 
-## Measurements
-
-What the suites last measured is [measurements.md](measurements.md)'s, with the command and report
-file behind every number. This file records why a number moved, not what it is.

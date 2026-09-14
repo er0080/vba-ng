@@ -5,15 +5,13 @@ already use.**
 
 vba-ng is an Excel add-in — an Excel-DNA `.xll` — plus a `vbang` command line tool that replaces
 the VBA engine. Your code lives in ordinary text files next to the workbook, is compiled to .NET
-IL by a real compiler, and runs inside Excel exactly as VBA does: buttons, sheet events, worksheet
-functions, `MsgBox`, `Range`, COM references, error numbers, and all the rest. The workbook itself
-stays a plain `.xlsx` with no VBA project in it.
+IL by a real compiler, and runs inside Excel as VBA does.
 
-Existing VBA runs unchanged. This is not a new language, a subset, or a modernized dialect. It is
-VBA, bug for bug, with the tooling VBA never had.
+This is not a new language, a subset, or a modernized dialect. It is VBA, bug for bug, with the
+tooling VBA never had; [docs/vba-quirks.md](docs/vba-quirks.md) lists where vba-ng still differs.
 
-> **Pre-release.** This is the first general testing release. [ROADMAP.md](ROADMAP.md) lists the
-> versions; `vbang --version` reports the build you have.
+> **Pre-release.** [ROADMAP.md](ROADMAP.md) lists the versions; `vbang --version` reports the build
+> you have.
 
 ## Why
 
@@ -23,79 +21,80 @@ continuous integration, and a macro-enabled file that mail gateways and security
 increasingly refuse to carry. Rewriting a working spreadsheet in Python or C# means rewriting the
 business logic too, which is where the risk is.
 
-vba-ng keeps the language and replaces everything around it.
-
 **Text files, one folder per workbook.** `Sales.xlsx` binds to `Sales.vbang/` in the same
 directory, holding `.bas` and `.cls` files in exactly the format the VBA editor already exports.
-Git sees ordinary text: real diffs, real merges, real blame, real code review. No export step, no
-synchronization dance, no code buried in a binary.
+Git sees ordinary text: diffs, merges, blame, code review, with no export step.
 
-**The workbook stays macro-free.** Code lives beside the workbook rather than inside it, so the
-file stays a plain `.xlsx`. Nothing to warn about, nothing to strip at a gateway, nothing to
-prompt the user on open.
+**The workbook stays macro-free.** A plain `.xlsx`: nothing to warn about, strip at a gateway, or
+prompt on open.
 
 **A real compiler, not a translator.** A hand-written lexer, parser, binder and code generator
 built from the MS-VBAL specification, emitting C# with `#line` directives that Roslyn compiles to
-IL and a portable PDB. Transpiling to VB.NET was rejected outright: there, `Integer` is 32 bits,
+IL and a portable PDB. Transpiling to VB.NET was rejected: there, `Integer` is 32 bits,
 `Currency` does not exist, arrays are zero-based, and error numbers differ. Owning the front end
 and the runtime is the only route to exact compatibility.
 
 **Compatibility is measured, not claimed.** Every semantic rule is backed by a golden test
-generated from real VBA running in real Excel, then replayed against the runtime with no Excel
-present. Where Microsoft's specification and Excel disagree, Excel wins and the discrepancy is
-written down in [docs/vba-quirks.md](docs/vba-quirks.md).
+generated from real VBA in Excel, then replayed against the runtime with no Excel present. Where
+Microsoft's specification and Excel disagree, Excel wins and the discrepancy is written down in
+[docs/vba-quirks.md](docs/vba-quirks.md).
 
 **Debugging that already works.** The PDB maps IL back to your `.bas` files, so any .NET debugger
-attaches to `EXCEL.EXE` and breaks on a line of VBA, with working locals, stepping and watches. No
-new debugger to build, none to learn.
+attaches to `EXCEL.EXE` and breaks on a line of VBA, with working locals, stepping and watches.
 
 **Built for a terminal, and for agents.** The interface is the CLI, files and stdout. Diagnostics
-come out as `file(line,col): error VBA0001: message`, which every editor already turns into
-clickable problems, and `build`, `run`, `test` and `status` take `--json`. A coding agent drives
-vba-ng with the same commands a person does, with no plugin or protocol in between.
+come out as `file(line,col): error VBA0001: message`, which every editor turns into clickable
+problems, and `build`, `run`, `test` and `status` take `--json`. A coding agent drives vba-ng with
+the same commands a person does, with no plugin or protocol in between.
 
 **The compiler never runs inside Excel.** `vbang build` is a separate process producing a DLL and
 a PDB; the add-in only loads the output. A compiler bug cannot take down a workbook, and the build
-works on a machine with no Excel installed at all.
+works on a machine with no Excel installed.
 
 ## Quickstart
 
-This installs vba-ng from a release, runs VBA from a button in a workbook, and drives the same code
-from a terminal. [docs/user-manual.md](docs/user-manual.md) has the rest: every command and
-option, starting a project beside a workbook of your own, importing an existing VBA project, the
-test runner.
+[docs/user-manual.md](docs/user-manual.md) has the rest: every command and option, starting a
+project beside a workbook of your own, importing an existing VBA project, the test runner.
 
 **Prerequisites.** Windows with 64-bit Excel 2016 or later, and the
 [.NET 10 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/10.0), x64. The add-in's
-bitness must match Excel's, so check it:
+bitness must match Excel's: on a Click-to-Run install this prints `x64`, and otherwise
+**File > Account > About Excel** says 64-bit. `dotnet --list-runtimes` lists
+`Microsoft.WindowsDesktop.App 10.0` once the runtime is installed.
 
 ```powershell
 (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Office\ClickToRun\Configuration').Platform
 ```
 
-It should print `x64`. (32-bit Excel is planned, not supported yet.)
-
 **1. Install.** Download `vbang-<version>-win-x64.zip` and `SHA256SUMS` from
-[Releases](https://github.com/er0080/vba-ng/releases). In PowerShell, in the download folder,
-compare the hash with `SHA256SUMS`, unblock the zip so Excel does not refuse an add-in from the
-internet, unpack it, and put the folder on your `PATH`:
+[Releases](https://github.com/er0080/vba-ng/releases). In PowerShell, in the download folder: check
+that the two hashes printed match, unblock the zip so Excel does not refuse an add-in from the
+internet, unpack it, put the folder on your `PATH`, and copy its path:
 
 ```powershell
-Get-FileHash .\vbang-*-win-x64.zip
+(Get-FileHash .\vbang-*-win-x64.zip).Hash.ToLower(); Get-Content .\SHA256SUMS
 Unblock-File .\vbang-*-win-x64.zip
 Expand-Archive .\vbang-*-win-x64.zip "$env:LOCALAPPDATA\vba-ng"
 $dir = (Get-Item "$env:LOCALAPPDATA\vba-ng\vbang-*-win-x64").FullName
 [Environment]::SetEnvironmentVariable('Path', [Environment]::GetEnvironmentVariable('Path', 'User') + ";$dir", 'User')
+$env:Path += ";$dir"; $dir | Set-Clipboard
+vbang --version
 ```
 
-Open a new terminal and `vbang --version` prints the version you installed.
-
 **2. Load the add-in.** In Excel, **File > Options > Add-ins > Manage: Excel Add-ins > Go >
-Browse**, pick `vba-ng.xll` in that folder, and accept the notice Excel shows for an unsigned
-add-in. Excel loads it at every start from then on.
+Browse**, paste the copied path into the file name box, pick `vba-ng.xll`, and accept the notice
+Excel shows for an unsigned add-in. If Excel offers to copy the add-in into its own Add-ins folder,
+answer **No**: the add-in finds `vbang.exe` beside itself. Excel loads it at every start from then
+on.
 
-**3. Click the button.** Open `samples\Quickstart\Quickstart.xlsx` in that folder: a plain `.xlsx`
-with one button, and beside it `Quickstart.vbang\`, the code bound to it by name:
+**3. Click the button.** Open the sample from the same terminal:
+
+```powershell
+Invoke-Item "$dir\samples\Quickstart\Quickstart.xlsx"
+```
+
+It is a plain `.xlsx` with one button, and beside it `Quickstart.vbang\`, the code bound to it by
+name:
 
 ```vba
 Attribute VB_Name = "Greeting"
@@ -107,25 +106,27 @@ Public Sub SayHello()
 End Sub
 ```
 
-The add-in builds the project as the workbook opens. Click **Say hello** and `Hello, world` lands
-in **B2**, exactly as the same module would in VBA.
+The add-in builds the project as the workbook opens, and Excel does not respond for those few
+seconds. Click **Say hello** and `Hello, world` lands in **B2**. If Excel says it cannot run the
+macro, `vbang status` says why: the workbook missing from its bound workbooks, or a build error.
 
 **4. Drive it from the terminal.** Leave Excel running:
 
 ```powershell
-cd "$env:LOCALAPPDATA\vba-ng\vbang-*-win-x64\samples\Quickstart"
+cd "$dir\samples\Quickstart"
 vbang run Greeting.SayHello --project Quickstart.vbang
 vbang status
 ```
 
-`run` builds the project, runs the procedure in the Excel you have open, and prints its
-`Debug.Print` output. `status` reports the add-in's version, its loaded projects, the workbooks they
-are bound to and the most recent output.
+`run` builds the project, runs the procedure in the Excel you have open, and prints
+`Hello, world`. `status` reports the add-in's version, its loaded projects, the workbooks they are
+bound to, `Quickstart.xlsx` among them, and the most recent output.
 
-**5. Edit while Excel stays open.** Change `Greeting.bas` and save. The add-in watches the project
-folder, rebuilds it half a second later, and reloads it between macros; click the button again and
-the new code runs. If the edit does not compile, the error is reported and the loaded version stays
-in place, so the workbook keeps working.
+**5. Edit while Excel stays open.** In `Quickstart.vbang\Greeting.bas`, change `"Hello, world"` on
+the `Range` line to `"Hello again"` and save. The add-in rebuilds the project half a second later and
+reloads it between macros: click the button and **B2** changes, and `vbang status` counts one
+reload. An edit that does not compile leaves the loaded version in place, and `vbang status` shows
+the error.
 
 ## Building from source
 
@@ -139,9 +140,9 @@ dotnet test                        # unit and golden tests; never needs Excel
 dotnet format --verify-no-changes  # style gate
 ```
 
-The CLI lands in `src\VbaNg.Cli\bin\Debug\net10.0-windows\vbang.exe`, and the add-in beside the
-add-in project's build output. Excel-dependent tests sit behind an environment variable, so a normal
-test run never opens Excel:
+The CLI and the add-in land where
+[docs/user-manual.md](docs/user-manual.md#getting-the-add-in-and-the-cli) says. Excel-dependent
+tests run only with `VBANG_E2E` set:
 
 ```powershell
 $env:VBANG_E2E = "1"; dotnet test tests/VbaNg.E2E

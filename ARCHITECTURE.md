@@ -44,8 +44,8 @@ add-in to load picks it for every other — so the add-in targets the LTS runtim
 
 **Dependency direction**, enforced by project references: Runtime and Import reference nothing of
 vba-ng's; Compiler and Interop reference only Runtime; the AddIn references Runtime and Interop plus
-Excel-DNA; the CLI references Compiler, Import, Interop, and Runtime. Only the AddIn sees Excel-DNA,
-only Interop and its two hosts touch COM, and generated code sees only Runtime's public surface.
+Excel-DNA; the CLI references Compiler, Import, Interop, and Runtime. Only Interop and its two hosts
+touch COM, and generated code sees only Runtime's public surface.
 
 **Compilation is out of process.** The compiler is a plain .NET library driven by `vbang`; it
 produces a DLL and a portable PDB into the project's output folder, and the add-in only loads that
@@ -84,8 +84,8 @@ map of module name to `Workbook`, `Worksheet`, or `Chart`:
 ```
 
 A reference resolves by guid and version, or by name alone against the libraries vba-ng knows
-(Excel, Office, Scripting, stdole, VBIDE, MSForms) — which is also how one resolves whose guid is
-registered nowhere, as a workbook carrying a UserForm has. `VBA` and `stdole` are implicit; `Office`
+(Excel, Office, Scripting, stdole, VBIDE, MSForms) — and by that name when its guid is registered
+nowhere, as a UserForm workbook's `MSForms` is. `VBA` and `stdole` are implicit; `Office`
 is not, so its constants and types resolve only when the manifest names it, though `vbang init`
 writes it alongside `Excel`. The name `vbang` is vba-ng's own library, bringing the `Assert` module
 of test procedures (section 8) — it is the opt-in every vba-ng language addition needs. An invalid
@@ -129,9 +129,7 @@ procedure body with error 438 naming the gap, so the rest of such a workbook sti
    attribute, through which the host resolves `Application.Run` and test names; test procedures
    carry a `VbaTest` attribute.
 
-The `#line`-mapped PDB is what lets VS Code, Visual Studio, and Rider attach to `EXCEL.EXE` and set
-breakpoints in `.bas` files with working locals and stepping. Generated C# stays on disk, and the
-same inputs give byte-identical output. Diagnostics have stable ids, listed with a triggering
+The same inputs give byte-identical output. Diagnostics have stable ids, listed with a triggering
 snippet in [docs/diagnostics.md](docs/diagnostics.md).
 
 ### Error handling
@@ -147,8 +145,9 @@ from the numbered lines that ran. A procedure without those constructs compiles 
 structured C# at full speed.
 
 Runtime errors, COM errors from `IDispatch::Invoke` included, are `VbaException` instances carrying
-number, source, description, and help context with VBA's numbering. An unhandled error at the top of
-a macro shows the run-time error dialog in interactive mode; in CLI mode it prints as a diagnostic.
+VBA's number and message text, the project name as source, and VBA's help file and context. An
+unhandled error at the top of a macro shows the run-time error dialog in interactive mode; in CLI mode
+it is printed and logged.
 
 ## 5. Runtime library
 
@@ -163,7 +162,7 @@ addresses, and `CopyMemory` between variables means what it means in VBA. Nothin
 managed, and conversion to and from ANSI happens only where VBA converts: a `Declare`'s
 `ByVal String` arguments, the file statements, `StrConv`.
 
-The address comes from where storage already lies, not from an arena:
+The address comes from where storage already lies:
 
 | Storage | Lives in |
 |---|---|
@@ -234,8 +233,7 @@ class through the same contract as a COM object, and `Implements` is resolved in
 explicit implementations of the generated interface. `RaiseEvent` and `WithEvents` pass arguments as
 a Variant array, which lets a handler's `ByRef` parameter write back; a source holds its sinks
 weakly and a sink unsubscribes when it terminates. `Collection`, `Err`, the enumerator, and the event
-sink have the same shape, so any can be handed to a COM method. A run-time error carries the number,
-VBA's message text, the project name as source, and VBA's help file.
+sink have the same shape, so any can be handed to a COM method.
 
 The file statements compile to calls on `FileSystem`, which numbers the current thread's open files
 as VBA does and lays Binary and Random values out byte for byte; its channel table is the runtime's
@@ -261,10 +259,10 @@ interactive implementation, the CLI and test harnesses its defaults.
 - **Invoke path, and the runtime stays free of COM.** The runtime defines the contract —
   `IDispatchObject`: dispid lookup, invoke, property put, enumeration, identity — which the
   late-bound helpers, `Coerce`, and `For Each` use exclusively; Interop implements it against the
-  vtable of `IDispatch` with a hand-written `Invoke` wrapper and explicit VARIANT and SAFEARRAY
-  marshaling, no C# `dynamic`, so `Currency`, `Date`, `Decimal`, `Empty`, `Null`, `Missing`, `ByRef`
-  arguments, and non-zero lower bounds all get exact treatment. Since values are already VARIANTs,
-  BSTRs, and SAFEARRAYs the layer is mostly a passthrough. `DISP_E` codes map to VBA's numbers;
+  vtable of `IDispatch` with a hand-written `Invoke` wrapper and no C# `dynamic`; values are already
+  VARIANTs, BSTRs, and SAFEARRAYs, so the layer is mostly a passthrough and `Currency`, `Date`,
+  `Decimal`, `Empty`, `Null`, `Missing`, `ByRef` arguments, and non-zero lower bounds get exact
+  treatment. `DISP_E` codes map to VBA's numbers;
   `DISP_E_EXCEPTION` becomes the object's own error.
 - **Application objects, default members, creation, iteration.** The members of a library's
   application object (a coclass marked appobject) are in scope unqualified, over one instance per
@@ -281,7 +279,7 @@ interactive implementation, the CLI and test harnesses its defaults.
   `WithEvents`, document modules, and worksheet ActiveX controls. A `WithEvents` variable of a
   library type carries its coclass's default source interface and dispids from the type library at
   compile time and hands them to the runtime on `Set`, which advises through `IComEventSource`, an
-  interface Interop implements, so neither the compiler nor the runtime knows COM. Excel fires events
+  interface Interop implements. Excel fires events
   in declared order, not the reversed order `IDispatch` prescribes, so sources taken from a type
   library model are marked declared-order.
 - **`Declare`.** Generated P/Invoke stubs following VBA marshaling rules: ANSI strings by default,
@@ -294,11 +292,11 @@ interactive implementation, the CLI and test harnesses its defaults.
 and `WorkbookBeforeClose`; workbooks already open when it loads go through the same path.
 
 1. Locate the project folder for the workbook. One whose folder does not exist is ignored, and so is
-   one that still carries a VBA project (`Workbook.HasVBProject`): the add-in says why, naming
-   `vbang import --to-xlsx`, so no macro runs twice.
-2. Compare `out/build.json` with the sources and spawn `vbang build` out of process when they
-   differ, finding the CLI through `VBANG_CLI`, beside the add-in, or in this repository's build
-   output.
+   one that still carries a VBA project (`Workbook.HasVBProject`): the add-in says why and to save
+   a macro-free copy, so no macro runs twice.
+2. Compare `out/build.json` with the sources and the add-in's version, and spawn `vbang build` out
+   of process when either differs, finding the CLI through `VBANG_CLI`, beside the add-in, or in
+   this repository's build output.
 3. Load the DLL into a collectible `AssemblyLoadContext`, set the `Me` field of every document
    module to the object whose CodeName matches, advise the event procedures on that object or on the
    named ActiveX control, and register the project's names.
@@ -309,12 +307,11 @@ and `WorkbookBeforeClose`; workbooks already open when it loads go through the s
    outlive the workbook and are registered again after a rebuild. The project's assembly context
    unloads at add-in shutdown.
 
-**Registration.** A public parameterless Sub of a standard module becomes an XLL command and a public
-Function becomes an XLL UDF, visible in the function wizard under a category named after the project,
-so `OnAction`, `Application.Run`, `OnTime`, and `OnKey` resolve by name. XLL registration is global
-per Excel session, where VBA scoped UDFs per workbook. Form controls carry an `OnAction` name and
-resolve the same way; an ActiveX control's events are advised onto the named procedures of the
-sheet's document module, bound early against MSForms.
+**Registration.** A public parameterless Sub of a standard module becomes an XLL command and a
+public Function becomes an XLL UDF, visible in the function wizard under a category named after the
+project, so `OnAction`, `Application.Run`, `OnTime`, and `OnKey` resolve by name. XLL registration
+is global per Excel session, where VBA scopes UDFs per workbook. An ActiveX control's events are
+advised onto the named procedures of the sheet's document module, bound early against MSForms.
 
 **`Application.Run` of the calling project's own procedures runs in-process.** A call to Excel's
 `Run`, on `Application` or unqualified, goes through the runtime, which looks the name up in the
@@ -324,16 +321,16 @@ table of its Subs and Functions, private ones included; a name found there runs 
 project, so the procedure sees the caller's module state as in VBA and an unhandled error escapes
 every handler of the caller. Any other name goes to Excel, which raises 1004 unless it is another
 workbook's macro or a registered command. This is also what makes a project loaded by a host command
-reachable at all, since such a project registers no names.
+reachable, since such a project registers no names.
 
 **Host commands.** `vbang.Run`, `vbang.Test`, and `vbang.Status` are XLL functions registered hidden
 from the wizard, which the CLI calls through `Application.Run`. Each returns one JSON string; a
-response over 32,000 characters — deliberately under Excel's cap of 32,767 on an XLL function's
+response over 32,000 characters — under Excel's cap of 32,767 on an XLL function's
 string result — goes to `out/response.json`, and the returned JSON only names that file. A run
-triggered from inside Excel (a button, `OnTime`) is always interactive; a CLI-driven run is not, by
-default, so `MsgBox` logs its text and returns `vbOK` and `InputBox` returns its default unless
-`--ui` restores the real dialogs — otherwise an agent triggering a legacy module with a `MsgBox`
-would deadlock Excel behind it.
+triggered from inside Excel (a button, `OnTime`) is always interactive; a CLI-driven run is not unless
+`--ui` is given, so an agent cannot deadlock Excel behind a modal dialog: `MsgBox` logs its text and
+returns `vbOK`, `InputBox` returns its default, and vba-ng's own notices open no dialog in a hidden
+Excel.
 
 **Hot reload.** A debounced `FileSystemWatcher` per bound project folder, over the sources and
 manifest at its top level, builds through the same out-of-process `vbang build` on a worker thread,
@@ -373,16 +370,14 @@ register no language here, so VS Code needs `debug.allowBreakpointsEverywhere` t
 
 **Start and run under one keypress.** A launch configuration that starts Excel with the add-in and
 a workbook and sets `VBANG_PROJECT` and `VBANG_RUN` gets a procedure run at startup: the add-in
-polls until Excel is genuinely ready, splash screen gone and a workbook open, runs that procedure,
+polls until Excel is ready, splash screen gone and a workbook open, runs that procedure,
 and mirrors `Debug.Print` to the debugger's console. Throwaway instances hold the add-in files
 locked, so such a configuration closes them first.
 
 Runtime types carry `DebuggerDisplay` and `DebuggerTypeProxy` attributes so a `Variant` reads as its
 VBA value in the locals window and helper locals are hidden; where the debugger cannot read native
 memory as a VBA value the type carries its own view, so an object variable shows `Nothing` or its
-class and an array its elements under their VBA subscripts. For agents the loop is the whole
-protocol: edit files, `vbang build`, read canonical diagnostics, `vbang run` or `vbang test`, read
-stdout.
+class and an array its elements under their VBA subscripts.
 
 ## 10. Import
 
@@ -393,17 +388,15 @@ tells a class module from a document module; each module's stream carries its so
 offset the `dir` stream records, and a class module's file gets the `VERSION 1.0 CLASS` header the
 VBE writes but the stream does not. Sources are decoded from the system ANSI code page and written
 as UTF-8. The output is export-format files, a manifest with the references, and a report of
-unsupported constructs — a formula referencing another workbook's UDF needs manual attention, and a
-UserForm's code is written as a `.frm` while its `.frx` resources stay behind.
+what did not come over: a UserForm's code is written as a `.frm` while its `.frx` resources stay
+behind.
 
-The workbook is never modified, so rolling an import back is deleting a folder. `--to-xlsx`
-additionally saves a macro-free `Book.xlsx` copy through Excel automation, in a hidden instance of
-its own, preserving CodeNames. That copy is the form vba-ng runs: the compiled project supplies the
-behavior, and a workbook that kept its VBA project would run both.
+The workbook is never modified, and an import never overwrites a project folder or a copy, so
+rolling an import back is deleting a folder. `--to-xlsx` also saves a macro-free `Book.xlsx` copy
+through Excel automation, in a hidden instance of its own with macros disabled, preserving CodeNames.
+That copy is the form vba-ng runs.
 
 ## 11. Testing strategy
-
-Three tiers.
 
 **Unit tests**, one project per source project: the lexer, the parser, the binder, lowering, and the
 emitter, whose tests assert over the generated C# text. `tests/VbaNg.Compiler.Tests` also runs the

@@ -1,19 +1,16 @@
 # CLAUDE.md
 
 vba-ng is an Excel-DNA add-in plus a `vbang` CLI that replaces native VBA with a compiled,
-git-native, 100% compatible implementation. ARCHITECTURE.md is the design reference: the current
-design, in the present tense. Read it before any non-trivial change.
-
-Every doc has one job, and writing in the wrong one is a defect: see Documentation below. Status is
-ROADMAP.md's table; the reasoning behind a change is docs/build-log.md.
+git-native, 100% compatible implementation. ARCHITECTURE.md is the design reference; read it
+before any non-trivial change.
 
 ## Commands
 
 ```
 dotnet build                          build everything; warnings are errors
 dotnet test                           unit + golden replay tests; never needs Excel
-$env:VBANG_CORPUS = "C:\path\to\vba"; dotnet test    also runs the corpus tests: the corpus parse rate and the compile scorecard; the reports land next to the test dll as corpus-report.txt and corpus-compile-report.txt
-$env:VBANG_E2E = "1"; dotnet test tests/VbaNg.E2E     end-to-end tests (Category=E2E): starts hidden throwaway Excel instances with the add-in from the build output and quits them; skipped without the variable; with VBANG_CORPUS set too, the corpus spec workbooks are imported and their suites run under vbang.Test; the benchmarks run only in the Release build (`-c Release`) and land next to the test dll as benchmark-report.txt
+$env:VBANG_CORPUS = "C:\path\to\vba"; dotnet test    also the corpus parse and compile tests; corpus-report.txt and corpus-compile-report.txt land next to the test dll
+$env:VBANG_E2E = "1"; dotnet test tests/VbaNg.E2E     E2E tests (Category=E2E) in throwaway hidden Excel instances; with VBANG_CORPUS, also the corpus spec workbooks; with -c Release after dotnet build -c Release, also the benchmarks, benchmark-report.txt next to the test dll
 dotnet format --verify-no-changes     style gate
 dotnet run --project tests/VbaNg.Golden.Regen -- [Area ...]     regenerate goldens from real VBA in a hidden throwaway Excel; review the diff before committing. --validate checks that the cases parse without starting Excel; --bisect names a case the VBE rejects
 dotnet test tests/VbaNg.Golden        replay the goldens against the runtime; the pass rate per area lands next to the test dll as golden-report.txt, known gaps live in tests/VbaNg.Golden/Expected
@@ -33,8 +30,8 @@ powershell -ExecutionPolicy Bypass -File tools/Update-Measurements.ps1     write
 
 While an Excel instance has the add-in loaded, `dotnet build` of the solution fails to overwrite
 the add-in's output. Quit that Excel first, or build only the project you changed. The VS Code
-F5 configurations run tools/Prepare-Debug.ps1 first: it closes throwaway Excel instances, meaning
-any that loaded the add-in from src/VbaNg.AddIn/bin, and never touches other Excel instances.
+F5 configurations run tools/Prepare-Debug.ps1 first: it closes throwaway Excel instances, those that
+loaded the add-in from src/VbaNg.AddIn/bin.
 
 Tests run under Microsoft.Testing.Platform (global.json "test.runner"). Never pass MSBuild-style
 flags such as `-nologo` to `dotnet test`: they are forwarded to the test host, which rejects them
@@ -63,8 +60,7 @@ Interop, AddIn, or Excel-DNA. Generated code references only Runtime's public su
 
 ## Documentation
 
-Each file has one job. Detail that does not fit its job goes to docs/build-log.md — never into
-ARCHITECTURE.md or ROADMAP.md, which is how both became build logs.
+Each file has one job.
 
 | File | Holds | Never holds |
 |---|---|---|
@@ -94,13 +90,11 @@ ARCHITECTURE.md or ROADMAP.md, which is how both became build logs.
 
 ## Rules
 
-Every rule is meant to be checkable with a yes or no. Cite one by its name — "bug-for-bug", "a
+Every rule is checkable with a yes or no. Cite one by its name — "bug-for-bug", "a
 failing test first" — never by a number.
 
-The `R1`/`D12`/`WP4`/`M7` labels are discontinued from 1.0.0-alpha1: they turned every doc and
-comment into a lookup. Do not create new ones. The ones already in source comments stay rather than
-churn a thousand files, and docs/build-log.md keeps the old identifiers as historical anchors so
-those comments still resolve to something.
+Do not create `R1`/`D12`/`WP4`/`M7`-style labels. Those in source comments stay; docs/build-log.md
+resolves them.
 
 ### Compatibility
 
@@ -108,7 +102,7 @@ those comments still resolve to something.
   disagree, Excel wins, and the discrepancy is recorded in docs/vba-quirks.md.
 - **No semantic claim without a golden.** Every runtime behavior (operators, coercions,
   intrinsic functions, error numbers, error messages) is backed by a golden case generated from
-  real VBA in tests/VbaNg.Golden. If a golden cannot be generated right now, write the case,
+  real VBA in tests/VbaNg.Golden. If a golden cannot be generated, write the case,
   mark the test pending-golden, and do not guess.
 - **Bug-for-bug.** Never improve, fix, or modernize VBA semantics. Every valid VBA program
   means exactly what it means in Excel. Extensions (vba-mp) are opt-in per project and never
@@ -130,7 +124,7 @@ those comments still resolve to something.
 ### Architecture
 
 - **ARCHITECTURE.md is authoritative.** Code that must deviate from a decision changes the
-  doc in the same commit, so that it states the design now in force, and docs/build-log.md
+  doc in the same commit, and docs/build-log.md
   records what changed and why. Decided questions are not re-decided in code comments or chat.
 - **`dotnet build` and `dotnet test` never require Excel**, Office type libraries, or
   admin rights. Excel-dependent tests live in tests/VbaNg.E2E and carry Category=E2E.
@@ -169,9 +163,8 @@ those comments still resolve to something.
   IDispatch invoke. Everything else is measured before it is optimized.
 - **Names.** Namespaces are `VbaNg.*`. The CLI is `vbang`. The Runtime public API is the
   contract with generated code; changes to it are called out explicitly in the commit.
-- **A comment says the thing, not where the thing is written down.** Explain the behavior or the
-  design in the sentence itself. Naming a doc section is fine; a bare label a reader has to go
-  look up is not.
+- **A comment says the thing, not where the thing is written down.** Naming a doc section is
+  fine; a bare label a reader has to go look up is not.
 - **A version is read, never written down.** Directory.Build.props declares it once, as
   `VersionPrefix` and `VersionSuffix`, and a release tag overrides it with `-p:Version=<tag>`. Code
   that reports a version reads it off an assembly, and no doc spells one out except ROADMAP.md's
@@ -195,13 +188,12 @@ those comments still resolve to something.
 - **Status is ROADMAP.md's table, never ARCHITECTURE.md.** The detail behind a row is
   docs/build-log.md's. After the 1.0.0-rc1 release, GitHub issues and pull requests take over
   from the table for planned work.
-- **CI runs everything that does not need Excel; tools/Invoke-Gate.ps1 runs the rest.** GitHub
-  runners have no Office, so .github/workflows/ci.yml is build, format, the unit and golden tests,
-  the version guard and the measurements check. The E2E tests and the benchmarks are local: run the
-  gate script before pushing, and before tagging.
+- **CI runs everything that does not need Excel; tools/Invoke-Gate.ps1 runs the rest.** ci.yml
+  is build, format, the unit and golden tests, the version guard and the measurements check. Run
+  the gate script before pushing and before tagging.
 - **A release is a tag.** `v1.0.0-alpha1` pushed to the remote builds that version, gates it, and
-  attaches the zip and its checksum to a GitHub release. The tag is the only input; no file is
-  edited to cut a release, and nothing is deployed.
+  attaches the zip and its checksum to a GitHub release. The tag is the only input, and nothing
+  is deployed.
 
 ### Working with Claude Code in this repo
 
@@ -213,7 +205,7 @@ those comments still resolve to something.
 - **Ask before:** adding a dependency, changing the Runtime public API, regenerating
   goldens, or changing a decision in ARCHITECTURE.md.
 - **Commit at natural checkpoints without asking.** Pushing, rewriting history, and anything
-  touching a remote still require asking.
+  touching a remote require asking.
 - **Excel may be opened autonomously for E2E tests and golden regeneration**, in the throwaway
   hidden instances the COM-test rule describes. Kill only `/automation -Embedding` instances,
   never an Excel the user has open.

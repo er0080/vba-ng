@@ -1,7 +1,6 @@
 # vba-ng Roadmap
 
-One row per version, from the first testing release to the last scheduled item. The detail behind a
-row is [docs/build-log.md](docs/build-log.md)'s, and `vbang --version` reports the build in hand.
+The detail behind a row is [docs/build-log.md](docs/build-log.md)'s.
 
 | Version | Delivers |
 |---|---|

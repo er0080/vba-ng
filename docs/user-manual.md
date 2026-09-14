@@ -1,13 +1,10 @@
 # vba-ng user manual
 
-Install it, lay out a project, run it in Excel, test it, debug it, and read what it tells you when
-something goes wrong.
-
 ## Requirements
 
 | | |
 |---|---|
-| Excel | desktop Excel for Windows, 64-bit. 32-bit is not supported: the add-in is built x64 only |
+| Excel | desktop Excel for Windows, 64-bit; the add-in is x64 only |
 | .NET Desktop Runtime | 10.0, x64, to run a release |
 | .NET SDK | 10.0.400 or later, to build from source |
 | VS Code | optional, with the C# extension, for breakpoints in VBA source |
@@ -25,10 +22,15 @@ administrator rights.
 ## Getting the add-in and the CLI
 
 **From a release.** `vbang-<version>-win-x64.zip` on the GitHub releases page unpacks to one folder:
-`vbang.exe`, the add-in as a single `vba-ng.xll`, and `samples\Quickstart`. Check the zip against
-`SHA256SUMS` and run `Unblock-File` on it before unpacking, or Excel refuses an add-in that came from
-the internet. Keep `vba-ng.xll` beside `vbang.exe`: the add-in builds projects with the CLI next to
-it. README.md's Quickstart has the commands, putting the folder on `PATH` included.
+`vbang.exe`, the add-in as a single `vba-ng.xll`, `samples\Quickstart`, and these docs. Check the
+zip against `SHA256SUMS` and run `Unblock-File` on it before unpacking, or Excel refuses an add-in
+that came from the internet. Keep `vba-ng.xll` beside `vbang.exe`: the add-in builds projects with
+the CLI next to it. README.md's Quickstart has the commands, putting the folder on `PATH` included.
+
+To upgrade, unpack the new zip beside the old folder, load its `vba-ng.xll` in place of the old one,
+and change the `PATH` entry; each bound project builds again the next time its workbook opens. To
+remove vba-ng, untick the add-in, then delete the folder, `%LOCALAPPDATA%\vbang`, and the `PATH`
+entry.
 
 **From source.**
 
@@ -51,9 +53,10 @@ zip ships as `vba-ng.xll`.
 ### Loading the add-in
 
 **File > Options > Add-ins > Manage: Excel Add-ins > Go > Browse**, pick the `.xll`, and accept the
-notice Excel shows for an unsigned add-in. For a throwaway instance, this script registers it
-through `Application.RegisterXLL`, which skips that notice, and prints the Excel process id and the
-add-in's status:
+notice Excel shows for an unsigned add-in. If Excel offers to copy the add-in into its own Add-ins
+folder, answer **No**: the add-in finds `vbang.exe` beside itself. From source, this script starts a
+throwaway Excel with the add-in registered through `Application.RegisterXLL`, which skips the
+notice, and prints the process id and the add-in's status:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools/Start-ExcelWithAddIn.ps1 [-AddInPath <xll>] [-Hidden]
@@ -81,7 +84,7 @@ Sales.vbang/
 ```
 
 A project needs no workbook if you only build, run and test it from the CLI; `samples/Classes` and
-`samples/Storage` have none.
+`samples/Storage` in the source repository have none.
 
 Source files are exactly what the VBA editor exports: a `.bas` starts with
 `Attribute VB_Name = "Module1"`, a `.cls` with the four-line `VERSION 1.0 CLASS` header and then
@@ -192,7 +195,7 @@ Reads the VBA project out of a macro workbook and writes it as source files. See
 
 ### build
 
-Compiles the project. No Excel, no COM. Diagnostics print one per line in the format every editor
+Compiles the project. Diagnostics print one per line in the format every editor
 turns into a clickable problem, then a final line:
 
 ```
@@ -215,10 +218,12 @@ case-insensitively. The call blocks until the macro returns — Ctrl+C ends the 
 Hello, world
 ```
 
-A run-time error the code leaves unhandled prints to stderr and exits 4:
+A run-time error the code leaves unhandled prints to stderr, followed by the stack, whose frames name
+the module file and line, reaches the project's log, and exits 4. With `--ui` it also shows VBA's
+run-time error dialog.
 
 ```
-vbang: run-time error: VbaException: Division by zero
+vbang: Run-time error '11': Division by zero
 ```
 
 `--ui` keeps dialogs interactive; see [Dialogs](#dialogs-errors-and-the-log). `--json` prints the
@@ -256,7 +261,7 @@ Writes one zip for a bug report. See [Reporting a bug](#reporting-a-bug).
 |---|---|
 | 0 | success |
 | 1 | compile errors; also an import that could not read the workbook |
-| 2 | usage error: bad option, missing argument, no project folder, no workbook |
+| 2 | usage error: bad option, missing argument, no project folder, no workbook; an import that would overwrite |
 | 3 | Excel not reachable, or the add-in did not answer |
 | 4 | run-time error in the macro, or the host command itself failed |
 | 5 | a test failed |
@@ -276,31 +281,34 @@ Imported 4 file(s) into C:\work\Book.vbang
 Wrote C:\work\Book.xlsx
 ```
 
-Into `Book.vbang/`, or the folder you name, it writes one file per module in the editor's own
-export format with CRLF line ends — `.bas` for standard modules, `.cls` for classes and document
-modules, `.frm` for forms — and a `vbang.json` carrying the project's name, `Excel`, every other
-referenced library that has a GUID, and a `documents` map of each document module and its kind, plus
-a `.gitignore` for `out/` unless the folder has one. It
-warns for each `.frm` that only the code came over; the layout and `.frx` resources stay in the
-workbook. `.xls` and `.xla` workbooks are read too, from `_VBA_PROJECT_CUR`.
+It writes one file per module into `Book.vbang/`, or the folder you name, in the editor's export
+format with CRLF line ends, plus a `vbang.json` (the project's name, `Excel`, every other referenced
+library with a GUID, and the `documents` map) and a `.gitignore` for `out/`. Each `.frm` warns that
+only its code came over; the layout and `.frx` resources stay in the workbook. `.xls` and `.xla`
+workbooks are read too.
 
-`--to-xlsx` also saves a macro-free copy beside the workbook through a hidden Excel of its own —
-the only part of an import that needs Excel installed, and exit 3 when it cannot be done.
+An import never overwrites. It refuses a folder that already holds a project, and with `--to-xlsx`
+a `Book.xlsx` that already exists, before writing anything; to import again, import into another
+folder and compare.
+
+`--to-xlsx` also saves the macro-free copy beside the workbook, through a hidden Excel of its own
+with macros disabled, so none of the workbook's code runs. It is the only part of an import that
+needs Excel installed, and exit 3 when it cannot be done.
 
 Then `vbang build Book.vbang`, fix what the compiler reports, and open the `.xlsx` in an Excel with
 the add-in loaded. Keep the original `.xlsm` out of the way: a workbook that still has its own VBA
-project is **not** bound, because both would run; vba-ng says so in a dialog naming `--to-xlsx`, or
-only in the log when Excel is hidden.
+project is **not** bound, because both would run. vba-ng says so, in a dialog when Excel is visible,
+and says to save a copy as an Excel Workbook (.xlsx) instead.
 
 ## Inside Excel
 
 ### Binding
 
 When the add-in loads, and on every workbook that opens afterwards, it looks for a folder named
-after the workbook. No folder, nothing happens: the add-in is inert for every other file you open.
-With one, it:
+after the workbook. With no folder, nothing happens. With one, it:
 
-1. runs `vbang build` out of process if `out/build.json` does not match the sources, and waits;
+1. runs `vbang build` out of process if `out/build.json` does not match the sources or another version
+   of vba-ng wrote it, and waits, with Excel not responding meanwhile;
 2. loads `out/<Project>.dll` into a load context of its own;
 3. sets `Me` in each document module to the workbook or the sheet whose CodeName matches the module
    name, and connects the event procedures;
@@ -329,9 +337,9 @@ parameterless Subs of standard modules are registered under both names, so `OnAc
 `Application.Run`, `Application.OnTime` and `OnKey` resolve them. If two loaded projects claim the
 same bare name, the second registers `Project.Name` instead and logs a warning.
 
-`Application.Run` of the project's own procedures does not go through Excel at all; the runtime
-resolves it in process, arguments and all, and `Book.xlsx!Module.Proc` resolves there too when the
-prefix names the project's own workbook. A prefix naming another workbook does not resolve.
+The runtime resolves `Application.Run` of the project's own procedures in process, arguments and
+all, `Book.xlsx!Module.Proc` included when the prefix names the project's own workbook. A prefix
+naming another workbook does not resolve.
 
 ### Worksheet functions
 
@@ -348,23 +356,22 @@ and `Module.Name`, in the function wizard under a category named after the proje
 | an array | a 1-based two-dimensional `Variant` array |
 
 What comes back: a number, text, a Boolean, a date as its serial, an error value of 2000 plus an
-Excel error code as that error, a two-dimensional array as a block of cells, a one-dimensional
-array as a row, an object as its default value, `Empty` as an empty value. `Nothing`, `Null`, a
+Excel error code as that error, a two-dimensional array as a block of cells, a one-dimensional array
+as a row, an object as its default value, `Empty` as an empty value. `Nothing`, `Null`, a
 user-defined type, an unallocated array, an array of three dimensions or more, any other error
-value, and an unhandled run-time error all show `#VALUE!`, with no dialog. That mapping is what
-vba-ng returns; apart from `#VALUE!` for a run-time error it is not verified against VBA. A
-function's `Debug.Print` output and its unhandled error reach `vbang status`, not
-`out/output.log`. `Application.Volatile`, `Application.Caller` and `Application.ThisCell` answer
-inside a function call; every function runs on Excel's main thread and may touch the object model.
+value, and an unhandled run-time error all show `#VALUE!`, with no dialog. A function's
+`Debug.Print` output and its unhandled error reach `vbang status`, not `out/output.log`.
+`Application.Volatile`, `Application.Caller` and `Application.ThisCell` answer inside a function
+call; every function runs on Excel's main thread and may touch the object model.
 
 ### Hot reload
 
-While a workbook is bound, its folder is watched. Save a `.bas`, `.cls`, `.frm` or `vbang.json` at
+Save a `.bas`, `.cls`, `.frm` or `vbang.json` at
 the top of the folder and half a second later the add-in rebuilds on a worker thread, then swaps
 the new assembly in on Excel's thread, between macros. `Workbook_Open` does not run again, and
 module-level variables and `Static` locals reset, as they do in VBA after an edit. A failed build
 shows in `vbang status` and the loaded version stays, so the workbook keeps working; an edit during
-a build queues one more. `vbang status` counts the reloads.
+a build queues one more.
 
 ### Dialogs, errors and the log
 
@@ -381,8 +388,7 @@ only working button — and a line in the log:
 2026-09-12 11:04:19.286 Run-time error in Module1.Fails: '5': custom
 ```
 
-`out/output.log` holds what a command, an event handler, `vbang run` or `vbang test` printed and the
-errors they left unhandled, each stamped with the local time; a worksheet function's output, and the
+Each line of `out/output.log` is stamped with the local time; a worksheet function's output, and the
 add-in's own binding and reload lines, go to `vbang status` instead. Past one megabyte the log moves
 to `output.log.1`, replacing the previous one. A log that cannot be written is skipped rather than
 failing the run.
@@ -430,8 +436,8 @@ test's own `Debug.Print` lines under it behind `|`. The exit code is 5 when any 
 ## VS Code
 
 `vbang init --vscode` writes the two files a debugging session needs: a build task and an **Attach
-to Excel** configuration. Add the workspace settings yourself — VS Code allows breakpoints only in
-languages that register a debugger, and VBA has no grammar of its own here yet:
+to Excel** configuration. Add `.vscode/settings.json` yourself — VS Code allows breakpoints only in
+languages that register a debugger, and nothing registers one for VBA:
 
 ```json
 {
@@ -448,28 +454,30 @@ any .NET debugger gives you breakpoints, stepping, a call stack, and a locals wi
 
 To have Excel start and run a procedure under one keypress, write a `coreclr` launch configuration
 that runs `EXCEL.EXE` with the `.xll` and a workbook as its arguments, and sets `VBANG_PROJECT` to
-the project folder and `VBANG_RUN` to `Module.Procedure`. The add-in waits for Excel to be genuinely
+the project folder and `VBANG_RUN` to `Module.Procedure`. The add-in waits for Excel to be
 ready — main window visible, splash screen gone, `Application.Ready`, a workbook open — polling for
 up to a minute, then runs it, with `Debug.Print` reaching the debugger's console. Pass a workbook:
 without one Excel sits on its Start screen and the queued run waits. `vbang status` reports how the
-startup run went, and `.vscode/launch.json` in this repository has working examples.
+startup run went, and the source repository's `.vscode/launch.json` has working examples.
 
-There is no vba-ng language extension yet: no completions, no hover, no rename, no go-to-definition,
-and highlighting is Visual Basic's grammar rather than VBA's.
+Highlighting is Visual Basic's grammar; there are no completions, hover, rename, or go-to-definition.
 
 ## Troubleshooting
 
 | What you see | What to do |
 |---|---|
-| `no running Excel instance found` | Start Excel, load the add-in, open a workbook. Excel is found through the Running Object Table or its workbook window; with no workbook open, neither works |
-| `Excel could not run 'vbang.Run'. Is the vba-ng add-in loaded?`, or a host command returning nothing | The instance answered but has no add-in. Check **File > Options > Add-ins** |
+| `no running Excel instance found` | Start Excel, load the add-in, open a workbook |
+| `Excel could not run 'vbang.Run'. Is the vba-ng add-in loaded?`, or a host command returning nothing | The instance answered but has no add-in: check **File > Options > Add-ins**. With `Call was rejected by callee` in parentheses, Excel is busy: leave cell editing with Esc, or close the dialog it shows |
+| Excel refuses `vba-ng.xll`, or the add-in is unticked after a restart | Excel must be 64-bit, and `dotnet --list-runtimes` must list `Microsoft.WindowsDesktop.App 10.0`. Run `Unblock-File` on the `.xll`; in **File > Options > Trust Center > Add-ins**, add-ins must not be disabled or required to be signed. Excel runs one .NET version, so another .NET add-in can keep this one out |
+| A button says `Cannot run the macro` | The workbook is not bound. `vbang status` lists the bound workbooks and, under recent output, a `Build failed for` or `Could not load` line; `vbang build <folder>` prints the diagnostics |
+| A workbook in a OneDrive or SharePoint folder is never bound | Excel can report such a workbook's path as a web address, where no folder is beside it. Open it from a local folder |
 | `No project folder found` / `Several *.vbang folders found here` | Run inside the `.vbang` folder or pass `--project <folder>` |
 | `Could not load ...` / `Project has not been built; expected ...\out\Sales.dll` | Nothing is in `out/`. Run `vbang build`, or make `vbang.exe` reachable so the add-in can |
-| `Sales.xlsx still has a VBA project, so vba-ng does not bind Sales.vbang` | Save a macro-free copy: `vbang import --to-xlsx Sales.xlsx`, then open that one |
+| `Sales.xlsm still has a VBA project, so vba-ng does not bind Sales.vbang` | **File > Save As**, Excel Workbook (.xlsx), and open that copy instead |
 | `no sheet with CodeName Sheet3; its module is not bound` | The `.cls` names a CodeName the workbook does not have. Rename the module, or list it in `documents` |
 | `VBA0024` | Same, at build time |
 | `SayHello is already registered by another project` | Two loaded projects claim one name; the second answers to `Project.SayHello` |
-| `vbang CLI not found (set VBANG_CLI)` | The add-in cannot rebuild a stale project. Point `VBANG_CLI` at `vbang.exe`, or put it beside the `.xll` |
+| `vbang CLI not found (set VBANG_CLI)` | The add-in cannot rebuild a stale project. Put `vbang.exe` beside the `.xll`, or set `VBANG_CLI` with `[Environment]::SetEnvironmentVariable('VBANG_CLI', '<folder>\vbang.exe', 'User')` and restart Excel |
 | `The Excel type library could not be read; workbook events will not be connected` | The Excel type library is not registered for this Excel; reinstall or repair Office |
 | `VBA0023 Can't find project or library` | The manifest names a library that is not registered, or a bare name vba-ng does not know. Add its `guid` |
 | `already exists; init never overwrites a project` | Edit the manifest by hand, or delete it first |
@@ -477,14 +485,12 @@ and highlighting is Visual Basic's grammar rather than VBA's.
 | A UDF shows `#VALUE!` | A run-time error inside it, as in VBA. `vbang status` has the error; the project log does not |
 | Stale type-library behavior after an Office update | Delete the file for that library under `%LOCALAPPDATA%\vbang\typelibs` and rebuild |
 
-Behavior that is right but surprising is usually in [vba-quirks.md](vba-quirks.md), which records
-where Excel's VBA and the specification disagree and where vba-ng still differs from both.
+Surprising behavior, and where vba-ng still differs from Excel, is in [vba-quirks.md](vba-quirks.md).
 
 ## Reporting a bug
 
 `vbang report` writes `vbang-report-<Project>-<date>-<time>.zip` in the current folder and prints
-its path, its contents, and that the workbook is not among them, so the bundle can go on a public
-issue:
+its path, its contents, and that the workbook is not among them:
 
 | Entry | |
 |---|---|
@@ -494,7 +500,9 @@ issue:
 | `out/build.json`, `out/gen/*.cs`, `out/output.log` | the build record, the generated C#, and the project's log |
 | `status.json` | the add-in's status, when Excel was reachable |
 
-Attach it, say what you expected, and say what real Excel does with the same code.
+File it at https://github.com/er0080/vba-ng/issues: attach the zip, give your Excel version and build
+(**File > Account > About Excel**), say what you expected, and say what real Excel does with the
+same code. Read the zip first: it holds all your source, the log, and the project's path.
 
 ## Files and environment variables
 
@@ -506,8 +514,3 @@ Attach it, say what you expected, and say what real Excel does with the same cod
 | `VBANG_CLI` | the `vbang.exe` the add-in rebuilds a stale project with |
 | `VBANG_PROJECT`, `VBANG_RUN` | the project folder and `Module.Procedure` the add-in runs at startup |
 
-## Where else to look
-
-[../ARCHITECTURE.md](../ARCHITECTURE.md) for how it is built, [../ROADMAP.md](../ROADMAP.md) for
-what each version delivers, [diagnostics.md](diagnostics.md) for every diagnostic id, and
-[vba-quirks.md](vba-quirks.md) for where Excel's VBA and the specification disagree.
