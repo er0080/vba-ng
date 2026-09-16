@@ -50,13 +50,23 @@ The five criteria set 2026-09-09, as they stand.
 3. **Goldens.** Every miss closed or carried by a decision. *Met*: two named misses, D22.
 4. **Real workbooks.** Five go through `vbang import` and `vbang build` and run in Excel with no
    source edits, every divergence filed as an issue before the tag. *Met 2026-09-14*: the fifth is
-   VBA-Web's spec workbook, which reaches the network and so runs only in the local gate.
+   VBA-Web's spec workbook, which reaches the network and so runs only in the local gate. Every open
+   gap in docs/vba-quirks.md became an issue 2026-09-16.
 5. **Packaging.** A tester installs from the release zip by following README.md in ten minutes;
    `vbang init` starts a project, an unhandled error shows on screen, and `vbang report` writes the
    bug bundle. *Written and tested 2026-09-14*: README installs from the zip, and
    ReleasePackageTests installs it in Excel. Open: a first tester's timing.
    `vbang install` and `--out` moved to 1.0.0-alpha2, and so did ribbon `onAction` and the MSForms
    argument order, which docs/vba-quirks.md lists as unverified.
+
+## 2026-09-16
+
+- **The release dry run failed a test only a Debug runtime passes.** `Free_TwiceIsRefused` asserts
+  the refusal of a second free of a BSTR, which the runtime compiles into Debug only, keeping a lock
+  and a set off every string allocation; against Release the test freed the string twice. It skips
+  in Release now. CI tests Debug and the gate ran only the E2E tests in Release, so release.yml was
+  the first to test Release; `Invoke-Gate -Package` now does it before packaging, as release.yml
+  does.
 
 ## 2026-09-14
 

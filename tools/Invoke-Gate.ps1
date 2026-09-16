@@ -18,8 +18,8 @@
     Also run the Release benchmarks, which take several minutes and start Excel more than once.
 
 .PARAMETER Package
-    Also build the release zip with tools/New-ReleasePackage.ps1 and install it the way README.md
-    does, in a hidden Excel. Run it before tagging.
+    Also run what release.yml runs: the tests against the Release build, then the release zip from
+    that build, which is installed the way README.md does in a hidden Excel. Run it before tagging.
 
 .PARAMETER Corpus
     Corpus roots for the parse rate and the compile scorecard, separated by ';'. Defaults to
@@ -75,6 +75,13 @@ try {
     Invoke-Step 'version single-sourced' { powershell -ExecutionPolicy Bypass -File tools/Test-VersionSingleSource.ps1 }
     Invoke-Step 'measurements match the report' { powershell -ExecutionPolicy Bypass -File tools/Update-Measurements.ps1 -Verify }
 
+    if ($Package) {
+        # What release.yml runs before it packages: the tests against the Release build, where a
+        # check compiled only into Debug is absent.
+        Invoke-Step 'build (Release)' { dotnet build -c Release }
+        Invoke-Step 'test (unit and golden, Release)' { dotnet test -c Release --no-build }
+    }
+
     if (-not $SkipExcel) {
         # Everything below starts Excel. The tests use hidden throwaway instances and quit the ones
         # they start; they never touch a workbook that is already open.
@@ -84,12 +91,12 @@ try {
         if ($Benchmarks) {
             # Release only: a Debug run measures the Debug runtime rather than the design. The tests do not reference
             # the add-in, so the solution builds first, or Excel loads whatever Release add-in an older build left.
-            Invoke-Step 'build (Release)' { dotnet build -c Release }
+            if (-not $Package) { Invoke-Step 'build (Release)' { dotnet build -c Release } }
             Invoke-Step 'benchmarks (Excel, Release)' { dotnet test tests/VbaNg.E2E -c Release --no-build }
         }
 
         if ($Package) {
-            Invoke-Step 'release zip' { powershell -ExecutionPolicy Bypass -File tools/New-ReleasePackage.ps1 }
+            Invoke-Step 'release zip' { powershell -ExecutionPolicy Bypass -File tools/New-ReleasePackage.ps1 -NoBuild }
             $zip = @(Get-ChildItem artifacts -Filter 'vbang-*-win-x64.zip' -ErrorAction SilentlyContinue)
             $env:VBANG_PACKAGE = if ($zip.Count -eq 1) { $zip[0].FullName } else { '' }
             # Without a zip the test would skip and pass, so the step fails instead.
