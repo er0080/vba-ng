@@ -1,3 +1,5 @@
+using System.Reflection;
+
 using Xunit;
 
 namespace VbaNg.Runtime.Tests;
@@ -104,6 +106,10 @@ public sealed class VbaStringTests
     [Fact]
     public void Free_TwiceIsRefused()
     {
+        // Only a Debug runtime keeps the set of live BSTRs that refuses a second free; a Release one
+        // would free the string twice.
+        var configuration = typeof(Bstr).Assembly.GetCustomAttribute<AssemblyConfigurationAttribute>()?.Configuration;
+        Assert.SkipWhen(configuration == "Release", "A Release runtime does not check for a second free.");
         var text = VbaString.Alloc("once");
         text.Free();
         Assert.Throws<InvalidOperationException>(text.Free);
