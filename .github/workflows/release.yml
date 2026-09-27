@@ -93,7 +93,7 @@ jobs:
 
       - name: Keep the artifacts on the run as well
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: vbang-release
           path: |
